@@ -1,0 +1,14 @@
+/Temp
+/Library
+/Logs
+/obj
+/*.apk
+/*.csproj
+/*.sln
+/*_DoNotShip
+/.vsconfig
+/.vs
+/.vscode
+/Packages
+/ProjectSettings
+/UserSettings/EditorUserSettings.asset
