@@ -56,8 +56,7 @@ public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim> , IUIDat
 
     public void FillVertex(VertexHelper toFill, int flags, bool needColors = false)
     {
-        
-        var uiMeshDataGeometry = new UIMeshDataGeometry();
+        var uiMeshDataGeometry = new UIGeometry();
         var meshData = uiMeshDataGeometry.Alloc(toFill.currentVertCount, toFill.currentIndexCount);
         toFill.FillData3(ref uiMeshDataGeometry.vertList, ref uiMeshDataGeometry.colors, ref uiMeshDataGeometry.uvs,
             ref uiMeshDataGeometry.triangles, meshData.VertexOffset, meshData.IndicesOffset, 0, flags);

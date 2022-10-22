@@ -53,14 +53,11 @@ public class BatchUIDataRender : MonoBehaviour
         {
             vec[i] = new Vector3(UnityEngine.Random.Range(0,1200) - 600,UnityEngine.Random.Range(0,700)-350);
         }
+
         for (int i = 0; i < totalCount; i++)
         {
-            //dataUIRender.Fill(vertBuff, uvs, colors, triangles, vec[i]);
-            //text_uidata.Fill(vertBuff, uvs, colors, triangles, vec[i]);
             FillToDrawData(vertBuff, uvs, colors, triangles, vec[i]);
         }
-        
-
 
         compbine_mesh.SetVertices(vertBuff);
         compbine_mesh.SetUVs(0, uvs);

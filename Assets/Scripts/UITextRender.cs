@@ -31,6 +31,9 @@ public class UITextRender : MonoBehaviour
     private List<Vector3> mesh_2_vertex = new List<Vector3>();
     private Mesh compbine_mesh;
     private Material comb_Material;
+
+    [Button(nameof(ReCreate))]
+    public string _x;
     private void Start()
     {
         var str = txt_1.text + txt_2.text;
@@ -76,7 +79,6 @@ public class UITextRender : MonoBehaviour
         //vh.AddTriangle(2, 3, 0);
     }
 
-    [ContextMenu("ReCreate")]
     public void ReCreate()
     {
         var str = txt_1.text + txt_2.text;

@@ -8,12 +8,18 @@ using UnityEngine.Assertions;
 /// 存放所有的信息,
 /// UIMesh实际使用的vertexOffset,vertexCount,indexOffset,indexCount;
 /// /// </summary>
-public class UIMeshDataGeometry
+public class UIGeometry
 {
     public struct VertexSlice
     {
         public int start;
         public int count;
+
+        public VertexSlice(int start,int count)
+        {
+            this.start = start;
+            this.count = count;
+        }
     }
 
     public Vector4[] uvs = new Vector4[1024 * 256];
@@ -31,10 +37,10 @@ public class UIMeshDataGeometry
 
     private static int Next = 0;
 
-    public UIMeshDataGeometry()
+    public UIGeometry()
     {
-        openVertexList.AddFirst(new LinkedListNode<VertexSlice>(new VertexSlice { start = 0, count = vertList.Count() }));
-        openIndicesList.AddFirst(new LinkedListNode<VertexSlice>(new VertexSlice { start = 0, count = triangles.Count() }));
+        openVertexList.AddFirst(new VertexSlice(0, vertList.Count()));
+        openIndicesList.AddFirst(new VertexSlice(0, triangles.Count()));
     }
 
     private int GetAvailableVertex(LinkedList<VertexSlice> data, int vertexCount)
@@ -53,12 +59,7 @@ public class UIMeshDataGeometry
             else if (linkNodePerson.Value.count > vertexCount)
             {
                 vertexOffset = linkNodePerson.Value.start;
-                var tmpValue = new VertexSlice()
-                {
-                    start = vertexOffset + vertexCount,
-                    count = linkNodePerson.Value.count - vertexCount,
-                };
-                linkNodePerson.Value = tmpValue;
+                linkNodePerson.Value = new VertexSlice(vertexOffset + vertexCount, linkNodePerson.Value.count - vertexCount);
                 return vertexOffset;
             }
             else
@@ -72,59 +73,73 @@ public class UIMeshDataGeometry
         return vertexOffset;
     }
 
+
+    /// <summary>
+    /// 情况1:在头只前,一种直接插入
+    /// 情况2:在头之前,可以和头合并
+    /// 情况3:
+    /// 和前面的节点连续和后面的不连续, 和前面的节点合并
+    /// 和前面的节点不连续,和后面的节点也不连续, 插入到前面的节点之后
+    /// 和前面的节点不连续和后面的节点连续,  和后面的节点合并
+    /// 和前面的节点连续和后面节点连续.   移除后面的节点,合并到前面的节点
+    ///
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="start"></param>
+    /// <param name="vertexCount"></param>
     private void ReleaseSlice(LinkedList<VertexSlice> data, int start, int vertexCount)
     {
         var linkNodePerson = data.First;
 
-        while (linkNodePerson != null)
+        //首先去确定是否要加在头部
+        if(linkNodePerson != null)
         {
-            if (start < linkNodePerson.Value.start)
+            if((start + vertexCount) == linkNodePerson.Value.start) //case 2
             {
-                //merge
-                if (start + vertexCount == linkNodePerson.Value.start)
+                linkNodePerson.Value = new VertexSlice(start, vertexCount + linkNodePerson.Value.count);
+            }else if ((start + vertexCount) < linkNodePerson.Value.start)//case 1
+            {
+                data.AddBefore(linkNodePerson, new VertexSlice(start, vertexCount));
+            }
+            else
+            {
+                //他有个循环处理机制.
+                while (linkNodePerson != null)
                 {
-                    linkNodePerson.Value = new VertexSlice()
-                    {
-                        start = start,
-                        count = vertexCount + linkNodePerson.Value.count
-                    };
-                }
-                else
-                {
-                    data.AddBefore(linkNodePerson, new VertexSlice()
-                    {
-                        start = start,
-                        count = vertexCount,
-                    });
-                }
+                    var nextNode = linkNodePerson.Next;
+                    bool connectbefore = start == linkNodePerson.Value.start + linkNodePerson.Value.count;
+                    bool connectAfter = nextNode != null && (start + vertexCount) == nextNode.Value.start;
 
-                return;
+                    if(connectbefore && connectAfter)
+                    {
+                        linkNodePerson.Value = new VertexSlice(linkNodePerson.Value.start, vertexCount + linkNodePerson.Value.count + nextNode.Value.count);
+                        data.Remove(nextNode);
+                        break;
+                    }else if(connectbefore && !connectAfter)
+                    {
+                        linkNodePerson.Value = new VertexSlice(linkNodePerson.Value.start, vertexCount + linkNodePerson.Value.count);
+                        break;
+                    }else if(!connectbefore && connectAfter)
+                    {
+                        nextNode.Value = new VertexSlice(start,vertexCount + nextNode.Value.count);
+                        break;
+                    }else if (start>linkNodePerson.Value.start+ linkNodePerson.Value.count && 
+                        (nextNode==null || (start + vertexCount)>nextNode.Value.start))
+                    {
+                        data.AddAfter(linkNodePerson,new VertexSlice(start,vertexCount));
+                        break;
+                    }
+                    linkNodePerson = linkNodePerson.Next;
+                }
             }
         }
-        linkNodePerson = data.Last;
-        //合并
-        if (linkNodePerson.Value.start + linkNodePerson.Value.count == start)
-        {
-            linkNodePerson.Value = new VertexSlice()
-            {
-                start = linkNodePerson.Value.start,
-                count = vertexCount + linkNodePerson.Value.count
-            };
-        }
-        else
-        {
-            data.AddAfter(linkNodePerson, new VertexSlice()
-            {
-                start = start,
-                count = vertexCount,
-            });
-        }
+
     }
 
     public MeshSlim Alloc(int vertexCount, int indiceCount)
     {
         int VertexOffset = GetAvailableVertex(openVertexList, vertexCount);
-        int IndicesOfffset = GetAvailableVertex(openIndicesList, vertexCount);
+        int IndicesOfffset = GetAvailableVertex(openIndicesList, indiceCount);
         var mesh = new MeshSlim()
         {
 #if DEBUG

@@ -7,5 +7,5 @@ using UnityEngine;
 
 public interface IUIDrawTarget
 {
-    void DoGenerate(UIMeshData meshData, Transform root = null);
+    void DoGenerate(UIMeshData meshData, Transform root = null);//UIMeshData
 }
