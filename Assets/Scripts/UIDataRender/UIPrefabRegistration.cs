@@ -23,11 +23,7 @@ public partial class UIPrefabRegistration
         if (index < draws.Length && draws[index] is UIImage uiImg)
         {
             uiImg.sprite = sprite;
-            if (sprite == null)
-            {
-                TextureCall(sprite.texture);
-            }
-           
+            TextureCall.OnTextureRegister(uiImg.GetInstanceID(), uiImg.sprite ? sprite.texture : null);
             return uiImg;
         }
         return null;

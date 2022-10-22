@@ -84,7 +84,7 @@ public class UIMeshData : IUIData
         Index = -1,
     };
     public int MaterialIndex { get; set; }
-    public static bool UseSlim = false;
+    public static bool UseSlim = true;
     public static UIGeometry geometry { get; } = new UIGeometry();
     private static int NEXT = -1;
     public UIMeshData()
@@ -97,7 +97,7 @@ public class UIMeshData : IUIData
         if (UseSlim)
         {
             var vertexCount = mesh.VertexCount;
-            for (int i = mesh.VertexOffset; i < vertexCount; i++)
+            for (int i = mesh.VertexOffset; i < mesh.VertexOffset + vertexCount; i++)
             {
                 geometry.vertList[i] = mtx.MultiplyPoint(geometry.vertList[i]);
             }
@@ -183,10 +183,21 @@ public class UIMeshData : IUIData
 
     public void UpdateTextureIndex(int textureIndex)
     {
-        for (int i = 0; i < uvs.Length; i++)
+        if (UseSlim)
         {
-            ref Vector4 uv = ref uvs[i];
-            uv.z = textureIndex;
+            for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
+            {
+                ref Vector4 uv = ref geometry.uvs[i];
+                uv.z = textureIndex;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < uvs.Length; i++)
+            {
+                ref Vector4 uv = ref uvs[i];
+                uv.z = textureIndex;
+            }
         }
     }
 
@@ -310,7 +321,7 @@ public class UIMeshData : IUIData
                 }
             }
 
-            UnityEngine.Debug.LogError($"Mesh{mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
+            UnityEngine.Debug.LogError($"FillVertex Mesh {mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
             toFill.FillData3(ref geometry.vertList, ref geometry.colors,ref geometry.uvs, ref geometry.triangles, mesh.VertexOffset, mesh.IndicesOffset, MaterialIndex, flags);
         }
         else

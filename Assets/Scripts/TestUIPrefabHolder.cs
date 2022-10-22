@@ -13,7 +13,6 @@ public class TestUIPrefabHolder : MonoBehaviour
     public List<UIPrefaHolder> holders;
 
     public Sprite texture_1;
-
     public Sprite texture_2;
 
     private Mesh compbine_mesh;
@@ -21,6 +20,7 @@ public class TestUIPrefabHolder : MonoBehaviour
 
     private UIPrefabManager uiPrefabManager = new UIPrefabManager();
 
+    private bool created = false;
     [Button("ReCreate")]
     public string _X;
 
@@ -35,7 +35,8 @@ public class TestUIPrefabHolder : MonoBehaviour
             UnityEngine.Debug.LogError("Only Run In PlayModel");
             return;
         }
-        foreach(var holder in holders)
+        created = true;
+        foreach (var holder in holders)
         {
             uiPrefabManager.Register(holder);
             holder.SetText(2, "NiHao" + UnityEngine.Random.Range(1, 10));
@@ -58,6 +59,9 @@ public class TestUIPrefabHolder : MonoBehaviour
 
     private void ModifyText()
     {
+        if (!created)
+            return;
+
         holders[0].SetText(2,"NiHao" + UnityEngine.Random.Range(1,10));
         holders[0].SetWidth(1, 80 + UnityEngine.Random.Range(10,20));
         RebuildMesh();
@@ -99,8 +103,6 @@ public class TestUIPrefabHolder : MonoBehaviour
             compbine_mesh.SetTriangles(triangles, 0);
             compbine_mesh.RecalculateBounds();
         }
-
-      
     }
 
     private void LateUpdate()

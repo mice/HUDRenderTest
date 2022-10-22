@@ -17,6 +17,13 @@ public interface IUIPrefabHolder
     void BuildMesh(IUIDrawTarget[] draws);
 }
 
+public interface ITextureRecorder
+{
+    void OnTextureRegister(int guid,Texture obj);
+    void OnTextureUnRegister(int guid);
+}
+
+
 public class UIPrefabWrapper : IDisposable
 {
     public UIPrefabOwner target;
@@ -36,20 +43,22 @@ public class UIPrefabWrapper : IDisposable
     }
 }
 
-
+/// <summary>
+/// 只记录显示对象,不负责Mesh生成
+/// </summary>
 public partial class UIPrefabRegistration
 {
     /// <summary>
     /// 这里需要有一些统计功能,保证uv设置indics的次数最少.
     /// </summary>
-    public System.Action<Texture> TextureCall;
+    public ITextureRecorder TextureCall;
     public UIPrefabOwner owner { get; private set; }
     /// <summary>
     /// UI element
     /// </summary>
     public IUIDrawTarget[] draws;
 
-    public UIPrefabRegistration(UIPrefabOwner owner, Action<Texture> textureCall)
+    public UIPrefabRegistration(UIPrefabOwner owner, ITextureRecorder textureCall)
     {
         this.owner = owner;
         TextureCall = textureCall;
@@ -64,10 +73,7 @@ public partial class UIPrefabRegistration
             draws[i] = owner.targets[i].GetComponent<IUIDrawTarget>();
             if (draws[i] is UIImage uiImg)
             {
-                if (uiImg.sprite != null && uiImg.sprite.texture != null)
-                {
-                    TextureCall(uiImg.sprite.texture);
-                }
+                TextureCall.OnTextureRegister(uiImg.GetInstanceID(), uiImg.sprite? uiImg.sprite.texture:null);
             }
         }
     }
@@ -81,16 +87,17 @@ public partial class UIPrefabRegistration
 /// <summary>
 /// 需要动态写UV的Index.
 /// </summary>
-public class UIPrefabManager
+public class UIPrefabManager: ITextureRecorder
 {
     public Dictionary<UIPrefabOwner, UIPrefabRegistration> owners = new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
     private List<Texture> textures = new List<Texture>();
+    private Dictionary<int, Texture> textureDict = new Dictionary<int, Texture>();
 
-    private System.Action<Texture> OnTextureRegister_instance;
     public UIPrefabManager()
     {
-        OnTextureRegister_instance = OnTextureRegister;
+        
     }
+
     /// <summary>
     /// 记录Prefab
     /// </summary>
@@ -102,22 +109,68 @@ public class UIPrefabManager
         {
             UnityEngine.Debug.LogError("Shold Not Be Null::");
             return;
-
         }
+
         if (!this.owners.TryGetValue(prefabOwner,out var reg))
         {
-            reg = new UIPrefabRegistration(prefabOwner, OnTextureRegister_instance);
+            reg = new UIPrefabRegistration(prefabOwner, this);
             holder.SetWrapper(reg);
             this.owners.Add(prefabOwner, reg);
         }
     }
 
-    private void OnTextureRegister(Texture obj)
+    void ITextureRecorder.OnTextureRegister(int guid, Texture obj)
     {
-        if (obj!=null && !textures.Contains(obj))
-        {
-            textures.Add(obj);
+        if (obj != null) { 
+
+            if(textureDict.TryGetValue(guid,out var _tex))
+            {
+                if (_tex != obj)
+                {
+                    _OnTextureUnRegister(guid, false);
+                    textureDict[guid] = obj;
+                    if (!textures.Contains(_tex))
+                        textures.Add(_tex);
+                }
+            }
+            else
+            {
+                textureDict.Add(guid, _tex);
+                if (!textures.Contains(_tex))
+                    textures.Add(_tex);
+            }
         }
+        else
+        {
+            _OnTextureUnRegister(guid,false);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void _OnTextureUnRegister(int guid,bool removeFromDict)
+    {
+        if(textureDict.TryGetValue(guid,out var _tex))
+        {
+            int texCount = 0;
+            foreach (var item in textureDict)
+            {
+                if (item.Value == _tex)
+                {
+                    texCount++;
+                }
+            }
+            if (texCount == 1)
+            {
+                textures.Remove(_tex);
+            }
+            if(removeFromDict)
+                textureDict.Remove(guid);
+        }
+    }
+
+    void ITextureRecorder.OnTextureUnRegister(int guid)
+    {
+        _OnTextureUnRegister(guid,true);
     }
 
     public UIPrefabRegistration Generate(IUIPrefabHolder holder)

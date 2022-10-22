@@ -132,7 +132,8 @@ public static class ResourceUtility
 
         float position = 0f;
 		float height = 0;
-		
+
+        int j = 0;
         for (int i = 0; i < text.Length; i++)
         {
             if (font.GetCharacterInfo(text[i], out CharacterInfo info, fontSize))
@@ -148,18 +149,18 @@ public static class ResourceUtility
 				uvs.Add(new Vector4(info.uvBottomRight.x, info.uvBottomRight.y, index, 1));
 				uvs.Add(new Vector4(info.uvTopRight.x, info.uvTopRight.y, index, 1));
 
-
-
-                triangles.Add(i * 4 + 0);
-                triangles.Add(i * 4 + 1);
-                triangles.Add(i * 4 + 2);
-                triangles.Add(i * 4 + 2);
-                triangles.Add(i * 4 + 1);
-                triangles.Add(i * 4 + 3);
+                triangles.Add(j * 4 + 0);
+                triangles.Add(j * 4 + 1);
+                triangles.Add(j * 4 + 2);
+                triangles.Add(j * 4 + 2);
+                triangles.Add(j * 4 + 1);
+                triangles.Add(j * 4 + 3);
 
                 position += info.advance;
+                j++;
             }
         }
+
 		for (int i = 0; i < vertices.Count; i++)
 		{
 			vertices[i] = new Vector2(vertices[i].x - position * 0.5f, vertices[i].y - height * 0.5f);
@@ -177,6 +178,7 @@ public static class ResourceUtility
 		triangles.Clear();
 
 		float position = 0f;
+		int j = 0;
 		for (int i = 0; i < text.Length; i++)
 		{
 			if (font.GetCharacterInfo(text[i], out CharacterInfo info, fontSize))
@@ -191,14 +193,15 @@ public static class ResourceUtility
 				uvs.Add(info.uvBottomRight);
 				uvs.Add(info.uvTopRight);
 
-				triangles.Add(i * 4 + 0);
-				triangles.Add(i * 4 + 1);
-				triangles.Add(i * 4 + 2);
-				triangles.Add(i * 4 + 2);
-				triangles.Add(i * 4 + 1);
-				triangles.Add(i * 4 + 3);
+				triangles.Add(j * 4 + 0);
+				triangles.Add(j * 4 + 1);
+				triangles.Add(j * 4 + 2);
+				triangles.Add(j * 4 + 2);
+				triangles.Add(j * 4 + 1);
+				triangles.Add(j * 4 + 3);
 
 				position += info.advance;
+				j++;
 			}
 		}
 
