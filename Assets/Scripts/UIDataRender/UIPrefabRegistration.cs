@@ -31,7 +31,7 @@ public partial class UIPrefabRegistration
 
     public IUIDrawTarget SetWidth(int index, int width)
     {
-        var item = index < draws.Length ? owner.targets[index] : null;
+        var item = index < draws.Length ? Owner.targets[index] : null;
         if (item is RectTransform rtm)
         {
             rtm.sizeDelta = new Vector2(width, rtm.sizeDelta.y);

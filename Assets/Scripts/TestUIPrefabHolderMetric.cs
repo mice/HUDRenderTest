@@ -106,7 +106,7 @@ public class TestUIPrefabHolderMetric : MonoBehaviour
             holder.SetText(2, "NiHao" + UnityEngine.Random.Range(1, 10));
            
             uiPrefabManager.Generate(holder);
-            if (holder.target == owners[1])
+            if (holder.Target == owners[1])
             {
                 holder.SetTextureIndex(2, 2);
             }

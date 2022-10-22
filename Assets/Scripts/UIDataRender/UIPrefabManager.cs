@@ -11,7 +11,7 @@ using static UnityEngine.GraphicsBuffer;
 /// </summary>
 public interface IUIPrefabHolder
 {
-    UIPrefabOwner target { get; }
+    UIPrefabOwner Target { get; }
     Vector3 Position { get; }
     void SetWrapper(UIPrefabRegistration wrapper);
     void BuildMesh(IUIDrawTarget[] draws);
@@ -52,7 +52,7 @@ public partial class UIPrefabRegistration
     /// 这里需要有一些统计功能,保证uv设置indics的次数最少.
     /// </summary>
     public ITextureRecorder TextureCall;
-    public UIPrefabOwner owner { get; private set; }
+    public UIPrefabOwner Owner { get; private set; }
     /// <summary>
     /// UI element
     /// </summary>
@@ -60,17 +60,17 @@ public partial class UIPrefabRegistration
 
     public UIPrefabRegistration(UIPrefabOwner owner, ITextureRecorder textureCall)
     {
-        this.owner = owner;
+        this.Owner = owner;
         TextureCall = textureCall;
         RecordDraws();
     }
 
     private void RecordDraws()
     {
-        draws = new IUIDrawTarget[owner.targets.Count];
-        for (int i = 0; i < owner.targets.Count; i++)
+        draws = new IUIDrawTarget[Owner.targets.Count];
+        for (int i = 0; i < Owner.targets.Count; i++)
         {
-            draws[i] = owner.targets[i].GetComponent<IUIDrawTarget>();
+            draws[i] = Owner.targets[i].GetComponent<IUIDrawTarget>();
             if (draws[i] is UIImage uiImg)
             {
                 TextureCall.OnTextureRegister(uiImg.GetInstanceID(), uiImg.sprite? uiImg.sprite.texture:null);
@@ -91,8 +91,8 @@ public class UIPrefabManager : ITextureRecorder
 {
     public static UIPrefabManager Instance { get; } = new UIPrefabManager();
     public Dictionary<UIPrefabOwner, UIPrefabRegistration> owners = new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
-    private List<Texture> textures = new List<Texture>();
-    private Dictionary<int, Texture> textureDict = new Dictionary<int, Texture>();
+    private readonly List<Texture>  textures = new List<Texture>();
+    private readonly Dictionary<int, Texture> textureDict = new Dictionary<int, Texture>();
 
     private UIPrefabManager()
     {
@@ -111,16 +111,16 @@ public class UIPrefabManager : ITextureRecorder
     /// <param name="prefabOwner"></param>
     public void Register(IUIPrefabHolder holder)
     {
-        var prefabOwner = holder?.target;
+        var prefabOwner = holder?.Target;
         if (prefabOwner == null)
         {
             UnityEngine.Debug.LogError("Shold Not Be Null::");
             return;
         }
 
-        if (!this.owners.TryGetValue(prefabOwner,out var reg))
+        if (!this.owners.TryGetValue(prefabOwner,out _))
         {
-            reg = new UIPrefabRegistration(prefabOwner, this);
+            var reg = new UIPrefabRegistration(prefabOwner, this);
             holder.SetWrapper(reg);
             this.owners.Add(prefabOwner, reg);
         }
@@ -134,7 +134,7 @@ public class UIPrefabManager : ITextureRecorder
             {
                 if (_tex != obj)
                 {
-                    _OnTextureUnRegister(guid, false);
+                    OnTextureUnRegister(guid, false);
                     textureDict[guid] = obj;
                     if (!textures.Contains(obj))
                         textures.Add(obj);
@@ -151,12 +151,12 @@ public class UIPrefabManager : ITextureRecorder
         }
         else
         {
-            _OnTextureUnRegister(guid,false);
+            OnTextureUnRegister(guid,false);
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void _OnTextureUnRegister(int guid,bool removeFromDict)
+    private void OnTextureUnRegister(int guid,bool removeFromDict)
     {
         if(textureDict.TryGetValue(guid,out var _tex))
         {
@@ -180,19 +180,19 @@ public class UIPrefabManager : ITextureRecorder
 
     void ITextureRecorder.OnTextureUnRegister(int guid)
     {
-        _OnTextureUnRegister(guid,true);
+        OnTextureUnRegister(guid,true);
     }
 
     public UIPrefabRegistration Generate(IUIPrefabHolder holder)
     {
-        if(this.owners.TryGetValue(holder.target,out var reg)){
+        if(this.owners.TryGetValue(holder.Target,out var reg)){
             reg.Generate(holder);
             return reg;
         }
         return null;
     }
 
-    private int[] MaterialProperties = new int[] {
+    private readonly int[] MaterialProperties = new int[] {
         Shader.PropertyToID("_MainTex1"),
         Shader.PropertyToID("_MainTex2"),
         Shader.PropertyToID("_MainTex3"),

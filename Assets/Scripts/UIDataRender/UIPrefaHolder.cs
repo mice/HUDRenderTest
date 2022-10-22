@@ -7,7 +7,7 @@ public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
 {
     [SerializeField]
     protected UIPrefabOwner _target;
-    public UIPrefabOwner target => _target;
+    public UIPrefabOwner Target => _target;
 
     public Vector3 Position => transform.localPosition;
     private DataPrefaHolder dataHolder;
@@ -84,7 +84,7 @@ public class DataPrefaHolder : IUIPrefabHolder
 {
     [SerializeField]
     protected UIPrefabOwner _target;
-    public UIPrefabOwner target => _target;
+    public UIPrefabOwner Target => _target;
     public UIPrefabRegistration wrapper { get; set; }
 
     private Vector3 _position;
@@ -126,7 +126,7 @@ public class DataPrefaHolder : IUIPrefabHolder
         for (int i = 0; i < draws.Length; i++)
         {
             uIMeshDatas[i] = uIMeshDatas[i] ?? new UIMeshData();
-            draws[i].DoGenerate(uIMeshDatas[i], target.transform);
+            draws[i].DoGenerate(uIMeshDatas[i], Target.transform);
         }
     }
 
@@ -135,7 +135,7 @@ public class DataPrefaHolder : IUIPrefabHolder
         var uiText = wrapper?.SetText(index, text);
         if (uiText != null && index < uIMeshDatas.Length)
         {
-            uiText.DoGenerate(uIMeshDatas[index], target.transform);
+            uiText.DoGenerate(uIMeshDatas[index], Target.transform);
         }
     }
 
@@ -144,7 +144,7 @@ public class DataPrefaHolder : IUIPrefabHolder
         var uiImg = wrapper?.SetSprite(index, text);
         if (uiImg != null && index < uIMeshDatas.Length)
         {
-            uiImg.DoGenerate(uIMeshDatas[index], target.transform);
+            uiImg.DoGenerate(uIMeshDatas[index], Target.transform);
         }
     }
 
@@ -153,7 +153,7 @@ public class DataPrefaHolder : IUIPrefabHolder
         var item = wrapper?.SetWidth(index, width);
         if (item != null && index < uIMeshDatas.Length)
         {
-            item.DoGenerate(uIMeshDatas[index], target.transform);
+            item.DoGenerate(uIMeshDatas[index], Target.transform);
         }
     }
 

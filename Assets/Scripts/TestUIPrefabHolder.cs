@@ -15,7 +15,7 @@ public class TestUIPrefabHolder : MonoBehaviour
     private Mesh compbine_mesh;
     private Material comb_Material;
 
-    private UIPrefabManager uiPrefabManager = UIPrefabManager.Instance;
+    private readonly UIPrefabManager uiPrefabManager = UIPrefabManager.Instance;
 
     private bool created = false;
     [Button("ReCreate")]
