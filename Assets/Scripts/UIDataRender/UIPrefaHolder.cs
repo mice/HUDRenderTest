@@ -53,6 +53,7 @@ public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
         dataHolder?.SetWidth(index, width);
     }
 
+    //这个应该是内部算好.
     public void SetTextureIndex(int index,int textureIndex)
     {
         dataHolder?.SetTextureIndex(index, textureIndex);

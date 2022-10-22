@@ -87,15 +87,22 @@ public partial class UIPrefabRegistration
 /// <summary>
 /// 需要动态写UV的Index.
 /// </summary>
-public class UIPrefabManager: ITextureRecorder
+public class UIPrefabManager : ITextureRecorder
 {
+    public static UIPrefabManager Instance { get; } = new UIPrefabManager();
     public Dictionary<UIPrefabOwner, UIPrefabRegistration> owners = new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
     private List<Texture> textures = new List<Texture>();
     private Dictionary<int, Texture> textureDict = new Dictionary<int, Texture>();
 
-    public UIPrefabManager()
+    private UIPrefabManager()
     {
         
+    }
+
+    public int GetTextureIndex(Texture texture)
+    {
+        UnityEngine.Debug.LogError($"GetTextureIndex:{textures.IndexOf(texture)}");
+        return textures.IndexOf(texture) + 1;
     }
 
     /// <summary>
@@ -129,15 +136,17 @@ public class UIPrefabManager: ITextureRecorder
                 {
                     _OnTextureUnRegister(guid, false);
                     textureDict[guid] = obj;
-                    if (!textures.Contains(_tex))
-                        textures.Add(_tex);
+                    if (!textures.Contains(obj))
+                        textures.Add(obj);
+                    UnityEngine.Debug.LogError($"AddTexture:{obj}");
                 }
             }
             else
             {
-                textureDict.Add(guid, _tex);
-                if (!textures.Contains(_tex))
-                    textures.Add(_tex);
+                textureDict.Add(guid, obj);
+                UnityEngine.Debug.LogError($"AddTexture:{obj}");
+                if (!textures.Contains(obj))
+                    textures.Add(obj);
             }
         }
         else
@@ -165,6 +174,7 @@ public class UIPrefabManager: ITextureRecorder
             }
             if(removeFromDict)
                 textureDict.Remove(guid);
+            UnityEngine.Debug.LogError($"RemoveTexture:{_tex}");
         }
     }
 
@@ -180,5 +190,27 @@ public class UIPrefabManager: ITextureRecorder
             return reg;
         }
         return null;
+    }
+
+    private int[] MaterialProperties = new int[] {
+        Shader.PropertyToID("_MainTex1"),
+        Shader.PropertyToID("_MainTex2"),
+        Shader.PropertyToID("_MainTex3"),
+        Shader.PropertyToID("_MainTex4"),
+        Shader.PropertyToID("_MainTex5"),
+        Shader.PropertyToID("_MainTex6"),
+        Shader.PropertyToID("_MainTex7"),
+    };
+
+    public void UpdateTexture(Material comb_Material)
+    {
+        if (comb_Material != null)
+        {
+            var count = Mathf.Min(textures.Count, MaterialProperties.Length);
+            for (int i = 0; i < count; i++)
+            {
+                comb_Material.SetTexture(MaterialProperties[i], textures[i]);
+            }
+        }
     }
 }

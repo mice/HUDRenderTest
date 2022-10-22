@@ -12,13 +12,10 @@ public class TestUIPrefabHolder : MonoBehaviour
 
     public List<UIPrefaHolder> holders;
 
-    public Sprite texture_1;
-    public Sprite texture_2;
-
     private Mesh compbine_mesh;
     private Material comb_Material;
 
-    private UIPrefabManager uiPrefabManager = new UIPrefabManager();
+    private UIPrefabManager uiPrefabManager = UIPrefabManager.Instance;
 
     private bool created = false;
     [Button("ReCreate")]
@@ -42,18 +39,18 @@ public class TestUIPrefabHolder : MonoBehaviour
             holder.SetText(2, "NiHao" + UnityEngine.Random.Range(1, 10));
             uiPrefabManager.Generate(holder);
         }
+        //这个需要自动设置.
         if (2 < holders.Count)
         {
-            holders[2].SetTextureIndex(2,2);
+            //holders[2].SetTextureIndex(2,2);
         }
         compbine_mesh = compbine_mesh ?? new Mesh();
 
         RebuildMesh();
 
         comb_Material = new Material(Shader.Find("Hidden/UIE-AtlasBlit"));
+        uiPrefabManager.UpdateTexture(comb_Material);
         comb_Material.SetTexture("_MainTex0", font.material.mainTexture);
-        comb_Material.SetTexture("_MainTex1", texture_1.texture);
-        comb_Material.SetTexture("_MainTex2", texture_2.texture);
         comb_Material.renderQueue = 3000;
     }
 

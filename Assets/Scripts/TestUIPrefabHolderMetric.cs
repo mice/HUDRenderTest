@@ -32,7 +32,7 @@ public class TestUIPrefabHolderMetric : MonoBehaviour
     private Mesh combine_mesh;
     private Material comb_Material;
 
-    private UIPrefabManager uiPrefabManager = new UIPrefabManager();
+    private UIPrefabManager uiPrefabManager = UIPrefabManager.Instance;
     private List<Vector3> vertBuff = new List<Vector3>();
     private List<Vector4> uvs = new List<Vector4>();
     private List<Color32> colors = new List<Color32>();

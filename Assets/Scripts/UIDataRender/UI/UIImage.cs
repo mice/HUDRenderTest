@@ -22,7 +22,7 @@ public class UIImage :Image,IUIDrawTarget
     public void DoGenerate(UIMeshData meshData,Transform root = null)
     {
         _isGenerating = true;
-        meshData.MaterialIndex = 1;
+        meshData.MaterialIndex = UIPrefabManager.Instance.GetTextureIndex(sprite.texture);
         tmp_meshData = meshData;
         tmp_root = root;
         UpdateGeometry();
