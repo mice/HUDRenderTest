@@ -84,8 +84,8 @@ public class TestUIPrefabHolder : MonoBehaviour
                 holder.Fill(triangles, holder.transform.localPosition);
             }
             var uiGeometry = UIMeshData.geometry;
-            int vertexCount = uiGeometry.drawVertList.Length;
-            compbine_mesh.SetVertices(uiGeometry.drawVertList,0, vertexCount);
+            int vertexCount = uiGeometry.drawVertex.Length;
+            compbine_mesh.SetVertices(uiGeometry.drawVertex,0, vertexCount);
             compbine_mesh.SetUVs(0, uiGeometry.uvs, 0, vertexCount);
             compbine_mesh.SetColors(uiGeometry.colors, 0, vertexCount);
             compbine_mesh.SetTriangles(triangles, 0);

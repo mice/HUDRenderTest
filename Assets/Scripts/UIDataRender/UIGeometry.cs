@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,13 @@ public class UIGeometry
         }
     }
 
-    public Vector4[] uvs = new Vector4[1024];
-    public Vector3[] vertList = new Vector3[1024];
-    public Vector3[] drawVertList = new Vector3[1024];
-    public Color32[] colors = new Color32[1024];
-    public int[] triangles = new int[1024 * 3];
+    public const int GROWTH = 1024 * 4;
+    public Vector4[] uvs = new Vector4[GROWTH];
+    public Vector3[] vertex = new Vector3[GROWTH];
+    public Vector3[] drawVertex = new Vector3[GROWTH];
+    public Color32[] colors = new Color32[GROWTH];
+    public int[] indices = new int[GROWTH * 2];
+
     /// <summary>
     /// 总的Vertex大小;
     /// </summary>
@@ -40,28 +43,28 @@ public class UIGeometry
 
     public UIGeometry()
     {
-        openVertexList.AddFirst(new VertexSlice(0, vertList.Count()));
-        openIndicesList.AddFirst(new VertexSlice(0, triangles.Count()));
+        openVertexList.AddFirst(new VertexSlice(0, vertex.Count()));
+        openIndicesList.AddFirst(new VertexSlice(0, indices.Count()));
     }
 
-    private int GetAvailableVertex(LinkedList<VertexSlice> data, int vertexCount)
+    private bool GetAvailableVertex(LinkedList<VertexSlice> data, int vertexCount,out int vertexOffset)
     {
         var linkNodePerson = data.First;
-        int vertexOffset = 0;
+       
         while (linkNodePerson != null)
         {
             if (linkNodePerson.Value.count == vertexCount)
             {
                 vertexOffset = linkNodePerson.Value.start;
                 data.Remove(linkNodePerson);
-                return vertexOffset;
+                return true;
 
             }
             else if (linkNodePerson.Value.count > vertexCount)
             {
                 vertexOffset = linkNodePerson.Value.start;
                 linkNodePerson.Value = new VertexSlice(vertexOffset + vertexCount, linkNodePerson.Value.count - vertexCount);
-                return vertexOffset;
+                return true;
             }
             else
             {
@@ -69,9 +72,9 @@ public class UIGeometry
             }
             linkNodePerson = linkNodePerson.Next;
         }
-        Assert.IsFalse(true, "not here");
+        vertexOffset = 0;
         //TODO当没有找到的时候,需要处理.
-        return vertexOffset;
+        return false;
     }
 
 
@@ -139,8 +142,35 @@ public class UIGeometry
 
     public MeshSlim Alloc(int vertexCount, int indiceCount)
     {
-        int VertexOffset = GetAvailableVertex(openVertexList, vertexCount);
-        int IndicesOfffset = GetAvailableVertex(openIndicesList, indiceCount);
+        int VertexOffset;
+        if(!GetAvailableVertex(openVertexList, vertexCount,out VertexOffset))
+        {
+            var oldCount = vertex.Length;
+            Array.Resize(ref vertex, oldCount + GROWTH);
+
+            VertexOffset = oldCount;
+            //oldCount[VertexCount|]
+            openVertexList.AddLast(new VertexSlice()
+            {
+                start = oldCount + vertexCount,
+                count = GROWTH - vertexCount,
+            });
+        }
+
+        int IndicesOfffset;
+        if(!GetAvailableVertex(openIndicesList, indiceCount,out IndicesOfffset))
+        {
+            var oldCount = indices.Length;
+            Array.Resize(ref indices, oldCount + GROWTH );
+            IndicesOfffset = oldCount;
+
+            openIndicesList.AddLast(new VertexSlice() { 
+                start = oldCount + indiceCount,
+                count = GROWTH - indiceCount,
+            }
+            );
+        }
+
         var mesh = new MeshSlim()
         {
             VertexOffset = VertexOffset,

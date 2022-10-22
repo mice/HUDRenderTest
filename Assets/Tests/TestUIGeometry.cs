@@ -13,9 +13,9 @@ public class TestUIGeometry
         Assert.AreEqual(uiGeometry.openIndicesList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertList.Length);
+        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertex.Length);
         Assert.AreEqual(uiGeometry.openIndicesList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.triangles.Length);
+        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.indices.Length);
     }
 
     // A Test behaves as an ordinary method
@@ -39,9 +39,9 @@ public class TestUIGeometry
         Assert.AreEqual(uiGeometry.openIndicesList.Count ,1);
         Assert.AreEqual(uiGeometry.openVertexList.Count ,1);
         Assert.AreEqual(uiGeometry.openVertexList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertList.Length);
+        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertex.Length);
         Assert.AreEqual(uiGeometry.openIndicesList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.triangles.Length);
+        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.indices.Length);
 
     }
 
@@ -59,9 +59,9 @@ public class TestUIGeometry
         Assert.AreEqual(uiGeometry.openIndicesList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.First.Value.start, 8);
-        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertList.Length-8);
+        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertex.Length-8);
         Assert.AreEqual(uiGeometry.openIndicesList.First.Value.start, 12);
-        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.triangles.Length-12);
+        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.indices.Length-12);
     }
 
     [Test]
@@ -85,9 +85,9 @@ public class TestUIGeometry
         Assert.AreEqual(uiGeometry.openIndicesList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertList.Length);
+        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertex.Length);
         Assert.AreEqual(uiGeometry.openIndicesList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.triangles.Length);
+        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.indices.Length);
     }
 
     [Test]
@@ -215,9 +215,9 @@ public class TestUIGeometry
         Assert.AreEqual(uiGeometry.openIndicesList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.Count, 1);
         Assert.AreEqual(uiGeometry.openVertexList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertList.Length);
+        Assert.AreEqual(uiGeometry.openVertexList.First.Value.count, uiGeometry.vertex.Length);
         Assert.AreEqual(uiGeometry.openIndicesList.First.Value.start, 0);
-        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.triangles.Length);
+        Assert.AreEqual(uiGeometry.openIndicesList.First.Value.count, uiGeometry.indices.Length);
 
     }
 }

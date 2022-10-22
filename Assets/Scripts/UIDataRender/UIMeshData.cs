@@ -56,8 +56,8 @@ public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim> , IUIDat
     {
         var uiMeshDataGeometry = new UIGeometry();
         var meshData = uiMeshDataGeometry.Alloc(toFill.currentVertCount, toFill.currentIndexCount);
-        toFill.FillData3(ref uiMeshDataGeometry.vertList, ref uiMeshDataGeometry.colors, ref uiMeshDataGeometry.uvs,
-            ref uiMeshDataGeometry.triangles, meshData.VertexOffset, meshData.IndicesOffset, 0, flags);
+        toFill.FillData3(ref uiMeshDataGeometry.vertex, ref uiMeshDataGeometry.colors, ref uiMeshDataGeometry.uvs,
+            ref uiMeshDataGeometry.indices, meshData.VertexOffset, meshData.IndicesOffset, 0, flags);
     }
 
     public void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition)
@@ -99,7 +99,7 @@ public class UIMeshData : IUIData
             var vertexCount = mesh.VertexCount;
             for (int i = mesh.VertexOffset; i < mesh.VertexOffset + vertexCount; i++)
             {
-                geometry.vertList[i] = mtx.MultiplyPoint(geometry.vertList[i]);
+                geometry.vertex[i] = mtx.MultiplyPoint(geometry.vertex[i]);
             }
         }
         else
@@ -255,12 +255,12 @@ public class UIMeshData : IUIData
     {
         for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
         {
-            geometry.drawVertList[i] = (geometry.vertList[i] + localPosition);
+            geometry.drawVertex[i] = (geometry.vertex[i] + localPosition);
         }
 
         for (int i = 0; i < mesh.IndicesCount; i++)
         {
-            triangles_.Add(geometry.triangles[i] + mesh.VertexOffset);
+            triangles_.Add(geometry.indices[i] + mesh.VertexOffset);
         }
     }
 
@@ -322,7 +322,7 @@ public class UIMeshData : IUIData
             }
 
             UnityEngine.Debug.LogError($"FillVertex Mesh {mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
-            toFill.FillData3(ref geometry.vertList, ref geometry.colors,ref geometry.uvs, ref geometry.triangles, mesh.VertexOffset, mesh.IndicesOffset, MaterialIndex, flags);
+            toFill.FillData3(ref geometry.vertex, ref geometry.colors,ref geometry.uvs, ref geometry.indices, mesh.VertexOffset, mesh.IndicesOffset, MaterialIndex, flags);
         }
         else
         {
