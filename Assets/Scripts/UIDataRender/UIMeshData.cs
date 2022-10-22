@@ -21,21 +21,19 @@ public interface IUIData : System.IDisposable
 
 public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim> , IUIData
 {
-#if DEBUG
-    public int Index;
-#endif
     public int VertexOffset;
     public int VertexCount;
     public int IndicesOffset;
     public int IndicesCount;
+    public int Index;
 
     public void Dispose()
     {
-#if DEBUG
         Index = -1;
-#endif
         VertexOffset = 0;
         VertexCount = 0;
+        IndicesOffset = 0;
+        IndicesCount = 0;
     }
 
     public bool Equals(MeshSlim x, MeshSlim y)
@@ -81,18 +79,36 @@ public class UIMeshData : IUIData
     public Vector3[] vertList = new Vector3[4];
     public Color32[] colors = Array.Empty<Color32>();
     public int[] triangles = new int[6];
-    public int VertexOffset;
-    public int VertexCount;
-    public int IndicesOffset;
-    public int IndicesCount;
+    public MeshSlim mesh = new MeshSlim()
+    {
+        Index = -1,
+    };
     public int MaterialIndex { get; set; }
+    public static bool UseSlim = false;
+    public static UIGeometry geometry { get; } = new UIGeometry();
+    private static int NEXT = -1;
+    public UIMeshData()
+    {
+        UnityEngine.Debug.LogError($"New UI Mesh Data:{NEXT++}");
+    }
 
     public void TransformVertex(Matrix4x4 mtx)
     {
-        var vertexCount = VertexCount;
-        for (int i = 0; i < vertexCount; i++)
+        if (UseSlim)
         {
-            vertList[i] = mtx.MultiplyPoint(vertList[i]);
+            var vertexCount = mesh.VertexCount;
+            for (int i = mesh.VertexOffset; i < vertexCount; i++)
+            {
+                geometry.vertList[i] = mtx.MultiplyPoint(geometry.vertList[i]);
+            }
+        }
+        else
+        {
+            var vertexCount = mesh.VertexCount;
+            for (int i = 0; i < vertexCount; i++)
+            {
+                vertList[i] = mtx.MultiplyPoint(vertList[i]);
+            }
         }
     }
 
@@ -123,8 +139,8 @@ public class UIMeshData : IUIData
         this.vertList = tmp_vert_list.ToArray();
         this.uvs = tmp_uv_list.ToArray();
         this.triangles = tmp_triangles_list.ToArray();
-        this.VertexCount = vertList.Count();
-        this.IndicesCount = triangles.Count();
+        this.mesh.VertexCount = vertList.Count();
+        this.mesh.IndicesCount = triangles.Count();
     }
 
     private void Create(Vector4 v,int flags)
@@ -160,8 +176,8 @@ public class UIMeshData : IUIData
         triangles[4] = 3;
         triangles[5] = 0;
 
-        this.VertexCount = 4;
-        this.IndicesCount = 6;
+        this.mesh.VertexCount = 4;
+        this.mesh.IndicesCount = 6;
     }
 
 
@@ -178,20 +194,20 @@ public class UIMeshData : IUIData
     public void FillToDrawData(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
     {
         var offset = vertList_.Count;
-        var vertexCount = this.VertexCount;
-        if(this.VertexCount!= vertList.Length)
+        var vertexCount = this.mesh.VertexCount;
+        if(this.mesh.VertexCount!= vertList.Length)
         {
-            UnityEngine.Debug.LogError($"Error:Length:{VertexCount},{vertList.Length}");
+            UnityEngine.Debug.LogError($"Error:Length:{mesh.VertexCount},{vertList.Length}");
         }
 
-        if (this.VertexCount != uvs.Length)
+        if (this.mesh.VertexCount != uvs.Length)
         {
-            UnityEngine.Debug.LogError($"Error:Length:{VertexCount},{uvs.Length}");
+            UnityEngine.Debug.LogError($"Error:Length:{mesh.VertexCount},{uvs.Length}");
         }
 
-        if (colors.Length!= 0 && this.VertexCount != colors.Length)
+        if (colors.Length!= 0 && this.mesh.VertexCount != colors.Length)
         {
-            UnityEngine.Debug.LogError($"Error:Length:{VertexCount},{colors.Length}");
+            UnityEngine.Debug.LogError($"Error:Length:{mesh.VertexCount},{colors.Length}");
         }
 
 
@@ -220,13 +236,30 @@ public class UIMeshData : IUIData
         }
     }
 
+    /// <summary>
+    /// 可以transform 封装下,传递给gpu.
+    /// </summary>
+    /// <param name="localPosition"></param>
+    public void FillToTriangleData(List<int> triangles_, Vector3 localPosition)
+    {
+        for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
+        {
+            geometry.drawVertList[i] = (geometry.vertList[i] + localPosition);
+        }
+
+        for (int i = 0; i < mesh.IndicesCount; i++)
+        {
+            triangles_.Add(geometry.triangles[i] + mesh.VertexOffset);
+        }
+    }
+
     public void FillWithMatrix(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Matrix4x4 mtx)
     {
         var offset = vertList_.Count;
-        var vertexCount = this.VertexCount;
+        var vertexCount = this.mesh.VertexCount;
         for (int i = 0; i < vertexCount; i++)
         {
-                vertList_.Add(mtx.MultiplyPoint(vertList[i]));
+            vertList_.Add(mtx.MultiplyPoint(vertList[i]));
         }
 
         var white = Color.white;
@@ -245,19 +278,50 @@ public class UIMeshData : IUIData
 
     public void Dispose()
     {
-        Clear();
+        if (UseSlim)
+        {
+            if (mesh.Index != -1)
+            {
+                geometry.Release(mesh);
+                mesh.Dispose();
+            }
+        }
     }
 
     public void FillVertex(VertexHelper toFill,int flags)
     {
         this.Clear();
-        
-        (this.VertexCount, this.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, MaterialIndex, flags);
+        if (UseSlim)
+        {
+            var vertexCount = toFill.currentVertCount;
+            var indicesCount = toFill.currentIndexCount;
+            if (mesh.Index == -1)
+            {
+                mesh = geometry.Alloc(vertexCount, indicesCount);
+            }
+            else
+            {
+                if(mesh.VertexCount != vertexCount || mesh.IndicesCount != indicesCount)
+                {
+                    var oldVertexCount = mesh.VertexCount;
+                    var oldIndicesCount= mesh.IndicesCount;
+                    geometry.ReAlloc(vertexCount, indicesCount, ref mesh);
+                    UnityEngine.Debug.LogError($"Relocated:: + {mesh.Index}=>{oldVertexCount}=>{vertexCount},indices:{oldIndicesCount}=>{indicesCount}");
+                }
+            }
+
+            UnityEngine.Debug.LogError($"Mesh{mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
+            toFill.FillData3(ref geometry.vertList, ref geometry.colors,ref geometry.uvs, ref geometry.triangles, mesh.VertexOffset, mesh.IndicesOffset, MaterialIndex, flags);
+        }
+        else
+        {
+            (this.mesh.VertexCount, this.mesh.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, MaterialIndex, flags);
+        }
        
     } 
 
     private void Clear()
     {
-      
+       
     }
 }

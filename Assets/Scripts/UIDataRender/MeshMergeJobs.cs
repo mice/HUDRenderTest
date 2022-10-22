@@ -47,7 +47,7 @@ namespace UIData
             for (int i = 0; i < UIMeshCount; i++)
             {
                 var item = arr[i];
-                int item_vert_count = item.VertexCount;
+                int item_vert_count = item.mesh.VertexCount;
                 UnsafeFastCopy.CopyVec4(item.uvs, (Vector4*)result_uv_buffer, 0, index, item_vert_count);
                 bool hasColor = item.colors.Length > 0;
                 if (hasColor)
@@ -69,7 +69,7 @@ namespace UIData
                     index++;
                 }
 
-                var indicsCount = item.IndicesCount;
+                var indicsCount = item.mesh.IndicesCount;
                 for (int k = 0; k < indicsCount; k++)
                 {
                     UnsafeUtility.WriteArrayElement(result_triangle_buffer, tIndics++, offset + item.triangles[k]);
@@ -105,7 +105,7 @@ namespace UIData
             for (int i = 0; i < UIMeshCount; i++)
             {
                 var item = arr[i];
-                int item_vert_count = item.VertexCount;
+                int item_vert_count = item.mesh.VertexCount;
                 for (int j = 0; j < item_vert_count; j++)
                 {
                     UnsafeUtility.WriteArrayElement(result_pos_buffer, index, item.vertList[j] + UnsafeUtility.ReadArrayElement<Vector3>(pos_buffer, i));
@@ -135,7 +135,7 @@ namespace UIData
             for (int i = 0; i < UIMeshCount; i++)
             {
                 var item = arr[i];
-                int item_vert_count = item.VertexCount;
+                int item_vert_count = item.mesh.VertexCount;
                 if (item.colors.Length == 0)
                 {
                     for (int j = 0; j < item_vert_count; j++)
@@ -170,7 +170,7 @@ namespace UIData
             for (int i = 0; i < UIMeshCount; i++)
             {
                 var item = arr[i];
-                int item_vert_count = item.VertexCount;
+                int item_vert_count = item.mesh.VertexCount;
                 UnsafeFastCopy.CopyVec4(item.uvs, (Vector4*)result_uv_buffer, 0, index, item_vert_count);
                 index += item_vert_count;
             }
@@ -196,8 +196,8 @@ namespace UIData
             for (int i = 0; i < UIMeshCount; i++)
             {
                 var item = arr[i];
-                int item_vert_count = item.VertexCount;
-                var indicsCount = item.IndicesCount;
+                int item_vert_count = item.mesh.VertexCount;
+                var indicsCount = item.mesh.IndicesCount;
                 for (int j = 0; j < indicsCount; j++)
                 {
                     UnsafeUtility.WriteArrayElement(result_triangle_buffer, tIndics++, vertCountTotal + item.triangles[j]);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
 {
@@ -72,6 +73,11 @@ public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
     {
         dataHolder.Fill(vertList_, uvs_, colors_, triangles_, localPosition);
     }
+
+    public void Fill(List<int> triangles_, Vector3 localPosition)
+    {
+        dataHolder.Fill(triangles_, localPosition);
+    }
 }
 
 public class DataPrefaHolder : IUIPrefabHolder
@@ -119,9 +125,8 @@ public class DataPrefaHolder : IUIPrefabHolder
         }
         for (int i = 0; i < draws.Length; i++)
         {
-            var uiMeshData = new UIMeshData();
-            draws[i].DoGenerate(uiMeshData, target.transform);
-            uIMeshDatas[i] = uiMeshData;
+            uIMeshDatas[i] = uIMeshDatas[i] ?? new UIMeshData();
+            draws[i].DoGenerate(uIMeshDatas[i], target.transform);
         }
     }
 
@@ -173,6 +178,14 @@ public class DataPrefaHolder : IUIPrefabHolder
         foreach (var item in uIMeshDatas)
         {
             item.FillToDrawData(vertList_, uvs_, colors_, triangles_, localPosition);
+        }
+    }
+
+    public void Fill(List<int> triangles_, Vector3 localPosition)
+    {
+        foreach(var item in uIMeshDatas)
+        {
+            item.FillToTriangleData(triangles_,localPosition);
         }
     }
 }

@@ -22,10 +22,11 @@ public class UIGeometry
         }
     }
 
-    public Vector4[] uvs = new Vector4[1024 * 256];
-    public Vector3[] vertList = new Vector3[1024 * 256];
-    public Color32[] colors = new Color32[1024 * 256];
-    public int[] triangles = new int[1024 * 3 * 256];
+    public Vector4[] uvs = new Vector4[1024];
+    public Vector3[] vertList = new Vector3[1024];
+    public Vector3[] drawVertList = new Vector3[1024];
+    public Color32[] colors = new Color32[1024];
+    public int[] triangles = new int[1024 * 3];
     /// <summary>
     /// 总的Vertex大小;
     /// </summary>
@@ -52,7 +53,7 @@ public class UIGeometry
             if (linkNodePerson.Value.count == vertexCount)
             {
                 vertexOffset = linkNodePerson.Value.start;
-                openVertexList.Remove(linkNodePerson);
+                data.Remove(linkNodePerson);
                 return vertexOffset;
 
             }
@@ -142,13 +143,11 @@ public class UIGeometry
         int IndicesOfffset = GetAvailableVertex(openIndicesList, indiceCount);
         var mesh = new MeshSlim()
         {
-#if DEBUG
-            Index = Next++,
-#endif
             VertexOffset = VertexOffset,
             VertexCount = vertexCount,
             IndicesOffset = IndicesOfffset,
-            IndicesCount = indiceCount
+            IndicesCount = indiceCount,
+            Index = Next++
         };
 
         return mesh;

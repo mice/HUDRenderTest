@@ -41,7 +41,10 @@ public class TestUIPrefabHolder : MonoBehaviour
             holder.SetText(2, "NiHao" + UnityEngine.Random.Range(1, 10));
             uiPrefabManager.Generate(holder);
         }
-        holders[2].SetTextureIndex(2,2);
+        if (2 < holders.Count)
+        {
+            holders[2].SetTextureIndex(2,2);
+        }
         compbine_mesh = compbine_mesh ?? new Mesh();
 
         RebuildMesh();
@@ -70,16 +73,34 @@ public class TestUIPrefabHolder : MonoBehaviour
         var colors = new List<Color32>();
         var triangles = new List<int>();
 
-        foreach (var holder in holders)
+        if (UIMeshData.UseSlim)
         {
-            holder.Fill(vertBuff, uvs, colors, triangles, holder.transform.localPosition);
+            foreach (var holder in holders)
+            {
+                holder.Fill(triangles, holder.transform.localPosition);
+            }
+            var uiGeometry = UIMeshData.geometry;
+            int vertexCount = uiGeometry.drawVertList.Length;
+            compbine_mesh.SetVertices(uiGeometry.drawVertList,0, vertexCount);
+            compbine_mesh.SetUVs(0, uiGeometry.uvs, 0, vertexCount);
+            compbine_mesh.SetColors(uiGeometry.colors, 0, vertexCount);
+            compbine_mesh.SetTriangles(triangles, 0);
+            compbine_mesh.RecalculateBounds();
+        }
+        else
+        {
+            foreach (var holder in holders)
+            {
+                holder.Fill(vertBuff, uvs, colors, triangles, holder.transform.localPosition);
+            }
+            compbine_mesh.SetVertices(vertBuff);
+            compbine_mesh.SetUVs(0, uvs);
+            compbine_mesh.SetColors(colors);
+            compbine_mesh.SetTriangles(triangles, 0);
+            compbine_mesh.RecalculateBounds();
         }
 
-        compbine_mesh.SetVertices(vertBuff);
-        compbine_mesh.SetUVs(0, uvs);
-        compbine_mesh.SetColors(colors);
-        compbine_mesh.SetTriangles(triangles, 0);
-        compbine_mesh.RecalculateBounds();
+      
     }
 
     private void LateUpdate()

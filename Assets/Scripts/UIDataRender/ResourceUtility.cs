@@ -143,10 +143,10 @@ public static class ResourceUtility
                 vertices.Add(new Vector3(position + info.maxX, info.maxY, 0f));
 
 				height = Mathf.Max(info.maxY - info.minY);
-                uvs.Add(new Vector4(info.uvBottomLeft.x,info.uvBottomLeft.y,index,1));
-                uvs.Add(new Vector4(info.uvTopLeft.x, info.uvTopLeft.y, index,1));
-                uvs.Add(new Vector4(info.uvBottomRight.x, info.uvBottomRight.y, index,1));
-                uvs.Add(new Vector4(info.uvTopRight.x, info.uvTopRight.y, index,1));
+				uvs.Add(new Vector4(info.uvBottomLeft.x, info.uvBottomLeft.y, index, 1));
+				uvs.Add(new Vector4(info.uvTopLeft.x, info.uvTopLeft.y, index, 1));
+				uvs.Add(new Vector4(info.uvBottomRight.x, info.uvBottomRight.y, index, 1));
+				uvs.Add(new Vector4(info.uvTopRight.x, info.uvTopRight.y, index, 1));
 
 
 
@@ -162,7 +162,7 @@ public static class ResourceUtility
         }
 		for (int i = 0; i < vertices.Count; i++)
 		{
-			vertices[i] = new Vector2(vertices[i].x - position * 0.5f , vertices[i].y - height * 0.5f);
+			vertices[i] = new Vector2(vertices[i].x - position * 0.5f, vertices[i].y - height * 0.5f);
         }
     }
 

@@ -181,7 +181,7 @@ public class TestGraphicsDataWithJob : MonoBehaviour
             {
                 foreach (var item in arr)
                 {
-                    var vertexCount = item.VertexCount;
+                    var vertexCount = item.mesh.VertexCount;
 
                     for (int j = 0; j < vertexCount; j++)
                     {
@@ -191,7 +191,7 @@ public class TestGraphicsDataWithJob : MonoBehaviour
                         index++;
                     }
 
-                    int indicsCount = item.IndicesCount;
+                    int indicsCount = item.mesh.IndicesCount;
                     for (int j = 0; j < indicsCount; j++)
                     {
                         result_triangle[tIndics++] = offset + item.triangles[i];
