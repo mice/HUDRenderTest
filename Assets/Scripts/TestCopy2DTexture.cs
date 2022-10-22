@@ -29,6 +29,6 @@ public class TestCopy2DTexture : MonoBehaviour
         var tmpInt = rTexture_width;
         //rTexture = new Texture2D(tmpInt,tmpInt,TextureFormat.R8,false,true);
         rTexture = new Texture2D(tmpInt, tmpInt, TextureFormat.R8, false, false);
-        Graphics.CopyTexture(texture,0,0,0, offset_y, tmpInt, tmpInt, rTexture,0,0,0,0);
+        Graphics.CopyTexture(texture, 0, 0, 0, offset_y, tmpInt, tmpInt, rTexture, 0, 0, 0, 0);
     }
 }

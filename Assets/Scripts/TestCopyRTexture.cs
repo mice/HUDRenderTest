@@ -24,6 +24,6 @@ public class TestCopyRTexture : MonoBehaviour
     public void TestSubCopy()
     {
         var tmpInt = rTexture.width;
-        Graphics.CopyTexture(texture,0,0,0, offset_y, tmpInt, tmpInt, rTexture,0,0,0,0);
+        Graphics.CopyTexture(texture, 0, 0, 0, offset_y, tmpInt, tmpInt, rTexture, 0, 0, 0, 0);
     }
 }

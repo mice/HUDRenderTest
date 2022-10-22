@@ -251,7 +251,7 @@ public class UIMeshData : IUIData
     public void FillVertex(VertexHelper toFill,int flags)
     {
         this.Clear();
-       
+        
         (this.VertexCount, this.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, MaterialIndex, flags);
        
     } 

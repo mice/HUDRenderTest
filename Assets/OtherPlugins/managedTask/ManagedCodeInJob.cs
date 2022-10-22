@@ -58,17 +58,6 @@ public class ManagedCodeInJob : MonoBehaviour
     private readonly List<GCHandle> gcHandles = new List<GCHandle>();
     private readonly List<JobHandle> jobHandles = new List<JobHandle>();
 
-#if UNITY_EDITOR
-    [Button("TestUpdate")]
-    public int _x;
-    private void TestUpdate()
-    {
-        // Schedule one task per frame
-        IJobTask task = new SampleHeavyTask();
-        ScheduleTask(task);
-    }
-#endif
-
     public JobHandle ScheduleTask<T>(T task) where T: IJobTask
     {
         GCHandle gcHandle = GCHandle.Alloc(task);
