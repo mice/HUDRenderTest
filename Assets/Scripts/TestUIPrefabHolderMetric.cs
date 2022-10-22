@@ -44,9 +44,12 @@ public class TestUIPrefabHolderMetric : MonoBehaviour
     NativeArray<Vector4> result_uv;
     SharedArray<int> result_triangle;
     NativeArray<Color32> result_colors;
+
+
     NativeArray<int> result_count;
 
-    private Queue<(MergeXVertexJob, MergeXColorJob, MergeXUVJob, MergeXIndicsJob, JobHandle)> jobs = new Queue<(MergeXVertexJob, MergeXColorJob, MergeXUVJob, MergeXIndicsJob, JobHandle)>();
+    private Queue<(MergeXVertexJob, MergeXColorJob, MergeXUVJob, MergeXIndicsJob, JobHandle, JobHandle, JobHandle, JobHandle)> jobs = 
+    new Queue<(MergeXVertexJob, MergeXColorJob, MergeXUVJob, MergeXIndicsJob, JobHandle, JobHandle, JobHandle, JobHandle)>();
 
 
     public Button btn_test;
@@ -128,8 +131,6 @@ public class TestUIPrefabHolderMetric : MonoBehaviour
             result_colors = new NativeArray<Color32>(totalVertCount, Allocator.Persistent);
             result_count = new NativeArray<int>(2, Allocator.Persistent);
         }
-       
-        
 
         comb_Material = new Material(Shader.Find("Hidden/UIE-AtlasBlit"));
         comb_Material.SetTexture("_MainTex0", font.material.mainTexture);
@@ -261,11 +262,11 @@ public class TestUIPrefabHolderMetric : MonoBehaviour
         }
         else
         {
-            jobTaskMgr.ScheduleTask(tmp_vertex_job);
-            jobTaskMgr.ScheduleTask(tmp_color_job);
-            jobTaskMgr.ScheduleTask(tmp_uv_job);
-            var jobHandle = jobTaskMgr.ScheduleTask(tmp_indics_job);
-            jobs.Enqueue((tmp_vertex_job, tmp_color_job, tmp_uv_job, tmp_indics_job, jobHandle));
+            var jobHandle0 = jobTaskMgr.ScheduleTask(tmp_vertex_job);
+            var jobHandle1 = jobTaskMgr.ScheduleTask(tmp_color_job);
+            var jobHandle2 = jobTaskMgr.ScheduleTask(tmp_uv_job);
+            var jobHandle3 = jobTaskMgr.ScheduleTask(tmp_indics_job);
+            jobs.Enqueue((tmp_vertex_job, tmp_color_job, tmp_uv_job, tmp_indics_job, jobHandle0,jobHandle1,jobHandle2,jobHandle3));
         }
     }
 
@@ -299,9 +300,18 @@ public class TestUIPrefabHolderMetric : MonoBehaviour
     {
         if (useJob)
         {
-            if (jobs.Count > 0 && jobs.Peek().Item5.IsCompleted)
+            if (jobs.Count > 0 )
             {
-                (var vertex_job, var tmp_color_job, var uv_job, var indics_job, _) = jobs.Dequeue();
+                (var vertex_job, var tmp_color_job, var uv_job, var indics_job,var jobHandle_0,var jobHandle_1,var jobHandle_2,var jobHandle_3) = jobs.Dequeue();
+                if(!jobHandle_0.IsCompleted)
+                    jobHandle_0.Complete();
+                if(!jobHandle_1.IsCompleted)
+                    jobHandle_1.Complete();
+                if(!jobHandle_2.IsCompleted)
+                    jobHandle_2.Complete();
+                if(!jobHandle_3.IsCompleted)  
+                    jobHandle_3.Complete();
+                
                 ConsumeMergeJob(vertex_job, uv_job, indics_job);
             }
 

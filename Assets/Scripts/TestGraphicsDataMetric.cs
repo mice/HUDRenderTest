@@ -64,14 +64,14 @@ public class TestGraphicsDataMetric : MonoBehaviour
             vec[i] = new Vector3(UnityEngine.Random.Range(0, 1200) - 600, UnityEngine.Random.Range(0, 700) - 350);
         }
 
-        img_meshData_1.Fill(vertBuff, uvs, colors, triangles, vec[0]);
-        img_meshData_2.Fill(vertBuff, uvs, colors, triangles, vec[1]);
-        txt_meshData_1.Fill(vertBuff, uvs, colors, triangles, vec[2]);
+        img_meshData_1.FillToDrawData(vertBuff, uvs, colors, triangles, vec[0]);
+        img_meshData_2.FillToDrawData(vertBuff, uvs, colors, triangles, vec[1]);
+        txt_meshData_1.FillToDrawData(vertBuff, uvs, colors, triangles, vec[2]);
         for (int i = offset; i < totalCount; i++)
         {
-            img_meshData_2.Fill(vertBuff, uvs, colors, triangles, vec[i]);
-            img_meshData_1.Fill(vertBuff, uvs, colors, triangles, vec[i]);
-            txt_meshData_1.Fill(vertBuff, uvs, colors, triangles, vec[i]);
+            img_meshData_2.FillToDrawData(vertBuff, uvs, colors, triangles, vec[i]);
+            img_meshData_1.FillToDrawData(vertBuff, uvs, colors, triangles, vec[i]);
+            txt_meshData_1.FillToDrawData(vertBuff, uvs, colors, triangles, vec[i]);
         }
 
         combine_mesh.SetVertices(vertBuff);
@@ -85,15 +85,15 @@ public class TestGraphicsDataMetric : MonoBehaviour
     public void NativeCreate()
     {
         var img_meshData_1 = new UIMeshData();
-        img_meshData_1.Index = 1;
+        img_meshData_1.MaterialIndex = 1;
         img_ui_1.DoGenerate(img_meshData_1);
 
         var img_meshData_2 = new UIMeshData();
-        img_meshData_2.Index = 1;
+        img_meshData_2.MaterialIndex = 1;
         img_ui_2.DoGenerate(img_meshData_2);
 
         var txt_meshData_1 = new UIMeshData();
-        txt_meshData_1.Index = 0;
+        txt_meshData_1.MaterialIndex = 0;
         txt_1.DoGenerate(txt_meshData_1);
         __CreateMeshData(img_meshData_1,img_meshData_2,txt_meshData_1);
     }
@@ -106,15 +106,15 @@ public class TestGraphicsDataMetric : MonoBehaviour
             return;
         }
         var img_meshData_1 = new UIMeshData();
-        img_meshData_1.Index = 1;
+        img_meshData_1.MaterialIndex = 1;
         img_ui_1.DoGenerate(img_meshData_1);
 
         var img_meshData_2= new UIMeshData();
-        img_meshData_2.Index = 1;
+        img_meshData_2.MaterialIndex = 1;
         img_ui_2.DoGenerate(img_meshData_2);
 
         var txt_meshData_1 = new UIMeshData();
-        txt_meshData_1.Index = 0;
+        txt_meshData_1.MaterialIndex = 0;
         txt_1.DoGenerate(txt_meshData_1);
 
         meshArray = new List<UIMeshData>(3);
@@ -202,7 +202,7 @@ public class TestGraphicsDataMetric : MonoBehaviour
                         index++;
                     }
 
-                    var indicsCount = item.IndicsCount;
+                    var indicsCount = item.IndicesCount;
                     for (int j = 0; j < indicsCount; j++)
                     {
                         UnsafeUtility.WriteArrayElement(result_triangle_buffer, tIndics++, offset + item.triangles[j]);

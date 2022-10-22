@@ -166,48 +166,6 @@ public static class ResourceUtility
         }
     }
 
-    public static (int,int) BuildTextMesh(Font font, int fontSize, int index, System.String text, Vector3[] vertices, Vector4[] uvs, int[] triangles)
-    {
-        float position = 0f;
-        float height = 0;
-		int vertexCount = 0;
-		int indicsCount = 0;
-        for (int i = 0; i < text.Length; i++)
-        {
-            if (font.GetCharacterInfo(text[i], out CharacterInfo info, fontSize))
-            {
-                vertices[vertexCount] = (new Vector3(position + info.minX, info.minY, 0f));
-                vertices[vertexCount+1] = (new Vector3(position + info.minX, info.maxY, 0f));
-                vertices[vertexCount+2] = (new Vector3(position + info.maxX, info.minY, 0f));
-                vertices[vertexCount+3] = (new Vector3(position + info.maxX, info.maxY, 0f));
-
-                height = Mathf.Max(info.maxY - info.minY);
-                uvs[vertexCount] = (new Vector4(info.uvBottomLeft.x, info.uvBottomLeft.y, index, 1));
-                uvs[vertexCount] = (new Vector4(info.uvTopLeft.x, info.uvTopLeft.y, index, 1));
-                uvs[vertexCount] = (new Vector4(info.uvBottomRight.x, info.uvBottomRight.y, index, 1));
-                uvs[vertexCount] = (new Vector4(info.uvTopRight.x, info.uvTopRight.y, index, 1));
-
-
-
-                triangles[indicsCount] = (i * 4 + 0);
-                triangles[indicsCount+1] = (i * 4 + 1);
-                triangles[indicsCount+2] = (i * 4 + 2);
-                triangles[indicsCount+3] = (i * 4 + 2);
-                triangles[indicsCount+4] = (i * 4 + 1);
-                triangles[indicsCount+5] = (i * 4 + 3);
-
-                position += info.advance;
-                vertexCount += 4;
-				indicsCount += 6;
-            }
-        }
-        for (int i = 0; i < vertexCount; i++)
-        {
-            vertices[i] = new Vector2(vertices[i].x - position * 0.5f, vertices[i].y - height * 0.5f);
-        }
-		return (vertexCount,indicsCount);
-    }
-
     public static void BuildTextMesh(Font font, int fontSize,StringBuilder text, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
 	{
 		vertices.Capacity = Mathf.Max(vertices.Capacity, text.Length * 4);

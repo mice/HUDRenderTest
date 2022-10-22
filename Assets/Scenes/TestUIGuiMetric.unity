@@ -1302,6 +1302,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5580146551570704293, guid: c98f7b97bf697ce4281c685627485737,
+        type: 3}
+      propertyPath: m_Maskable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5580146551570704293, guid: c98f7b97bf697ce4281c685627485737,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5580146552202018430, guid: c98f7b97bf697ce4281c685627485737,
+        type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5580146552202018430, guid: c98f7b97bf697ce4281c685627485737,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c98f7b97bf697ce4281c685627485737, type: 3}
 --- !u!224 &721647041 stripped
@@ -2520,6 +2540,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1492603919}
     m_Modifications:
+    - target: {fileID: 566729104703121511, guid: 4136524a58fd0944988aa282bffe68ba,
+        type: 3}
+      propertyPath: m_Maskable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 566729104703121511, guid: 4136524a58fd0944988aa282bffe68ba,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5381173351734144835, guid: 4136524a58fd0944988aa282bffe68ba,
+        type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5381173351734144835, guid: 4136524a58fd0944988aa282bffe68ba,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5381173353073110449, guid: 4136524a58fd0944988aa282bffe68ba,
         type: 3}
       propertyPath: m_Name

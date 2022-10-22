@@ -43,7 +43,7 @@ public class UIText : Text, IUIDrawTarget
         base.OnPopulateMesh(toFill);
         if (!HasModifier && _isGenerating && tmp_meshData != null)
         {
-            tmp_meshData.FillVertex(toFill, 1, true);
+            tmp_meshData.FillVertex(toFill, 1);
             var _transform = transform;
             if (tmp_root != null && tmp_root != _transform && _transform.IsChildOf(tmp_root))
             {

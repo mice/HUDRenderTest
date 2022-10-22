@@ -22,7 +22,7 @@ public class UIImage :Image,IUIDrawTarget
     public void DoGenerate(UIMeshData meshData,Transform root = null)
     {
         _isGenerating = true;
-        meshData.Index = 1;
+        meshData.MaterialIndex = 1;
         tmp_meshData = meshData;
         tmp_root = root;
         UpdateGeometry();

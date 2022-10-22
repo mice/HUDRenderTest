@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TreeEditor;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 
@@ -12,13 +14,63 @@ using UnityEngine.UI;
 /// 2. 不支持Rotation
 /// 3. 不支持9宫格
 /// </summary>
-
-public interface IUIData : System.IDisposable
+public interface IUIData : System.IDisposable  
 {
-    void Fill(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition);
+    void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition);
 }
 
+public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim> , IUIData
+{
+#if DEBUG
+    public int Index;
+#endif
+    public int VertexOffset;
+    public int VertexCount;
+    public int IndicesOffset;
+    public int IndicesCount;
 
+    public void Dispose()
+    {
+#if DEBUG
+        Index = -1;
+#endif
+        VertexOffset = 0;
+        VertexCount = 0;
+    }
+
+    public bool Equals(MeshSlim x, MeshSlim y)
+    {
+        return x.Equals(y);
+    }
+
+    public bool Equals(MeshSlim other)
+    {
+        return other.VertexOffset == VertexOffset && other.VertexCount == VertexCount 
+            && other.IndicesOffset == IndicesOffset && other.IndicesCount == IndicesCount;
+    }
+
+    public int GetHashCode(MeshSlim obj)
+    {
+        return (obj.VertexOffset,obj.VertexCount,obj.IndicesOffset,obj.IndicesCount).GetHashCode();
+    }
+
+    public void FillVertex(VertexHelper toFill, int flags, bool needColors = false)
+    {
+        
+        var uiMeshDataGeometry = new UIMeshDataGeometry();
+        var meshData = uiMeshDataGeometry.Alloc(toFill.currentVertCount, toFill.currentIndexCount);
+        toFill.FillData3(ref uiMeshDataGeometry.vertList, ref uiMeshDataGeometry.colors, ref uiMeshDataGeometry.uvs,
+            ref uiMeshDataGeometry.triangles, meshData.VertexOffset, meshData.IndicesOffset, 0, flags);
+    }
+
+    public void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition)
+    {
+        throw new NotImplementedException();
+    }
+
+}
+
+///indirect idea
 public class UIMeshData : IUIData
 {
     /// <summary>
@@ -30,9 +82,11 @@ public class UIMeshData : IUIData
     public Vector3[] vertList = new Vector3[4];
     public Color32[] colors = Array.Empty<Color32>();
     public int[] triangles = new int[6];
+    public int VertexOffset;
     public int VertexCount;
-    public int IndicsCount;
-    public int Index { get; set; }
+    public int IndicesOffset;
+    public int IndicesCount;
+    public int MaterialIndex { get; set; }
 
     public void TransformVertex(Matrix4x4 mtx)
     {
@@ -46,7 +100,7 @@ public class UIMeshData : IUIData
     public static UIMeshData CreateTextData(Text txt_t)
     {
         UIMeshData textData = new UIMeshData();
-        textData.Create(txt_t.text,txt_t.font,txt_t.fontSize);
+        textData.Create(txt_t.text, txt_t.font, txt_t.fontSize);
         return textData;
     }
 
@@ -62,7 +116,16 @@ public class UIMeshData : IUIData
     private void Create(string text,Font font,int size)
     {
         Clear();
-        ResourceUtility.BuildTextMesh(font, size, 0, text, vertList, uvs, triangles);
+        var tmp_vert_list = new List<Vector3>();
+        var tmp_uv_list = new List<Vector4>();
+        var tmp_triangles_list = new List<int>();
+
+        ResourceUtility.BuildTextMesh(font, size, 0, text, tmp_vert_list, tmp_uv_list, tmp_triangles_list);
+        this.vertList = tmp_vert_list.ToArray();
+        this.uvs = tmp_uv_list.ToArray();
+        this.triangles = tmp_triangles_list.ToArray();
+        this.VertexCount = vertList.Count();
+        this.IndicesCount = triangles.Count();
     }
 
     private void Create(Vector4 v,int flags)
@@ -97,6 +160,9 @@ public class UIMeshData : IUIData
         triangles[3] = 2;
         triangles[4] = 3;
         triangles[5] = 0;
+
+        this.VertexCount = 4;
+        this.IndicesCount = 6;
     }
 
 
@@ -110,7 +176,7 @@ public class UIMeshData : IUIData
     }
 
 
-    public void Fill(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
+    public void FillToDrawData(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
     {
         var offset = vertList_.Count;
         var vertexCount = this.VertexCount;
@@ -183,60 +249,16 @@ public class UIMeshData : IUIData
         Clear();
     }
 
-    public void FillVertex(VertexHelper toFill,int flags,bool needColors = false)
+    public void FillVertex(VertexHelper toFill,int flags)
     {
         this.Clear();
-        if (needColors)
-        {
-            (this.VertexCount, this.IndicsCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, Index, flags);
-        }
-        else
-        {
-            (this.VertexCount,this.IndicsCount) = toFill.FillData2(ref this.vertList,ref this.uvs,ref this.triangles, Index, flags);
-        }
+       
+        (this.VertexCount, this.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, MaterialIndex, flags);
+       
     } 
 
     private void Clear()
     {
       
-    }
-
-   
-}
-
-public class UIPackData : IUIData
-{
-    public List<UIMeshData> lists = new List<UIMeshData>();
-    private static List<MaskableGraphic> tmp_graphics = new List<MaskableGraphic>();
-    public static UIPackData Create(Transform ui)
-    {
-        var uiPackData = new UIPackData();
-        tmp_graphics.Clear();
-        ui.GetComponentsInChildren<MaskableGraphic>(true, tmp_graphics);
-        foreach(var item in tmp_graphics)
-        {
-            if(item is Text txt)
-            {
-                uiPackData.lists.Add(UIMeshData.CreateTextData(txt));
-            }else if(item is Image img)
-            {
-                uiPackData.lists.Add(UIMeshData.CreateImageData(img));
-            }
-        }
-        tmp_graphics.Clear();
-        return uiPackData;
-    }
-
-    public void Fill(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
-    {
-        foreach(var item in lists)
-        {
-            item.Fill(vertList_, uvs_, colors_, triangles_, localPosition);
-        }
-    }
-
-    public void Dispose()
-    {
-        lists.Clear();
     }
 }

@@ -134,7 +134,7 @@ namespace UIData
                 {
                     var item = arr[j];
                     int item_vert_count = item.VertexCount;
-                    var indicsCount = item.IndicsCount;
+                    var indicsCount = item.IndicesCount;
                     for (int k = 0; k < indicsCount; k++)
                     {
                         UnsafeUtility.WriteArrayElement(result_triangle_buffer, tIndics++, offset + item.triangles[k]);

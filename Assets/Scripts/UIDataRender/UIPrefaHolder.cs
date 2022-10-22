@@ -172,7 +172,7 @@ public class DataPrefaHolder : IUIPrefabHolder
     {
         foreach (var item in uIMeshDatas)
         {
-            item.Fill(vertList_, uvs_, colors_, triangles_, localPosition);
+            item.FillToDrawData(vertList_, uvs_, colors_, triangles_, localPosition);
         }
     }
 }

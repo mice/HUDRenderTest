@@ -69,7 +69,7 @@ namespace UIData
                     index++;
                 }
 
-                var indicsCount = item.IndicsCount;
+                var indicsCount = item.IndicesCount;
                 for (int k = 0; k < indicsCount; k++)
                 {
                     UnsafeUtility.WriteArrayElement(result_triangle_buffer, tIndics++, offset + item.triangles[k]);
@@ -197,7 +197,7 @@ namespace UIData
             {
                 var item = arr[i];
                 int item_vert_count = item.VertexCount;
-                var indicsCount = item.IndicsCount;
+                var indicsCount = item.IndicesCount;
                 for (int j = 0; j < indicsCount; j++)
                 {
                     UnsafeUtility.WriteArrayElement(result_triangle_buffer, tIndics++, vertCountTotal + item.triangles[j]);

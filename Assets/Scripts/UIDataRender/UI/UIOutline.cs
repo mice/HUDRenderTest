@@ -12,7 +12,7 @@ public class UIOutline : Outline
     {
         if (tmp_meshData != null)
         {
-            tmp_meshData.FillVertex(vh, 1, true);
+            tmp_meshData.FillVertex(vh, 1);
             var _transform = transform;
             if (tmp_root != null && tmp_root != _transform && _transform.IsChildOf(tmp_root))
             {
@@ -23,7 +23,7 @@ public class UIOutline : Outline
         base.ModifyMesh(vh);
         if (tmp_meshData != null)
         { 
-            tmp_meshData.FillVertex(vh, 1, true);
+            tmp_meshData.FillVertex(vh, 1);
             var _transform = transform;
             if (tmp_root != null && tmp_root != _transform && _transform.IsChildOf(tmp_root))
             {

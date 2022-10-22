@@ -21,7 +21,7 @@ public class BatchUIDataRender : MonoBehaviour
 
     private UIMeshData dataUIRender;
 
-    private UIPackData uiPackData;
+    public List<UIMeshData> lists = new List<UIMeshData>();
 
     [Button("ReCreate")]
     public string _X;
@@ -32,7 +32,7 @@ public class BatchUIDataRender : MonoBehaviour
         text_uidata = UIMeshData.CreateTextData(txt_1);
         dataUIRender = UIMeshData.CreateImageData(img_t);
 
-        uiPackData = UIPackData.Create(img_t.transform);
+        Create(img_t.transform,lists);
     }
 
 
@@ -57,7 +57,7 @@ public class BatchUIDataRender : MonoBehaviour
         {
             //dataUIRender.Fill(vertBuff, uvs, colors, triangles, vec[i]);
             //text_uidata.Fill(vertBuff, uvs, colors, triangles, vec[i]);
-            uiPackData.Fill(vertBuff, uvs, colors, triangles, vec[i]);
+            FillToDrawData(vertBuff, uvs, colors, triangles, vec[i]);
         }
         
 
@@ -92,5 +92,31 @@ public class BatchUIDataRender : MonoBehaviour
             dataUIRender.Dispose();
         }
         dataUIRender = null;
+    }
+
+    public static void Create(Transform ui,List<UIMeshData> lists)
+    {
+        var tmp_graphics = new List<MaskableGraphic>();
+        ui.GetComponentsInChildren<MaskableGraphic>(true, tmp_graphics);
+        foreach (var item in tmp_graphics)
+        {
+            if (item is Text txt)
+            {
+                lists.Add(UIMeshData.CreateTextData(txt));
+            }
+            else if (item is Image img)
+            {
+                lists.Add(UIMeshData.CreateImageData(img));
+            }
+        }
+        tmp_graphics.Clear();
+    }
+
+    public void FillToDrawData(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
+    {
+        foreach (var item in lists)
+        {
+            item.FillToDrawData(vertList_, uvs_, colors_, triangles_, localPosition);
+        }
     }
 }

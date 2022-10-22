@@ -55,19 +55,19 @@ public class TestGraphicsDataWithScaleOrRotation : MonoBehaviour
     public void ReCreate()
     {
         img_meshData_1 = new UIMeshData();
-        img_meshData_1.Index = 1;
+        img_meshData_1.MaterialIndex = 1;
         img_ui_1.DoGenerate(img_meshData_1);
 
         img_meshData_2 = new UIMeshData();
-        img_meshData_2.Index = 1;
+        img_meshData_2.MaterialIndex = 1;
         img_ui_2.DoGenerate(img_meshData_2);
 
         img_meshData_3 = new UIMeshData();
-        img_meshData_3.Index = 1;
+        img_meshData_3.MaterialIndex = 1;
         img_ui_3.DoGenerate(img_meshData_3,img_ui_1.transform);
 
         txt_meshData_1 = new UIMeshData();
-        txt_meshData_1.Index = 0;
+        txt_meshData_1.MaterialIndex = 0;
         txt_1.DoGenerate(txt_meshData_1, img_ui_1.transform);
 
         combine_mesh = combine_mesh ?? new Mesh();
@@ -81,10 +81,10 @@ public class TestGraphicsDataWithScaleOrRotation : MonoBehaviour
         colors.Clear();
         triangles.Clear();
 
-        img_meshData_1.Fill(vertBuff, uvs, colors, triangles, vec);
-        img_meshData_2.Fill(vertBuff, uvs, colors, triangles, vec);
-        img_meshData_3.Fill(vertBuff, uvs, colors, triangles, vec);
-        txt_meshData_1.Fill(vertBuff, uvs, colors, triangles, vec);
+        img_meshData_1.FillToDrawData(vertBuff, uvs, colors, triangles, vec);
+        img_meshData_2.FillToDrawData(vertBuff, uvs, colors, triangles, vec);
+        img_meshData_3.FillToDrawData(vertBuff, uvs, colors, triangles, vec);
+        txt_meshData_1.FillToDrawData(vertBuff, uvs, colors, triangles, vec);
 
 
         combine_mesh.SetVertices(vertBuff);
