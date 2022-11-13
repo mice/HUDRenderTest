@@ -30,15 +30,15 @@ public class TestGraphicsData : MonoBehaviour
     public void ReCreate()
     {
         var img_meshData_1 = new UIMeshData();
-        img_meshData_1.MaterialIndex = 1;
+        img_meshData_1.TextureIndex = 1;
         img_ui_1.DoGenerate(img_meshData_1);
 
         var img_meshData_2= new UIMeshData();
-        img_meshData_2.MaterialIndex = 1;
+        img_meshData_2.TextureIndex = 1;
         img_ui_2.DoGenerate(img_meshData_2);
 
         var txt_meshData_1 = new UIMeshData();
-        txt_meshData_1.MaterialIndex = 0;
+        txt_meshData_1.TextureIndex = 0;
         txt_1.DoGenerate(txt_meshData_1);
 
         combine_mesh = combine_mesh ?? new Mesh();

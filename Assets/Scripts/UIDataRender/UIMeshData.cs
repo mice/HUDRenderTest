@@ -25,6 +25,9 @@ public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim> , IUIDat
     public int VertexCount;
     public int IndicesOffset;
     public int IndicesCount;
+    /// <summary>
+    /// 当前的Index,没有任何意义,只是记录当前的MeshSlim是否有效;
+    /// </summary>
     public int Index;
 
     public void Dispose()
@@ -83,7 +86,7 @@ public class UIMeshData : IUIData
     {
         Index = -1,
     };
-    public int MaterialIndex { get; set; }
+    public int TextureIndex { get; set; }
     public static bool UseSlim = true;
     public static UIGeometry geometry { get; } = new UIGeometry();
     private static int NEXT = -1;
@@ -183,6 +186,7 @@ public class UIMeshData : IUIData
 
     public void UpdateTextureIndex(int textureIndex)
     {
+        this.TextureIndex = textureIndex;
         if (UseSlim)
         {
             for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
@@ -322,11 +326,11 @@ public class UIMeshData : IUIData
             }
 
             UnityEngine.Debug.LogError($"FillVertex Mesh {mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
-            toFill.FillData3(ref geometry.vertex, ref geometry.colors,ref geometry.uvs, ref geometry.indices, mesh.VertexOffset, mesh.IndicesOffset, MaterialIndex, flags);
+            toFill.FillData3(ref geometry.vertex, ref geometry.colors,ref geometry.uvs, ref geometry.indices, mesh.VertexOffset, mesh.IndicesOffset, TextureIndex, flags);
         }
         else
         {
-            (this.mesh.VertexCount, this.mesh.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, MaterialIndex, flags);
+            (this.mesh.VertexCount, this.mesh.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, TextureIndex, flags);
         }
        
     } 

@@ -3,54 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
-
 
 public interface IJobTask
 {
     void Execute();
-}
-
-// Just an arbitrary heavy computation as an example
-class SampleHeavyTask : IJobTask
-{
-    private Unity.Mathematics.Random random;
-
-    public SampleHeavyTask()
-    {
-        this.random = new Unity.Mathematics.Random(1234);
-    }
-
-    public void Execute()
-    {
-        float total = 0;
-        for (int i = 0; i < 50000; ++i)
-        {
-            float randomValue = this.random.NextFloat(1, 100);
-            total += math.sqrt(randomValue);
-        }
-    }
-}
-
-class SampleSumTask : IJobTask
-{
-    private Unity.Mathematics.Random random;
-
-    public SampleSumTask()
-    {
-        this.random = new Unity.Mathematics.Random(1234);
-    }
-
-    public void Execute()
-    {
-        float total = 0;
-        for (int i = 0; i < 50000; ++i)
-        {
-            float randomValue = this.random.NextFloat(1, 100);
-            total += math.sqrt(randomValue);
-        }
-    }
 }
 
 public class ManagedCodeInJob : MonoBehaviour

@@ -24,7 +24,8 @@ public class TestUIPrefabHolder : MonoBehaviour
     [Button("ModifyText")]
     public string _Y;
 
-    [ContextMenu("ReCreate")]
+    [Button("NullIcon")]
+    public string _Z;
     public void ReCreate()
     {
         if (!UnityEngine.Application.isPlaying)
@@ -39,11 +40,7 @@ public class TestUIPrefabHolder : MonoBehaviour
             holder.SetText(2, "NiHao" + UnityEngine.Random.Range(1, 10));
             uiPrefabManager.Generate(holder);
         }
-        //这个需要自动设置.
-        if (2 < holders.Count)
-        {
-            //holders[2].SetTextureIndex(2,2);
-        }
+       
         compbine_mesh = compbine_mesh ?? new Mesh();
 
         RebuildMesh();
@@ -61,6 +58,14 @@ public class TestUIPrefabHolder : MonoBehaviour
 
         holders[0].SetText(2,"NiHao" + UnityEngine.Random.Range(1,10));
         holders[0].SetWidth(1, 80 + UnityEngine.Random.Range(10,20));
+        RebuildMesh();
+    }
+
+    private void NullIcon()
+    {
+        if (!created)
+            return;
+        holders[2].SetSprite(2, null);
         RebuildMesh();
     }
 

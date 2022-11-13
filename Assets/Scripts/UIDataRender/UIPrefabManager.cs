@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -21,6 +23,12 @@ public interface ITextureRecorder
 {
     void OnTextureRegister(int guid,Texture obj);
     void OnTextureUnRegister(int guid);
+}
+
+public interface ITextureNotify
+{
+    void ReplaceTextureID(int lastIndex, int tIndex);
+    void RemoveTextureID(int lastIndex);
 }
 
 
@@ -87,16 +95,57 @@ public partial class UIPrefabRegistration
 /// <summary>
 /// 需要动态写UV的Index.
 /// </summary>
-public class UIPrefabManager : ITextureRecorder
+public class UIPrefabManager : ITextureRecorder, ITextureNotify
 {
     public static UIPrefabManager Instance { get; } = new UIPrefabManager();
     public Dictionary<UIPrefabOwner, UIPrefabRegistration> owners = new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
     private readonly List<Texture>  textures = new List<Texture>();
     private readonly Dictionary<int, Texture> textureDict = new Dictionary<int, Texture>();
 
+    public ITextureNotify textureNotify;
+
+    private HashSet<DataPrefabHolder> holders = new HashSet<DataPrefabHolder>();
     private UIPrefabManager()
     {
-        
+        this.textureNotify = this;
+    }
+
+    void ITextureNotify.ReplaceTextureID(int lastIndex, int tIndex)
+    {
+        foreach(var holder in holders)
+        {
+            foreach(var item in holder.uIMeshDatas)
+            {
+                if (item.TextureIndex == lastIndex)
+                {
+                    item.UpdateTextureIndex(tIndex);
+                }
+            }
+        }
+    }
+
+    void ITextureNotify.RemoveTextureID(int lastIndex)
+    {
+        foreach (var holder in holders)
+        {
+            foreach (var item in holder.uIMeshDatas)
+            {
+                if (item.TextureIndex == lastIndex)
+                {
+                    item.UpdateTextureIndex(-1);
+                }
+            }
+        }
+    }
+
+    public void AddHolder(DataPrefabHolder holder)
+    {
+        holders.Add(holder);
+    }
+
+    public void RemoveHolder(DataPrefabHolder holder)
+    {
+        holders.Remove(holder);
     }
 
     public int GetTextureIndex(Texture texture)
@@ -125,7 +174,11 @@ public class UIPrefabManager : ITextureRecorder
             this.owners.Add(prefabOwner, reg);
         }
     }
-
+    /// <summary>
+    /// guid为Image的InstanceID
+    /// </summary>
+    /// <param name="guid"></param>
+    /// <param name="obj"></param>
     void ITextureRecorder.OnTextureRegister(int guid, Texture obj)
     {
         if (obj != null) { 
@@ -161,6 +214,7 @@ public class UIPrefabManager : ITextureRecorder
         if(textureDict.TryGetValue(guid,out var _tex))
         {
             int texCount = 0;
+            //如果当前数量只有一个,那么就表示移除了以后,就没有这个Texture了.
             foreach (var item in textureDict)
             {
                 if (item.Value == _tex)
@@ -168,9 +222,25 @@ public class UIPrefabManager : ITextureRecorder
                     texCount++;
                 }
             }
+
             if (texCount == 1)
             {
-                textures.Remove(_tex);
+                var tIndex = textures.IndexOf(_tex);
+                var lastIndex = textures.Count - 1;
+                if (tIndex != lastIndex)
+                {
+                    var replace = textures[lastIndex];
+                    textures[tIndex] = textures[lastIndex];
+                    textures.RemoveAt(lastIndex);
+                    //现在的问题是要update:TextureID;
+                    textureNotify?.ReplaceTextureID(lastIndex,tIndex);
+                    
+                }
+                else
+                {
+                    textures.RemoveAt(lastIndex);
+                    textureNotify?.RemoveTextureID(lastIndex + 1);
+                }
             }
             if(removeFromDict)
                 textureDict.Remove(guid);

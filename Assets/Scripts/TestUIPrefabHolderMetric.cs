@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class TestUIPrefabHolderMetric : MonoBehaviour
 {
-    private List<DataPrefaHolder> holders;
+    private List<DataPrefabHolder> holders;
     private UIMeshData[] meshArray;
     private int UIMeshCount = 0;
     public Font font;
@@ -88,12 +88,12 @@ public class TestUIPrefabHolderMetric : MonoBehaviour
         {
             count = _t;
         }
-        holders = holders?? new List<DataPrefaHolder>(count);
+        holders = holders?? new List<DataPrefabHolder>(count);
         meshArray = meshArray ?? new UIMeshData[1024];
         holders.Clear();
         for (int i = 0; i < count; i++)
         {
-            var holder = new DataPrefaHolder();
+            var holder = new DataPrefabHolder();
             holder.SetTarget(owners[UnityEngine.Random.Range(0,2)]);
             holder.SetPosition(new Vector3(UnityEngine.Random.Range(0,800)-400,UnityEngine.Random.Range(0,700)-350,0));
             uiPrefabManager.Register(holder);
