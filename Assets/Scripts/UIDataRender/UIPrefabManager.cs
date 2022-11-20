@@ -7,17 +7,30 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
+public interface IUIPrefabDataOwner
+{
+    IUIPrefabHolder DataHolder { get; }
+}
+
 /// <summary>
 /// 保存对应的Prefab
 /// 需要知道显示需要的position,scale,rotation
 /// </summary>
-public interface IUIPrefabHolder:IEnumerable<IUIData>
+public interface IUIPrefabHolder
 {
     UIPrefabOwner Target { get; }
     Vector3 Position { get; }
+    UIPrefabRegistration wrapper { get; }
 
+    void SetTarget(UIPrefabOwner target);
+
+    IList<IUIData> UIMeshDatas { get; }
     void SetWrapper(UIPrefabRegistration wrapper);
     void BuildMesh(IUIDrawTarget[] draws);
+
+    void Fill(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition);
+
+    void Fill(List<int> triangles_, Vector3 localPosition);
 }
 
 public interface ITextureRecorder
@@ -115,7 +128,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     {
         foreach(var holder in holders)
         {
-            foreach(var item in holder)
+            foreach(var item in holder.UIMeshDatas)
             {
                 if (item.TextureIndex == lastIndex)
                 {
@@ -129,7 +142,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     {
         foreach (var holder in holders)
         {
-            foreach (var item in holder)
+            foreach (var item in holder.UIMeshDatas)
             {
                 if (item.TextureIndex == lastIndex)
                 {

@@ -43,25 +43,11 @@ public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim>
     {
         return (obj.VertexOffset,obj.VertexCount,obj.IndicesOffset,obj.IndicesCount).GetHashCode();
     }
-
-    public void FillVertex(VertexHelper toFill, int flags, bool needColors = false)
-    {
-        var uiMeshDataGeometry = new UIGeometry();
-        var meshData = uiMeshDataGeometry.Alloc(toFill.currentVertCount, toFill.currentIndexCount);
-        toFill.FillData3(ref uiMeshDataGeometry.vertex, ref uiMeshDataGeometry.colors, ref uiMeshDataGeometry.uvs,
-            ref uiMeshDataGeometry.indices, meshData.VertexOffset, meshData.IndicesOffset, 0, flags);
-    }
-
-    public void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition)
-    {
-        throw new NotImplementedException();
-    }
 }
 
 ///indirect idea
 public class UIMeshDataX : IUIData
 {
-
     /// <summary>
     /// uv,xy为UV
     /// z为:index
@@ -72,12 +58,11 @@ public class UIMeshDataX : IUIData
         Index = -1,
     };
     public int TextureIndex { get; set; }
-    public static bool UseSlim = true;
     public static UIGeometry geometry { get; } = new UIGeometry();
     private static int NEXT = -1;
     public UIMeshDataX()
     {
-        UnityEngine.Debug.LogError($"New UI Mesh Data:{NEXT++}");
+        UnityEngine.Debug.LogError($"New UI UIMeshDataX :{NEXT++}");
     }
 
     public void TransformVertex(Matrix4x4 mtx)

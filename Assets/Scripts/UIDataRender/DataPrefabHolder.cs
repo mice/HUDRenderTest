@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 
+
 /// <summary>
 /// 每个prefab都会生成一个DataPrefabHolder用来记录当前的prefab的UI信息;
 /// </summary>
@@ -20,7 +21,7 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
     private Vector3 _position;
     public Vector3 Position => _position;
 
-    public IList<T> UIMeshDatas => uIMeshDatas;
+    public IList<IUIData> UIMeshDatas => uIMeshDatas;
     /// <summary>
     /// UI element 对应的Mesh信息
     /// </summary>
@@ -62,39 +63,6 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
         }
     }
 
-    public void SetText(int index, string text)
-    {
-        var uiText = wrapper?.SetText(index, text);
-        if (uiText != null && index < uIMeshDatas.Length)
-        {
-            uiText.DoGenerate(uIMeshDatas[index], Target.transform);
-        }
-    }
-
-    public void SetSprite(int index, Sprite text)
-    {
-        var uiImg = wrapper?.SetSprite(index, text);
-        if (uiImg != null && index < uIMeshDatas.Length)
-        {
-            uiImg.DoGenerate(uIMeshDatas[index], Target.transform);
-        }
-    }
-
-    public void SetWidth(int index, int width)
-    {
-        var item = wrapper?.SetWidth(index, width);
-        if (item != null && index < uIMeshDatas.Length)
-        {
-            item.DoGenerate(uIMeshDatas[index], Target.transform);
-        }
-    }
-
-    public void SetTextureIndex(int index, int textureIndex)
-    {
-        if (index < uIMeshDatas.Length)
-            uIMeshDatas[index].UpdateTextureIndex(textureIndex);
-    }
-
     /// <summary>
     /// 算法应该是:
     /// 遇到Text,不需要改变UV
@@ -125,58 +93,50 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
             item.FillToTriangleData(triangles_, localPosition);
         }
     }
+}
 
-    IEnumerator<IUIData> IEnumerable<IUIData>.GetEnumerator()
+public static class PrefabHolderExt
+{
+
+    public static void SetText(this IUIPrefabHolder target,int index, string text)
     {
-        return new ListEnumerator(uIMeshDatas);
+        if (target == null) return;
+        var uiText = target.wrapper?.SetText(index, text);
+        var uiMeshData = target?.UIMeshDatas;
+        if (uiText != null && index < uiMeshData.Count)
+        {
+            uiText.DoGenerate(uiMeshData[index], target.Target.transform);
+        }
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
+    public static void SetSprite(this IUIPrefabHolder target, int index, Sprite text)
     {
-        return new ListEnumerator(uIMeshDatas);
+        if (target == null) return;
+        var uiImg = target.wrapper?.SetSprite(index, text);
+        var uiMeshData = target?.UIMeshDatas;
+        if (uiImg != null && index < uiMeshData.Count)
+        {
+            uiImg.DoGenerate(uiMeshData[index], target.Target.transform);
+        }
     }
 
-    public class ListEnumerator : IEnumerator<IUIData>
+    public static void SetWidth(this IUIPrefabHolder target, int index, int width)
     {
-        public IUIData Current => _current;
-        private IList<IUIData> _list;
-        private IUIData _current;
-        private int _index;
-        private int _total = 0;
-
-        public ListEnumerator(IList<IUIData> list)
+        if (target == null) return;
+        var item = target.wrapper?.SetWidth(index, width);
+        var uiMeshData = target?.UIMeshDatas;
+        if (item != null && index < uiMeshData.Count)
         {
-            this._list = list;
-            _total = list.Count;
-            _index = 0;
-            _current = default(IUIData);
+            item.DoGenerate(uiMeshData[index], target.Target.transform);
         }
+    }
 
-        object System.Collections.IEnumerator.Current => _current;
-
-        public void Dispose()
-        {
-            
-        }
-
-        public bool MoveNext()
-        {
-            if(_total > 0 && _index < _total)
-            {
-                _current = _list[_index];
-                _index++;
-                return true;
-
-            }
-            _index = -1;
-            _current = default;
-            return false; 
-        }
-
-        public void Reset()
-        {
-            _current = default;
-        }
+    public static void SetTextureIndex(this IUIPrefabHolder target, int index, int textureIndex)
+    {
+        if (target == null) return;
+        var uiMeshData = target?.UIMeshDatas;
+        if (index < uiMeshData.Count)
+            uiMeshData[index].UpdateTextureIndex(textureIndex);
     }
 
 }

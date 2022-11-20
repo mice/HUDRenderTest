@@ -45,8 +45,6 @@ public class UIMeshData : IUIData
         Index = -1,
     };
     public int TextureIndex { get; set; }
-    public static bool UseSlim = true;
-    public static UIGeometry geometry { get; } = new UIGeometry();
     private static int NEXT = -1;
     public UIMeshData()
     {
@@ -55,21 +53,10 @@ public class UIMeshData : IUIData
 
     public void TransformVertex(Matrix4x4 mtx)
     {
-        if (UseSlim)
+        var vertexCount = mesh.VertexCount;
+        for (int i = 0; i < vertexCount; i++)
         {
-            var vertexCount = mesh.VertexCount;
-            for (int i = mesh.VertexOffset; i < mesh.VertexOffset + vertexCount; i++)
-            {
-                geometry.vertex[i] = mtx.MultiplyPoint(geometry.vertex[i]);
-            }
-        }
-        else
-        {
-            var vertexCount = mesh.VertexCount;
-            for (int i = 0; i < vertexCount; i++)
-            {
-                vertList[i] = mtx.MultiplyPoint(vertList[i]);
-            }
+            vertList[i] = mtx.MultiplyPoint(vertList[i]);
         }
     }
 
@@ -145,21 +132,11 @@ public class UIMeshData : IUIData
     public void UpdateTextureIndex(int textureIndex)
     {
         this.TextureIndex = textureIndex;
-        if (UseSlim)
+      
+        for (int i = 0; i < uvs.Length; i++)
         {
-            for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
-            {
-                ref Vector4 uv = ref geometry.uvs[i];
-                uv.z = textureIndex;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < uvs.Length; i++)
-            {
-                ref Vector4 uv = ref uvs[i];
-                uv.z = textureIndex;
-            }
+            ref Vector4 uv = ref uvs[i];
+            uv.z = textureIndex;
         }
     }
 
@@ -215,15 +192,7 @@ public class UIMeshData : IUIData
     /// <param name="localPosition"></param>
     public void FillToTriangleData(List<int> triangles_, Vector3 localPosition)
     {
-        for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
-        {
-            geometry.drawVertex[i] = (geometry.vertex[i] + localPosition);
-        }
-
-        for (int i = 0; i < mesh.IndicesCount; i++)
-        {
-            triangles_.Add(geometry.indices[i] + mesh.VertexOffset);
-        }
+        
     }
 
     public void FillWithMatrix(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Matrix4x4 mtx)
@@ -251,45 +220,15 @@ public class UIMeshData : IUIData
 
     public void Dispose()
     {
-        if (UseSlim)
-        {
-            if (mesh.Index != -1)
-            {
-                geometry.Release(mesh);
-                mesh.Dispose();
-            }
-        }
+        
     }
 
     public void FillVertex(VertexHelper toFill,int flags)
     {
         this.Clear();
-        if (UseSlim)
-        {
-            var vertexCount = toFill.currentVertCount;
-            var indicesCount = toFill.currentIndexCount;
-            if (mesh.Index == -1)
-            {
-                mesh = geometry.Alloc(vertexCount, indicesCount);
-            }
-            else
-            {
-                if(mesh.VertexCount != vertexCount || mesh.IndicesCount != indicesCount)
-                {
-                    var oldVertexCount = mesh.VertexCount;
-                    var oldIndicesCount= mesh.IndicesCount;
-                    geometry.ReAlloc(vertexCount, indicesCount, ref mesh);
-                    UnityEngine.Debug.LogError($"Relocated:: + {mesh.Index}=>{oldVertexCount}=>{vertexCount},indices:{oldIndicesCount}=>{indicesCount}");
-                }
-            }
-
-            UnityEngine.Debug.LogError($"FillVertex Mesh {mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
-            toFill.FillData3(ref geometry.vertex, ref geometry.colors,ref geometry.uvs, ref geometry.indices, mesh.VertexOffset, mesh.IndicesOffset, TextureIndex, flags);
-        }
-        else
-        {
-            (this.mesh.VertexCount, this.mesh.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, TextureIndex, flags);
-        }
+        
+        (this.mesh.VertexCount, this.mesh.IndicesCount) = toFill.FillData2(ref this.vertList, ref this.colors, ref this.uvs, ref this.triangles, TextureIndex, flags);
+      
        
     } 
 

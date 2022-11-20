@@ -12,10 +12,12 @@ public class TestUIPrefabHolder : MonoBehaviour
 
     public List<UIPrefaHolder> holders;
 
-    private Mesh compbine_mesh;
+    private Mesh combine_mesh;
     private Material comb_Material;
 
     private readonly UIPrefabManager uiPrefabManager = UIPrefabManager.Instance;
+
+    private bool UseSlim = false;
 
     private bool created = false;
     [Button("ReCreate")]
@@ -36,12 +38,13 @@ public class TestUIPrefabHolder : MonoBehaviour
         created = true;
         foreach (var holder in holders)
         {
-            uiPrefabManager.Register(holder);
+            holder.UseSlim(UseSlim);
+            uiPrefabManager.Register(holder.DataHolder);
             holder.SetText(2, "NiHao" + UnityEngine.Random.Range(1, 10));
-            uiPrefabManager.Generate(holder);
+            uiPrefabManager.Generate(holder.DataHolder);
         }
        
-        compbine_mesh = compbine_mesh ?? new Mesh();
+        combine_mesh = combine_mesh ?? new Mesh();
 
         RebuildMesh();
 
@@ -69,50 +72,51 @@ public class TestUIPrefabHolder : MonoBehaviour
         RebuildMesh();
     }
 
+    List<int> triangles = new List<int>();
     /// <summary>
     /// 能定点修改么?
     /// </summary>
     private void RebuildMesh()
     {
-        var vertBuff = new List<Vector3>();
-        var uvs = new List<Vector4>();
-        var colors = new List<Color32>();
-        var triangles = new List<int>();
-
-        if (UIMeshData.UseSlim)
+        if (UseSlim)
         {
             foreach (var holder in holders)
             {
                 holder.Fill(triangles, holder.transform.localPosition);
             }
-            var uiGeometry = UIMeshData.geometry;
+            var uiGeometry = UIMeshDataX.geometry;
             int vertexCount = uiGeometry.drawVertex.Length;
-            compbine_mesh.SetVertices(uiGeometry.drawVertex,0, vertexCount);
-            compbine_mesh.SetUVs(0, uiGeometry.uvs, 0, vertexCount);
-            compbine_mesh.SetColors(uiGeometry.colors, 0, vertexCount);
-            compbine_mesh.SetTriangles(triangles, 0);
-            compbine_mesh.RecalculateBounds();
+            combine_mesh.SetVertices(uiGeometry.drawVertex,0, vertexCount);
+            combine_mesh.SetUVs(0, uiGeometry.uvs, 0, vertexCount);
+            combine_mesh.SetColors(uiGeometry.colors, 0, vertexCount);
+            combine_mesh.SetTriangles(triangles, 0);
+            combine_mesh.RecalculateBounds();
         }
         else
         {
+
+            var vertBuff = new List<Vector3>();
+            var uvs = new List<Vector4>();
+            var colors = new List<Color32>();
+
             foreach (var holder in holders)
             {
                 holder.Fill(vertBuff, uvs, colors, triangles, holder.transform.localPosition);
             }
-            compbine_mesh.SetVertices(vertBuff);
-            compbine_mesh.SetUVs(0, uvs);
-            compbine_mesh.SetColors(colors);
-            compbine_mesh.SetTriangles(triangles, 0);
-            compbine_mesh.RecalculateBounds();
+            combine_mesh.SetVertices(vertBuff);
+            combine_mesh.SetUVs(0, uvs);
+            combine_mesh.SetColors(colors);
+            combine_mesh.SetTriangles(triangles, 0);
+            combine_mesh.RecalculateBounds();
         }
     }
 
     private void LateUpdate()
     {
-        if (compbine_mesh != null)
+        if (combine_mesh != null)
         {
             var matix = ui_root.localToWorldMatrix;
-            Graphics.DrawMesh(compbine_mesh, matix, comb_Material, 5, ui_Camera);
+            Graphics.DrawMesh(combine_mesh, matix, comb_Material, 5, ui_Camera);
         }
     }
 }

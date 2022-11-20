@@ -7,29 +7,49 @@ using UnityEngine;
 /// <summary>
 /// 他的生命周期.
 /// </summary>
-public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
+public class UIPrefaHolder : MonoBehaviour, IUIPrefabDataOwner
 {
     [SerializeField]
     protected UIPrefabOwner _target;
-    public UIPrefabOwner Target => _target;
 
-    public Vector3 Position => transform.localPosition;
-   
-    private DataPrefabHolder<UIMeshData> dataHolder;
+    private bool _UseX = true;
 
-    private void Awake()
+    private IUIPrefabHolder dataHolder;
+    public IUIPrefabHolder DataHolder => dataHolder;
+
+    public void UseSlim(bool useSlim)
     {
-        InitDataHolder();
+        _UseX = useSlim;
+        if (dataHolder == null)
+        {
+            CreateHolder();
+            return;
+        }
+        bool isX = dataHolder is DataPrefabHolder<UIMeshDataX>;
+        if (isX ==useSlim)
+            return;
+        UIPrefabManager.Instance.RemoveHolder(dataHolder);
+        dataHolder = null;
+        CreateHolder();
+
     }
 
-    public void SetWrapper(UIPrefabRegistration wrapper)
+    private void CreateHolder()
     {
-        dataHolder.SetWrapper(wrapper);
+        if (_UseX)
+        {
+            dataHolder = dataHolder ?? new DataPrefabHolder<UIMeshDataX>();
+        }
+        else
+        {
+            dataHolder = dataHolder ?? new DataPrefabHolder<UIMeshData>();
+        }
+        dataHolder.SetTarget(_target);
     }
 
     private void InitDataHolder()
     {
-        dataHolder = dataHolder ?? new DataPrefabHolder<UIMeshData>();
+        CreateHolder();
         dataHolder.SetTarget(_target);
         UIPrefabManager.Instance.AddHolder(dataHolder);
     }
@@ -95,15 +115,5 @@ public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
             UIPrefabManager.Instance.RemoveHolder(dataHolder);
             dataHolder = null;
         }
-    }
-
-    public IEnumerator<IUIData> GetEnumerator()
-    {
-        throw new Exception("No Imple");
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new Exception("No Imple");
     }
 }
