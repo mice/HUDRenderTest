@@ -16,59 +16,17 @@ using UnityEngine.UI;
 /// </summary>
 public interface IUIData : System.IDisposable  
 {
+    int TextureIndex { get; set; }
+    void FillVertex(VertexHelper toFill, int flags);
+
+    void UpdateTextureIndex(int index);
+
+    void TransformVertex(Matrix4x4 mtx);
+
+    void FillToTriangleData(List<int> triangles_, Vector3 localPosition);
     void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition);
 }
 
-public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim> , IUIData
-{
-    public int VertexOffset;
-    public int VertexCount;
-    public int IndicesOffset;
-    public int IndicesCount;
-    /// <summary>
-    /// 当前的Index,没有任何意义,只是记录当前的MeshSlim是否有效;
-    /// </summary>
-    public int Index;
-
-    public void Dispose()
-    {
-        Index = -1;
-        VertexOffset = 0;
-        VertexCount = 0;
-        IndicesOffset = 0;
-        IndicesCount = 0;
-    }
-
-    public bool Equals(MeshSlim x, MeshSlim y)
-    {
-        return x.Equals(y);
-    }
-
-    public bool Equals(MeshSlim other)
-    {
-        return other.VertexOffset == VertexOffset && other.VertexCount == VertexCount 
-            && other.IndicesOffset == IndicesOffset && other.IndicesCount == IndicesCount;
-    }
-
-    public int GetHashCode(MeshSlim obj)
-    {
-        return (obj.VertexOffset,obj.VertexCount,obj.IndicesOffset,obj.IndicesCount).GetHashCode();
-    }
-
-    public void FillVertex(VertexHelper toFill, int flags, bool needColors = false)
-    {
-        var uiMeshDataGeometry = new UIGeometry();
-        var meshData = uiMeshDataGeometry.Alloc(toFill.currentVertCount, toFill.currentIndexCount);
-        toFill.FillData3(ref uiMeshDataGeometry.vertex, ref uiMeshDataGeometry.colors, ref uiMeshDataGeometry.uvs,
-            ref uiMeshDataGeometry.indices, meshData.VertexOffset, meshData.IndicesOffset, 0, flags);
-    }
-
-    public void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition)
-    {
-        throw new NotImplementedException();
-    }
-
-}
 
 ///indirect idea
 public class UIMeshData : IUIData

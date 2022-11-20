@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +14,8 @@ public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
     public UIPrefabOwner Target => _target;
 
     public Vector3 Position => transform.localPosition;
-    private DataPrefabHolder dataHolder;
+   
+    private DataPrefabHolder<UIMeshData> dataHolder;
 
     private void Awake()
     {
@@ -27,7 +29,7 @@ public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
 
     private void InitDataHolder()
     {
-        dataHolder = dataHolder ?? new DataPrefabHolder();
+        dataHolder = dataHolder ?? new DataPrefabHolder<UIMeshData>();
         dataHolder.SetTarget(_target);
         UIPrefabManager.Instance.AddHolder(dataHolder);
     }
@@ -93,5 +95,15 @@ public class UIPrefaHolder : MonoBehaviour,IUIPrefabHolder
             UIPrefabManager.Instance.RemoveHolder(dataHolder);
             dataHolder = null;
         }
+    }
+
+    public IEnumerator<IUIData> GetEnumerator()
+    {
+        throw new Exception("No Imple");
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        throw new Exception("No Imple");
     }
 }

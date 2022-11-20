@@ -11,10 +11,11 @@ using static UnityEngine.GraphicsBuffer;
 /// 保存对应的Prefab
 /// 需要知道显示需要的position,scale,rotation
 /// </summary>
-public interface IUIPrefabHolder
+public interface IUIPrefabHolder:IEnumerable<IUIData>
 {
     UIPrefabOwner Target { get; }
     Vector3 Position { get; }
+
     void SetWrapper(UIPrefabRegistration wrapper);
     void BuildMesh(IUIDrawTarget[] draws);
 }
@@ -104,7 +105,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
 
     public ITextureNotify textureNotify;
 
-    private HashSet<DataPrefabHolder> holders = new HashSet<DataPrefabHolder>();
+    private HashSet<IUIPrefabHolder> holders = new HashSet<IUIPrefabHolder>();
     private UIPrefabManager()
     {
         this.textureNotify = this;
@@ -114,7 +115,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     {
         foreach(var holder in holders)
         {
-            foreach(var item in holder.uIMeshDatas)
+            foreach(var item in holder)
             {
                 if (item.TextureIndex == lastIndex)
                 {
@@ -128,7 +129,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     {
         foreach (var holder in holders)
         {
-            foreach (var item in holder.uIMeshDatas)
+            foreach (var item in holder)
             {
                 if (item.TextureIndex == lastIndex)
                 {
@@ -138,12 +139,12 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
         }
     }
 
-    public void AddHolder(DataPrefabHolder holder)
+    public void AddHolder(IUIPrefabHolder holder)
     {
         holders.Add(holder);
     }
 
-    public void RemoveHolder(DataPrefabHolder holder)
+    public void RemoveHolder(IUIPrefabHolder holder)
     {
         holders.Remove(holder);
     }
@@ -227,19 +228,22 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
             {
                 var tIndex = textures.IndexOf(_tex);
                 var lastIndex = textures.Count - 1;
-                if (tIndex != lastIndex)
+                if(tIndex != -1)
                 {
-                    var replace = textures[lastIndex];
-                    textures[tIndex] = textures[lastIndex];
-                    textures.RemoveAt(lastIndex);
-                    //现在的问题是要update:TextureID;
-                    textureNotify?.ReplaceTextureID(lastIndex,tIndex);
-                    
-                }
-                else
-                {
-                    textures.RemoveAt(lastIndex);
-                    textureNotify?.RemoveTextureID(lastIndex + 1);
+                    if (tIndex != lastIndex)
+                    {
+                        var replace = textures[lastIndex];
+                        textures[tIndex] = textures[lastIndex];
+                        textures.RemoveAt(lastIndex);
+                        //现在的问题是要update:TextureID;
+                        textureNotify?.ReplaceTextureID(lastIndex, tIndex);
+
+                    }
+                    else
+                    {
+                        textures.RemoveAt(lastIndex);
+                        textureNotify?.RemoveTextureID(lastIndex + 1);
+                    }
                 }
             }
             if(removeFromDict)

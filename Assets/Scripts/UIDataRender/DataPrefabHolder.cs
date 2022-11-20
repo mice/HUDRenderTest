@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
-
-
+using UnityEngine.XR.WSA.Input;
 
 /// <summary>
 /// 每个prefab都会生成一个DataPrefabHolder用来记录当前的prefab的UI信息;
 /// </summary>
-public class DataPrefabHolder : IUIPrefabHolder
+public class DataPrefabHolder<T> : IUIPrefabHolder 
+    where T: class, IUIData, new()
 {
     [SerializeField]
     protected UIPrefabOwner _target;
@@ -18,10 +20,11 @@ public class DataPrefabHolder : IUIPrefabHolder
     private Vector3 _position;
     public Vector3 Position => _position;
 
+    public IList<T> UIMeshDatas => uIMeshDatas;
     /// <summary>
     /// UI element 对应的Mesh信息
     /// </summary>
-    public UIMeshData[] uIMeshDatas = Array.Empty<UIMeshData>();
+    public T[] uIMeshDatas = Array.Empty<T>();
 
     public void SetTarget(UIPrefabOwner target)
     {
@@ -44,9 +47,9 @@ public class DataPrefabHolder : IUIPrefabHolder
     /// <param name="draws"></param>
     public void BuildMesh(IUIDrawTarget[] draws)
     {
-        if (uIMeshDatas == Array.Empty<UIMeshData>())
+        if (uIMeshDatas == Array.Empty<T>())
         {
-            uIMeshDatas = new UIMeshData[draws.Length];
+            uIMeshDatas = new T[draws.Length];
         }
         else if (uIMeshDatas.Length < draws.Length)
         {
@@ -54,7 +57,7 @@ public class DataPrefabHolder : IUIPrefabHolder
         }
         for (int i = 0; i < draws.Length; i++)
         {
-            uIMeshDatas[i] = uIMeshDatas[i] ?? new UIMeshData();
+            uIMeshDatas[i] = uIMeshDatas[i] ?? new T();
             draws[i].DoGenerate(uIMeshDatas[i], Target.transform);
         }
     }
@@ -122,4 +125,58 @@ public class DataPrefabHolder : IUIPrefabHolder
             item.FillToTriangleData(triangles_, localPosition);
         }
     }
+
+    IEnumerator<IUIData> IEnumerable<IUIData>.GetEnumerator()
+    {
+        return new ListEnumerator(uIMeshDatas);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return new ListEnumerator(uIMeshDatas);
+    }
+
+    public class ListEnumerator : IEnumerator<IUIData>
+    {
+        public IUIData Current => _current;
+        private IList<IUIData> _list;
+        private IUIData _current;
+        private int _index;
+        private int _total = 0;
+
+        public ListEnumerator(IList<IUIData> list)
+        {
+            this._list = list;
+            _total = list.Count;
+            _index = 0;
+            _current = default(IUIData);
+        }
+
+        object System.Collections.IEnumerator.Current => _current;
+
+        public void Dispose()
+        {
+            
+        }
+
+        public bool MoveNext()
+        {
+            if(_total > 0 && _index < _total)
+            {
+                _current = _list[_index];
+                _index++;
+                return true;
+
+            }
+            _index = -1;
+            _current = default;
+            return false; 
+        }
+
+        public void Reset()
+        {
+            _current = default;
+        }
+    }
+
 }

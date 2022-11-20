@@ -7,12 +7,12 @@ using static UnityEngine.Mesh;
 public class UIText : Text, IUIDrawTarget
 {
     private bool _isGenerating = false;
-    private UIMeshData tmp_meshData;
+    private IUIData tmp_meshData;
     private Transform tmp_root;
     public bool HasModifier = false;
     private UIOutline outline = null;
 
-    public void DoGenerate(UIMeshData meshData,Transform root = null)
+    public void DoGenerate(IUIData meshData,Transform root = null)
     {
         _isGenerating = true;
         tmp_meshData = meshData;

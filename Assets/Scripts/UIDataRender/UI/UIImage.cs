@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class UIImage :Image,IUIDrawTarget
 {
     private bool _isGenerating = false;
-    private UIMeshData tmp_meshData;
+    private IUIData tmp_meshData;
     private Transform tmp_root;
     [ContextMenu("ReCreate")]
     private void _UpdateGeom()
@@ -19,7 +19,7 @@ public class UIImage :Image,IUIDrawTarget
         _isGenerating = false;
     }
 
-    public void DoGenerate(UIMeshData meshData,Transform root = null)
+    public void DoGenerate(IUIData meshData,Transform root = null)
     {
         _isGenerating = true;
         if (sprite == null)

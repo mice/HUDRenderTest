@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIOutline : Outline
 {
-    public UIMeshData tmp_meshData;
+    public IUIData tmp_meshData;
     public Transform tmp_root;
 
     public override void ModifyMesh(VertexHelper vh)
