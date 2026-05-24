@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public interface IUIPrefabDataOwner
@@ -106,52 +105,34 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     public Dictionary<UIPrefabOwner, UIPrefabRegistration> owners = new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
     private readonly TextureSlotTable textureSlots;
 
-    public ITextureNotify textureNotify;
+    private readonly HolderNotifier holderNotifier;
 
     private HashSet<IUIPrefabHolder> holders = new HashSet<IUIPrefabHolder>();
     private UIPrefabManager()
     {
-        this.textureNotify = this;
         textureSlots = new TextureSlotTable();
-        textureSlots.SlotReplaced += OnSlotReplaced;
-        textureSlots.SlotRemoved += OnSlotRemoved;
+        holderNotifier = new HolderNotifier(textureSlots);
     }
 
     void ITextureNotify.ReplaceTextureID(int lastIndex, int tIndex)
     {
-        foreach(var holder in holders)
-        {
-            foreach(var item in holder.UIMeshDatas)
-            {
-                if (item.TextureIndex == lastIndex)
-                {
-                    item.UpdateTextureIndex(tIndex);
-                }
-            }
-        }
+        holderNotifier.ReplaceTextureID(lastIndex, tIndex);
     }
 
     void ITextureNotify.RemoveTextureID(int lastIndex)
     {
-        foreach (var holder in holders)
-        {
-            foreach (var item in holder.UIMeshDatas)
-            {
-                if (item.TextureIndex == lastIndex)
-                {
-                    item.UpdateTextureIndex(-1);
-                }
-            }
-        }
+        holderNotifier.RemoveTextureID(lastIndex);
     }
 
     public void AddHolder(IUIPrefabHolder holder)
     {
         holders.Add(holder);
+        holderNotifier.AddHolder(holder);
     }
 
     public void RemoveHolder(IUIPrefabHolder holder)
     {
+        holderNotifier.RemoveHolder(holder);
         holders.Remove(holder);
     }
 
@@ -219,18 +200,6 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
                 comb_Material.SetTexture(MaterialProperties[i], textureSlots.Textures[i]);
             }
         }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnSlotReplaced(int fromIndex, int toIndex)
-    {
-        textureNotify?.ReplaceTextureID(fromIndex, toIndex);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnSlotRemoved(int index)
-    {
-        textureNotify?.RemoveTextureID(index);
     }
 
     [Conditional("UI_VERBOSE")]
