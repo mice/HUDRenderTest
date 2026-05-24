@@ -1,14 +1,12 @@
 {
-    "name": "UIDataRender",
+    "name": "UGui.Extends",
     "rootNamespace": "",
     "references": [
-        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
-        "GUID:4e085dd6dee468140a190b878e7f37ce",
-        "GUID:b389234c361ce2b45872757236d27ca3"
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": true,
+    "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
