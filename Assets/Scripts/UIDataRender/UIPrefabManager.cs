@@ -193,11 +193,21 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
         if(this.owners.TryGetValue(holder.Target,out var reg)){
             holderNotifier.RemoveHolder(holder);  // untrack stale mesh objects
             reg.Generate(holder);                  // populate UIMeshDatas
+            holders.Add(holder);                   // ensure in lifecycle set (idempotent)
             holderNotifier.AddHolder(holder);      // track with correct TextureIndex
             return reg;
         }
         return null;
     }
+
+    /// <summary>
+    /// Moves a single mesh from its current slot bucket to the new bucket after
+    /// its TextureIndex has been updated externally (e.g. SetSprite, SetTextureIndex).
+    /// Call Untrack BEFORE the TextureIndex changes and Track AFTER.
+    /// </summary>
+    public void UntrackMesh(IUIData mesh) => holderNotifier.Untrack(mesh);
+
+    public void TrackMesh(IUIData mesh) => holderNotifier.Track(mesh);
 
     private readonly int[] MaterialProperties = new int[] {
         Shader.PropertyToID("_MainTex1"),

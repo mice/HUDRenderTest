@@ -116,7 +116,10 @@ public static class PrefabHolderExt
         var uiMeshData = target?.UIMeshDatas;
         if (uiImg != null && index < uiMeshData.Count)
         {
-            uiImg.DoGenerate(uiMeshData[index], target.Target.transform);
+            var mesh = uiMeshData[index];
+            UIPrefabManager.Instance.UntrackMesh(mesh);             // remove from old slot
+            uiImg.DoGenerate(mesh, target.Target.transform);         // updates TextureIndex
+            UIPrefabManager.Instance.TrackMesh(mesh);               // register at new slot
         }
     }
 
@@ -136,7 +139,12 @@ public static class PrefabHolderExt
         if (target == null) return;
         var uiMeshData = target?.UIMeshDatas;
         if (index < uiMeshData.Count)
-            uiMeshData[index].UpdateTextureIndex(textureIndex);
+        {
+            var mesh = uiMeshData[index];
+            UIPrefabManager.Instance.UntrackMesh(mesh);   // remove from old slot
+            mesh.UpdateTextureIndex(textureIndex);          // update slot
+            UIPrefabManager.Instance.TrackMesh(mesh);     // register at new slot
+        }
     }
 
 }
