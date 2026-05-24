@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public interface IUIPrefabDataOwner
 {
@@ -107,8 +104,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
 {
     public static UIPrefabManager Instance { get; } = new UIPrefabManager();
     public Dictionary<UIPrefabOwner, UIPrefabRegistration> owners = new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
-    private readonly List<Texture>  textures = new List<Texture>();
-    private readonly Dictionary<int, Texture> textureDict = new Dictionary<int, Texture>();
+    private readonly TextureSlotTable textureSlots;
 
     public ITextureNotify textureNotify;
 
@@ -116,6 +112,9 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     private UIPrefabManager()
     {
         this.textureNotify = this;
+        textureSlots = new TextureSlotTable();
+        textureSlots.SlotReplaced += OnSlotReplaced;
+        textureSlots.SlotRemoved += OnSlotRemoved;
     }
 
     void ITextureNotify.ReplaceTextureID(int lastIndex, int tIndex)
@@ -158,8 +157,9 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
 
     public int GetTextureIndex(Texture texture)
     {
-        LogDebug($"GetTextureIndex:{textures.IndexOf(texture)}");
-        return textures.IndexOf(texture) + 1;
+        var slot = textureSlots.GetSlot(texture);
+        LogDebug($"GetTextureIndex:{slot}");
+        return slot;
     }
 
     public void Register(IUIPrefabHolder holder)
@@ -184,77 +184,14 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     /// <param name="obj"></param>
     void ITextureRecorder.OnTextureRegister(int guid, Texture obj)
     {
-        if (obj != null) { 
-
-            if(textureDict.TryGetValue(guid,out var _tex))
-            {
-                if (_tex != obj)
-                {
-                    OnTextureUnRegister(guid, false);
-                    textureDict[guid] = obj;
-                    if (!textures.Contains(obj))
-                        textures.Add(obj);
-                    LogDebug($"AddTexture:{obj}");
-                }
-            }
-            else
-            {
-                textureDict.Add(guid, obj);
-                LogDebug($"AddTexture:{obj}");
-                if (!textures.Contains(obj))
-                    textures.Add(obj);
-            }
-        }
-        else
-        {
-            OnTextureUnRegister(guid,false);
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void OnTextureUnRegister(int guid,bool removeFromDict)
-    {
-        if(textureDict.TryGetValue(guid,out var _tex))
-        {
-            int texCount = 0;
-            foreach (var item in textureDict)
-            {
-                if (item.Value == _tex)
-                {
-                    texCount++;
-                }
-            }
-
-            if (texCount == 1)
-            {
-                var tIndex = textures.IndexOf(_tex);
-                var lastIndex = textures.Count - 1;
-                if(tIndex != -1)
-                {
-                    if (tIndex != lastIndex)
-                    {
-                        textures[tIndex] = textures[lastIndex];
-                        textures.RemoveAt(lastIndex);
-                        // TextureIndex is 1-based in IUIData.
-                        textureNotify?.ReplaceTextureID(lastIndex + 1, tIndex + 1);
-
-                    }
-                    else
-                    {
-                        textures.RemoveAt(lastIndex);
-                        textureNotify?.RemoveTextureID(lastIndex + 1);
-                    }
-                }
-            }
-            if(removeFromDict)
-                textureDict.Remove(guid);
-            LogDebug($"RemoveTexture:{_tex}");
-        }
+        var slot = textureSlots.Register(guid, obj);
+        LogDebug($"RegisterTexture guid:{guid}, slot:{slot}, tex:{obj}");
     }
 
     void ITextureRecorder.OnTextureUnRegister(int guid)
     {
-        OnTextureUnRegister(guid,true);
+        textureSlots.Unregister(guid);
+        LogDebug($"UnregisterTexture guid:{guid}");
     }
 
     public UIPrefabRegistration Generate(IUIPrefabHolder holder)
@@ -276,12 +213,24 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     {
         if (comb_Material != null)
         {
-            var count = Mathf.Min(textures.Count, MaterialProperties.Length);
+            var count = Mathf.Min(textureSlots.Textures.Count, MaterialProperties.Length);
             for (int i = 0; i < count; i++)
             {
-                comb_Material.SetTexture(MaterialProperties[i], textures[i]);
+                comb_Material.SetTexture(MaterialProperties[i], textureSlots.Textures[i]);
             }
         }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void OnSlotReplaced(int fromIndex, int toIndex)
+    {
+        textureNotify?.ReplaceTextureID(fromIndex, toIndex);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void OnSlotRemoved(int index)
+    {
+        textureNotify?.RemoveTextureID(index);
     }
 
     [Conditional("UI_VERBOSE")]
