@@ -126,14 +126,27 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
 
     public void AddHolder(IUIPrefabHolder holder)
     {
+        // Only registers in the holders set.
+        // Notifier tracking is deferred to Generate() / RefreshHolder() so that
+        // UIMeshDatas are guaranteed to be populated before tracking begins.
         holders.Add(holder);
-        holderNotifier.AddHolder(holder);
     }
 
     public void RemoveHolder(IUIPrefabHolder holder)
     {
+        if (!holders.Remove(holder)) return;
         holderNotifier.RemoveHolder(holder);
-        holders.Remove(holder);
+    }
+
+    /// <summary>
+    /// Re-syncs the notifier reverse index after a holder's UIMeshDatas have been
+    /// rebuilt outside of Generate (e.g. the UIPrefaHolder.BuildMesh direct path).
+    /// </summary>
+    public void RefreshHolder(IUIPrefabHolder holder)
+    {
+        if (!holders.Contains(holder)) return;
+        holderNotifier.RemoveHolder(holder);
+        holderNotifier.AddHolder(holder);
     }
 
     public int GetTextureIndex(Texture texture)
@@ -178,7 +191,9 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     public UIPrefabRegistration Generate(IUIPrefabHolder holder)
     {
         if(this.owners.TryGetValue(holder.Target,out var reg)){
-            reg.Generate(holder);
+            holderNotifier.RemoveHolder(holder);  // untrack stale mesh objects
+            reg.Generate(holder);                  // populate UIMeshDatas
+            holderNotifier.AddHolder(holder);      // track with correct TextureIndex
             return reg;
         }
         return null;

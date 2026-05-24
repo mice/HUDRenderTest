@@ -62,6 +62,7 @@ public class UIPrefaHolder : MonoBehaviour, IUIPrefabDataOwner
     {
         InitDataHolder();
         dataHolder.BuildMesh(draws);
+        UIPrefabManager.Instance.RefreshHolder(dataHolder);
     }
 
     public void SetText(int index, string text)
