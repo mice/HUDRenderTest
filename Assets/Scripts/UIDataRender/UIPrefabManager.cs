@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -13,8 +13,6 @@ public interface IUIPrefabDataOwner
 }
 
 /// <summary>
-/// 保存对应的Prefab
-/// 需要知道显示需要的position,scale,rotation
 /// </summary>
 public interface IUIPrefabHolder
 {
@@ -54,7 +52,6 @@ public class UIPrefabWrapper : IDisposable
     /// </summary>
     public List<IUIDrawTarget> draws = new List<IUIDrawTarget>();
     /// <summary>
-    /// UI element 对应的Mesh信息
     /// </summary>
     public List<UIMeshData> uIMeshDatas = new List<UIMeshData>();
 
@@ -66,12 +63,10 @@ public class UIPrefabWrapper : IDisposable
 }
 
 /// <summary>
-/// 只记录显示对象,不负责Mesh生成
 /// </summary>
 public partial class UIPrefabRegistration
 {
     /// <summary>
-    /// 这里需要有一些统计功能,保证uv设置indics的次数最少.
     /// </summary>
     public ITextureRecorder TextureCall;
     public UIPrefabOwner Owner { get; private set; }
@@ -107,7 +102,6 @@ public partial class UIPrefabRegistration
 }
 
 /// <summary>
-/// 需要动态写UV的Index.
 /// </summary>
 public class UIPrefabManager : ITextureRecorder, ITextureNotify
 {
@@ -164,20 +158,16 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
 
     public int GetTextureIndex(Texture texture)
     {
-        UnityEngine.Debug.LogError($"GetTextureIndex:{textures.IndexOf(texture)}");
+        LogDebug($"GetTextureIndex:{textures.IndexOf(texture)}");
         return textures.IndexOf(texture) + 1;
     }
 
-    /// <summary>
-    /// 记录Prefab
-    /// </summary>
-    /// <param name="prefabOwner"></param>
     public void Register(IUIPrefabHolder holder)
     {
         var prefabOwner = holder?.Target;
         if (prefabOwner == null)
         {
-            UnityEngine.Debug.LogError("Shold Not Be Null::");
+            LogDebug("Should Not Be Null::");
             return;
         }
 
@@ -189,7 +179,6 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
         }
     }
     /// <summary>
-    /// guid为Image的InstanceID
     /// </summary>
     /// <param name="guid"></param>
     /// <param name="obj"></param>
@@ -205,13 +194,13 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
                     textureDict[guid] = obj;
                     if (!textures.Contains(obj))
                         textures.Add(obj);
-                    UnityEngine.Debug.LogError($"AddTexture:{obj}");
+                    LogDebug($"AddTexture:{obj}");
                 }
             }
             else
             {
                 textureDict.Add(guid, obj);
-                UnityEngine.Debug.LogError($"AddTexture:{obj}");
+                LogDebug($"AddTexture:{obj}");
                 if (!textures.Contains(obj))
                     textures.Add(obj);
             }
@@ -228,7 +217,6 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
         if(textureDict.TryGetValue(guid,out var _tex))
         {
             int texCount = 0;
-            //如果当前数量只有一个,那么就表示移除了以后,就没有这个Texture了.
             foreach (var item in textureDict)
             {
                 if (item.Value == _tex)
@@ -245,11 +233,10 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
                 {
                     if (tIndex != lastIndex)
                     {
-                        var replace = textures[lastIndex];
                         textures[tIndex] = textures[lastIndex];
                         textures.RemoveAt(lastIndex);
-                        //现在的问题是要update:TextureID;
-                        textureNotify?.ReplaceTextureID(lastIndex, tIndex);
+                        // TextureIndex is 1-based in IUIData.
+                        textureNotify?.ReplaceTextureID(lastIndex + 1, tIndex + 1);
 
                     }
                     else
@@ -261,7 +248,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
             }
             if(removeFromDict)
                 textureDict.Remove(guid);
-            UnityEngine.Debug.LogError($"RemoveTexture:{_tex}");
+            LogDebug($"RemoveTexture:{_tex}");
         }
     }
 
@@ -283,10 +270,6 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
         Shader.PropertyToID("_MainTex1"),
         Shader.PropertyToID("_MainTex2"),
         Shader.PropertyToID("_MainTex3"),
-        Shader.PropertyToID("_MainTex4"),
-        Shader.PropertyToID("_MainTex5"),
-        Shader.PropertyToID("_MainTex6"),
-        Shader.PropertyToID("_MainTex7"),
     };
 
     public void UpdateTexture(Material comb_Material)
@@ -299,5 +282,11 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
                 comb_Material.SetTexture(MaterialProperties[i], textures[i]);
             }
         }
+    }
+
+    [Conditional("UI_VERBOSE")]
+    private static void LogDebug(string message)
+    {
+        UnityEngine.Debug.Log(message);
     }
 }

@@ -14,7 +14,7 @@ Shader "Hidden/UIE-AtlasBlit"
             ZTest Always Cull Off ZWrite Off
             //Blend Off
             Blend SrcAlpha OneMinusSrcAlpha
-            //Blend One OneMinusSrcAlpha // Ô¤³ËÍ¸Ã÷¶È
+            //Blend One OneMinusSrcAlpha // Ô¤ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½
 
             CGPROGRAM
             #pragma vertex vert

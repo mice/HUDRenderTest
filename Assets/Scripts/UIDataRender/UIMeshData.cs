@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using TreeEditor;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -10,8 +10,8 @@ using UnityEngine.UI;
 
 
 /// <summary>
-/// 1. 不支持Scale
-/// 2. 不支持Rotation
+/// 1. 支持Scale
+/// 2. 支持Rotation
 /// 3. 不支持9宫格
 /// </summary>
 public interface IUIData : System.IDisposable  
@@ -25,6 +25,7 @@ public interface IUIData : System.IDisposable
 
     void FillToTriangleData(List<int> triangles_, Vector3 localPosition);
     void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition);
+    void FillWithMatrix(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Matrix4x4 mtx);
 }
 
 
@@ -48,7 +49,7 @@ public class UIMeshData : IUIData
     private static int NEXT = -1;
     public UIMeshData()
     {
-        UnityEngine.Debug.LogError($"New UI Mesh Data:{NEXT++}");
+        LogDebug($"New UI Mesh Data:{NEXT++}");
     }
 
     public void TransformVertex(Matrix4x4 mtx)
@@ -147,17 +148,17 @@ public class UIMeshData : IUIData
         var vertexCount = this.mesh.VertexCount;
         if(this.mesh.VertexCount!= vertList.Length)
         {
-            UnityEngine.Debug.LogError($"Error:Length:{mesh.VertexCount},{vertList.Length}");
+            LogDebug($"Error:Length:{mesh.VertexCount},{vertList.Length}");
         }
 
         if (this.mesh.VertexCount != uvs.Length)
         {
-            UnityEngine.Debug.LogError($"Error:Length:{mesh.VertexCount},{uvs.Length}");
+            LogDebug($"Error:Length:{mesh.VertexCount},{uvs.Length}");
         }
 
         if (colors.Length!= 0 && this.mesh.VertexCount != colors.Length)
         {
-            UnityEngine.Debug.LogError($"Error:Length:{mesh.VertexCount},{colors.Length}");
+            LogDebug($"Error:Length:{mesh.VertexCount},{colors.Length}");
         }
 
 
@@ -201,13 +202,20 @@ public class UIMeshData : IUIData
         var vertexCount = this.mesh.VertexCount;
         for (int i = 0; i < vertexCount; i++)
         {
-            vertList_.Add(mtx.MultiplyPoint(vertList[i]));
+            vertList_.Add(mtx.MultiplyPoint(this.vertList[i]));
         }
 
-        var white = Color.white;
-        for (int i = 0; i < vertexCount; i++)
+        if (this.colors.Length != 0 && this.colors.Length == vertexCount)
         {
-            colors_.Add(white);
+            colors_.AddRange(this.colors);
+        }
+        else
+        {
+            var white = (Color32)Color.white;
+            for (int i = 0; i < vertexCount; i++)
+            {
+                colors_.Add(white);
+            }
         }
 
         uvs_.AddRange(this.uvs);
@@ -235,5 +243,11 @@ public class UIMeshData : IUIData
     private void Clear()
     {
        
+    }
+
+    [Conditional("UI_VERBOSE")]
+    private static void LogDebug(string message)
+    {
+        UnityEngine.Debug.Log(message);
     }
 }

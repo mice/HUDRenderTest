@@ -1,49 +1,11 @@
-﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using TreeEditor;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
-
-public struct MeshSlim:IEquatable<MeshSlim>,IEqualityComparer<MeshSlim>
-{
-    public int VertexOffset;
-    public int VertexCount;
-    public int IndicesOffset;
-    public int IndicesCount;
-    /// <summary>
-    /// 当前的Index,没有任何意义,只是记录当前的MeshSlim是否有效;
-    /// </summary>
-    public int Index;
-
-    public void Dispose()
-    {
-        Index = -1;
-        VertexOffset = 0;
-        VertexCount = 0;
-        IndicesOffset = 0;
-        IndicesCount = 0;
-    }
-
-    public bool Equals(MeshSlim x, MeshSlim y)
-    {
-        return x.Equals(y);
-    }
-
-    public bool Equals(MeshSlim other)
-    {
-        return other.VertexOffset == VertexOffset && other.VertexCount == VertexCount 
-            && other.IndicesOffset == IndicesOffset && other.IndicesCount == IndicesCount;
-    }
-
-    public int GetHashCode(MeshSlim obj)
-    {
-        return (obj.VertexOffset,obj.VertexCount,obj.IndicesOffset,obj.IndicesCount).GetHashCode();
-    }
-}
 
 ///indirect idea
 public class UIMeshDataX : IUIData
@@ -62,7 +24,7 @@ public class UIMeshDataX : IUIData
     private static int NEXT = -1;
     public UIMeshDataX()
     {
-        UnityEngine.Debug.LogError($"New UI UIMeshDataX :{NEXT++}");
+        LogDebug($"New UI UIMeshDataX :{NEXT++}");
     }
 
     public void TransformVertex(Matrix4x4 mtx)
@@ -125,7 +87,19 @@ public class UIMeshDataX : IUIData
     public void FillToDrawData(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
     {
         var offset = vertList_.Count;
-        var vertexCount = this.mesh.VertexCount;
+        var white = (Color32)Color.white;
+
+        for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
+        {
+            vertList_.Add(geometry.vertex[i] + localPosition);
+            uvs_.Add(geometry.uvs[i]);
+            colors_.Add(geometry.colors[i].Equals(default(Color32)) ? white : geometry.colors[i]);
+        }
+
+        for (int i = mesh.IndicesOffset; i < mesh.IndicesOffset + mesh.IndicesCount; i++)
+        {
+            triangles_.Add(geometry.indices[i] - mesh.VertexOffset + offset);
+        }
     }
 
     /// <summary>
@@ -139,15 +113,28 @@ public class UIMeshDataX : IUIData
             geometry.drawVertex[i] = (geometry.vertex[i] + localPosition);
         }
 
-        for (int i = 0; i < mesh.IndicesCount; i++)
+        for (int i = mesh.IndicesOffset; i < mesh.IndicesOffset + mesh.IndicesCount; i++)
         {
-            triangles_.Add(geometry.indices[i] + mesh.VertexOffset);
+            triangles_.Add(geometry.indices[i]);
         }
     }
 
     public void FillWithMatrix(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Matrix4x4 mtx)
     {
-        
+        var offset = vertList_.Count;
+        var white = (Color32)Color.white;
+
+        for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
+        {
+            vertList_.Add(mtx.MultiplyPoint(geometry.vertex[i]));
+            uvs_.Add(geometry.uvs[i]);
+            colors_.Add(geometry.colors[i].Equals(default(Color32)) ? white : geometry.colors[i]);
+        }
+
+        for (int i = mesh.IndicesOffset; i < mesh.IndicesOffset + mesh.IndicesCount; i++)
+        {
+            triangles_.Add(geometry.indices[i] - mesh.VertexOffset + offset);
+        }
     }
 
     public void Dispose()
@@ -175,11 +162,11 @@ public class UIMeshDataX : IUIData
                 var oldVertexCount = mesh.VertexCount;
                 var oldIndicesCount = mesh.IndicesCount;
                 geometry.ReAlloc(vertexCount, indicesCount, ref mesh);
-                UnityEngine.Debug.LogError($"Relocated:: + {mesh.Index}=>{oldVertexCount}=>{vertexCount},indices:{oldIndicesCount}=>{indicesCount}");
+                LogDebug($"Relocated:: + {mesh.Index}=>{oldVertexCount}=>{vertexCount},indices:{oldIndicesCount}=>{indicesCount}");
             }
         }
 
-        UnityEngine.Debug.LogError($"FillVertex Mesh {mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
+        LogDebug($"FillVertex Mesh {mesh.Index}::{mesh.VertexOffset},{mesh.VertexCount}::{mesh.IndicesOffset}:{mesh.IndicesCount}");
         toFill.FillData3(ref geometry.vertex, ref geometry.colors, ref geometry.uvs, ref geometry.indices, mesh.VertexOffset, mesh.IndicesOffset, TextureIndex, flags);
       
     }
@@ -187,5 +174,11 @@ public class UIMeshDataX : IUIData
     private void Clear()
     {
 
+    }
+
+    [Conditional("UI_VERBOSE")]
+    private static void LogDebug(string message)
+    {
+        UnityEngine.Debug.Log(message);
     }
 }
