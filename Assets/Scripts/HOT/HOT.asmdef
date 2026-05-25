@@ -1,0 +1,19 @@
+{
+    "name": "HOT",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4e085dd6dee468140a190b878e7f37ce",
+        "GUID:d58d11d0d3dcc624493ca077e0e314d5",
+        "GUID:7974a4d4ad01fb24492d56c28754b87c",
+        "GUID:2665a8d13d1b3f18800f46e256720795"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
