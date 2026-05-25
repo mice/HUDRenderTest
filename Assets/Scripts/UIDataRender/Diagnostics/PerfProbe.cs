@@ -34,6 +34,7 @@ namespace UIData
         public float AvgMs        => _count == 0 ? 0f : SumDurations() / _count;
         public float MaxMs        => _count == 0 ? 0f : MaxDuration();
         public float AvgDrawCalls => _count == 0 ? 0f : (float)SumDrawCalls() / _count;
+        public int   MaxDrawCalls => _count == 0 ? 0  : MaxDrawCallsCore();
 
         public void Record(float durationMs, int drawCalls = 1)
         {
@@ -57,7 +58,7 @@ namespace UIData
             {
                 w.WriteLine("metric,avg,max");
                 w.WriteLine(FormattableString.Invariant($"fill_ms,{AvgMs:F3},{MaxMs:F3}"));
-                w.WriteLine(FormattableString.Invariant($"draw_calls,{AvgDrawCalls:F3},{(float)MaxDrawCalls():F3}"));
+                w.WriteLine(FormattableString.Invariant($"draw_calls,{AvgDrawCalls:F3},{(float)MaxDrawCalls:F3}"));
             }
             return path;
         }
@@ -84,7 +85,7 @@ namespace UIData
             return sum;
         }
 
-        private int MaxDrawCalls()
+        private int MaxDrawCallsCore()
         {
             int max = int.MinValue;
             for (int i = 0; i < _count; i++)

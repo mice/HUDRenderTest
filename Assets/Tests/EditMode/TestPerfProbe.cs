@@ -70,7 +70,23 @@ public class TestPerfProbe
                 $"row {i} column 3 (max) must be a valid float");
         }
 
-        // Cleanup
-        File.Delete(path);
-    }
+        // TC-PP-02 extended: Flush on empty probe must not produce sentinel values
+        [Test]
+        public void Flush_EmptyProbe_WritesZeroes()
+        {
+            var probe = new PerfProbe(windowSize: 4);
+            // No Record calls — buffer is empty
+            string path = probe.Flush("empty");
+
+            Assert.IsTrue(File.Exists(path));
+            string[] lines = File.ReadAllLines(path);
+            // draw_calls row: avg and max must both be 0, not int.MinValue
+            string drawRow = System.Array.Find(lines, l => l.StartsWith("draw_calls"));
+            Assert.IsNotNull(drawRow, "draw_calls row must be present");
+            string[] parts = drawRow.Split(',');
+            float max = float.Parse(parts[2], System.Globalization.CultureInfo.InvariantCulture);
+            Assert.That(max, Is.EqualTo(0f), "MaxDrawCalls must be 0 for empty probe, not int.MinValue");
+
+            File.Delete(path);
+        }
 }
