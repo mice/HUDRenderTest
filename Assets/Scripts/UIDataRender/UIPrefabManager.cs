@@ -111,6 +111,12 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     private readonly OwnerRegistry ownerRegistry;
     private readonly HolderLifecycle holderLifecycle;
 
+    /// <summary>
+    /// Read-only view of the owner→registration map. Preserved from the pre-facade API for
+    /// compatibility; prefer <see cref="Register"/> and <see cref="Generate"/> for mutations.
+    /// </summary>
+    public IReadOnlyDictionary<UIPrefabOwner, UIPrefabRegistration> owners => ownerRegistry.Owners;
+
     private UIPrefabManager()
     {
         textureSlots    = new TextureSlotTable();

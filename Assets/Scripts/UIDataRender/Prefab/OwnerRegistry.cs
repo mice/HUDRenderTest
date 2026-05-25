@@ -10,6 +10,9 @@ public sealed class OwnerRegistry
     private readonly Dictionary<UIPrefabOwner, UIPrefabRegistration> owners =
         new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
 
+    /// <summary>Read-only view of the owner→registration map; exposed for API compatibility.</summary>
+    public IReadOnlyDictionary<UIPrefabOwner, UIPrefabRegistration> Owners => owners;
+
     public bool TryGet(UIPrefabOwner owner, out UIPrefabRegistration reg) =>
         owners.TryGetValue(owner, out reg);
 
