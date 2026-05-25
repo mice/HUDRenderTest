@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UIData;
 using UnityEngine;
 
 
@@ -74,9 +75,12 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
     /// <param name="localPosition"></param>
     public void Fill(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
     {
-        foreach (var item in uIMeshDatas)
+        using (PerfProbe.FillMarker.Auto())
         {
-            item.FillToDrawData(vertList_, uvs_, colors_, triangles_, localPosition);
+            foreach (var item in uIMeshDatas)
+            {
+                item.FillToDrawData(vertList_, uvs_, colors_, triangles_, localPosition);
+            }
         }
     }
 
@@ -87,9 +91,12 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
     /// <param name="localPosition"></param>
     public void Fill(List<int> triangles_, Vector3 localPosition)
     {
-        foreach (var item in uIMeshDatas)
+        using (PerfProbe.FillMarker.Auto())
         {
-            item.FillToTriangleData(triangles_, localPosition);
+            foreach (var item in uIMeshDatas)
+            {
+                item.FillToTriangleData(triangles_, localPosition);
+            }
         }
     }
 }
