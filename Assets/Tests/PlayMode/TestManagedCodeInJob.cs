@@ -31,7 +31,7 @@ public class TestManagedCodeInJob
         Assert.IsTrue(task.Executed, "IJobTask.Execute must be called by the job");
         Assert.IsTrue(jobHandle.IsCompleted, "JobHandle must be complete after LateUpdate");
 
-        Object.Destroy(go);
+        Object.DestroyImmediate(go);
     }
 
     // Additional: scheduling multiple tasks in one frame all complete.
@@ -54,6 +54,6 @@ public class TestManagedCodeInJob
         for (int i = 0; i < count; i++)
             Assert.IsTrue(tasks[i].Executed, $"task[{i}] must have executed");
 
-        Object.Destroy(go);
+        Object.DestroyImmediate(go);
     }
 }
