@@ -5,9 +5,12 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "UIDataRender",
-        "UGui.Extends"
+        "UGui.Extends",
+        "managedTask"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
     "overrideReferences": true,
