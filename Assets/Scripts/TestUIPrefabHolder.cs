@@ -10,7 +10,7 @@ public class TestUIPrefabHolder : MonoBehaviour
     public Transform ui_root;
 
 
-    public List<UIPrefaHolder> holders;
+    public List<UIPrefabHolder> holders;
 
     private Mesh combine_mesh;
     private Material comb_Material;

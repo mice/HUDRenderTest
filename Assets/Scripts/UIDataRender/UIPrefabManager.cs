@@ -165,12 +165,12 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
             return;
         }
 
-        if (!this.owners.TryGetValue(prefabOwner,out _))
+        if (!this.owners.TryGetValue(prefabOwner, out var reg))
         {
-            var reg = new UIPrefabRegistration(prefabOwner, this);
-            holder.SetWrapper(reg);
+            reg = new UIPrefabRegistration(prefabOwner, this);
             this.owners.Add(prefabOwner, reg);
         }
+        holder.SetWrapper(reg);  // always set wrapper, even for subsequent holders with the same owner
     }
     /// <summary>
     /// </summary>

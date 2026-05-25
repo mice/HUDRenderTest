@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// 他的生命周期.
 /// </summary>
-public class UIPrefaHolder : MonoBehaviour, IUIPrefabDataOwner
+public class UIPrefabHolder : MonoBehaviour, IUIPrefabDataOwner
 {
     [SerializeField]
     protected UIPrefabOwner _target;
