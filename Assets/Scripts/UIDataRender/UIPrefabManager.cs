@@ -191,6 +191,27 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     public void UpdateTexture(Material comb_Material) =>
         MaterialBinder.Bind(comb_Material, textureSlots.Textures);
 
+    private const string Keyword8Tex = "HUD_8_TEX_SLOTS";
+
+    /// <summary>
+    /// Activates 8-texture-slot mode: enables the <c>HUD_8_TEX_SLOTS</c> shader keyword on
+    /// <paramref name="material"/> and expands <see cref="TextureSlotTable"/> capacity to 7 image
+    /// slots so that <see cref="Register"/> can accept up to 7 distinct image textures.
+    /// Call once after material creation. Safe to call repeatedly (idempotent).
+    /// </summary>
+    public void Enable8TexSlots(Material material)
+    {
+        material?.EnableKeyword(Keyword8Tex);
+        textureSlots.ExpandTo(7);
+    }
+
+    /// <summary>
+    /// Deactivates 8-texture-slot mode on <paramref name="material"/>.
+    /// The <see cref="TextureSlotTable"/> capacity is not reduced; existing registrations above
+    /// slot 3 will still be tracked but will render incorrectly until the keyword is re-enabled.
+    /// </summary>
+    public void Disable8TexSlots(Material material) => material?.DisableKeyword(Keyword8Tex);
+
     [Conditional("UI_VERBOSE")]
     private static void LogDebug(string message)
     {

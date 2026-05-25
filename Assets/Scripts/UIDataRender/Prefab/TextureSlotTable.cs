@@ -4,14 +4,14 @@ using UnityEngine;
 
 public sealed class TextureSlotTable
 {
-    private const int DefaultMaxImageSlots = 7;
+    private const int DefaultMaxImageSlots = 3;
     private const int MaxSupportedImageSlots = 7;
 
     private readonly List<Texture> textures = new List<Texture>();
     private readonly Dictionary<int, Texture> ownerToTexture = new Dictionary<int, Texture>();
     private readonly Dictionary<int, HashSet<int>> slotToOwners = new Dictionary<int, HashSet<int>>();
 
-    public int MaxImageSlots { get; }
+    public int MaxImageSlots { get; private set; }
     public IReadOnlyList<Texture> Textures => textures;
 
     public event Action<int, int> SlotReplaced;
@@ -29,6 +29,18 @@ public sealed class TextureSlotTable
         }
 
         MaxImageSlots = maxImageSlots;
+    }
+
+    /// <summary>
+    /// Expand the slot capacity up to <see cref="MaxSupportedImageSlots"/>.
+    /// Has no effect if <paramref name="newMax"/> is not greater than the current limit.
+    /// Safe to call at any time; existing registrations are unaffected.
+    /// </summary>
+    public bool ExpandTo(int newMax)
+    {
+        if (newMax <= MaxImageSlots) return false;
+        MaxImageSlots = Mathf.Min(newMax, MaxSupportedImageSlots);
+        return true;
     }
 
     public int GetSlot(Texture texture)

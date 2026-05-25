@@ -23,6 +23,10 @@ Shader "Hidden/UIE-AtlasBlit"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            // HUD_8_TEX_SLOTS: enable slots 4-7 (8 textures total).
+            // Off by default; enable with material.EnableKeyword("HUD_8_TEX_SLOTS")
+            // and UIPrefabManager.Instance.Enable8TexSlots(material).
+            #pragma multi_compile _ HUD_8_TEX_SLOTS
             #include "UnityCG.cginc"
 
             uniform sampler2D _MainTex0;
@@ -37,6 +41,7 @@ Shader "Hidden/UIE-AtlasBlit"
             uniform sampler2D _MainTex3;
             uniform float4 _MainTex3_ST;
 
+            #ifdef HUD_8_TEX_SLOTS
             uniform sampler2D _MainTex4;
             uniform float4 _MainTex4_ST;
 
@@ -48,6 +53,7 @@ Shader "Hidden/UIE-AtlasBlit"
 
             uniform sampler2D _MainTex7;
             uniform float4 _MainTex7_ST;
+            #endif
 
             struct appdata_t
             {
@@ -82,6 +88,7 @@ Shader "Hidden/UIE-AtlasBlit"
                 case 3:
                     o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex3);
                     break;
+                #ifdef HUD_8_TEX_SLOTS
                 case 4:
                     o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex4);
                     break;
@@ -94,6 +101,7 @@ Shader "Hidden/UIE-AtlasBlit"
                 case 7:
                     o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex7);
                     break;
+                #endif
                 default:
                     o.texcoord.xy = float2(0, 0);
                     break;
@@ -121,6 +129,7 @@ Shader "Hidden/UIE-AtlasBlit"
                 case 3:
                     color = tex2D(_MainTex3, i.texcoord.xy);
                     break;
+                #ifdef HUD_8_TEX_SLOTS
                 case 4:
                     color = tex2D(_MainTex4, i.texcoord.xy);
                     break;
@@ -133,6 +142,7 @@ Shader "Hidden/UIE-AtlasBlit"
                 case 7:
                     color = tex2D(_MainTex7, i.texcoord.xy);
                     break;
+                #endif
                 }
                 if(i.is_text==1){
                     return fixed4(i.tint.rgb,color.a* i.tint.a);
