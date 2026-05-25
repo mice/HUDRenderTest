@@ -5,6 +5,80 @@ using UnityEngine.UI;
 
 public class TestUIMeshData
 {
+    // TC-UM-01
+    [Test]
+    public void FillToDrawData_AppliesLocalPosition()
+    {
+        var meshData = new UIMeshData();
+        using (var helper = CreateQuad())
+        {
+            meshData.FillVertex(helper, 0);
+        }
+
+        var verts = new List<Vector3>();
+        var uvs = new List<Vector4>();
+        var colors = new List<Color32>();
+        var triangles = new List<int>();
+        var localPosition = new Vector3(10, 20, 0);
+
+        meshData.FillToDrawData(verts, uvs, colors, triangles, localPosition);
+
+        Assert.AreEqual(4, verts.Count);
+        for (int i = 0; i < verts.Count; i++)
+        {
+            Assert.That(verts[i].x, Is.EqualTo(meshData.vertList[i].x + localPosition.x).Within(1e-4f));
+            Assert.That(verts[i].y, Is.EqualTo(meshData.vertList[i].y + localPosition.y).Within(1e-4f));
+        }
+    }
+
+    // TC-UM-02
+    [Test]
+    public void FillToDrawData_RebasesIndices()
+    {
+        var meshData = new UIMeshData();
+        using (var helper = CreateQuad())
+        {
+            meshData.FillVertex(helper, 0);
+        }
+
+        var verts = new List<Vector3>();
+        var uvs = new List<Vector4>();
+        var colors = new List<Color32>();
+        var triangles = new List<int>();
+
+        // Seed 3 pre-existing verts so offset = 3
+        verts.Add(Vector3.zero); verts.Add(Vector3.one); verts.Add(Vector3.up);
+        triangles.Add(0); triangles.Add(1); triangles.Add(2);
+        int preCount = verts.Count;  // 3
+
+        meshData.FillToDrawData(verts, uvs, colors, triangles, Vector3.zero);
+
+        for (int k = 0; k < meshData.mesh.IndicesCount; k++)
+        {
+            Assert.AreEqual(preCount + meshData.triangles[k], triangles[3 + k],
+                $"triangle[{k}] must be rebased by {preCount}");
+        }
+    }
+
+    // TC-UM-04
+    [Test]
+    public void UpdateTextureIndex_WritesUvZForAll()
+    {
+        var meshData = new UIMeshData();
+        using (var helper = CreateQuad())
+        {
+            meshData.FillVertex(helper, 0);
+        }
+
+        meshData.UpdateTextureIndex(3);
+
+        for (int i = 0; i < meshData.mesh.VertexCount; i++)
+        {
+            Assert.AreEqual(3, meshData.uvs[i].z, $"uv[{i}].z must be updated to new texture index");
+        }
+    }
+
+    // TC-UM-03
     [Test]
     public void FillWithMatrix_ScaleRotation()
     {
