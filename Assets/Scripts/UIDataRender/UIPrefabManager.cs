@@ -98,56 +98,43 @@ public partial class UIPrefabRegistration
 }
 
 /// <summary>
+/// Facade over four internal components: <see cref="TextureSlotTable"/>,
+/// <see cref="HolderNotifier"/>, <see cref="OwnerRegistry"/>, and <see cref="HolderLifecycle"/>.
+/// All state and logic are delegated to these classes; UIPrefabManager exposes the public API only.
 /// </summary>
 public class UIPrefabManager : ITextureRecorder, ITextureNotify
 {
     public static UIPrefabManager Instance { get; } = new UIPrefabManager();
-    public Dictionary<UIPrefabOwner, UIPrefabRegistration> owners = new Dictionary<UIPrefabOwner, UIPrefabRegistration>();
+
     private readonly TextureSlotTable textureSlots;
-
     private readonly HolderNotifier holderNotifier;
+    private readonly OwnerRegistry ownerRegistry;
+    private readonly HolderLifecycle holderLifecycle;
 
-    private HashSet<IUIPrefabHolder> holders = new HashSet<IUIPrefabHolder>();
     private UIPrefabManager()
     {
-        textureSlots = new TextureSlotTable();
-        holderNotifier = new HolderNotifier(textureSlots);
+        textureSlots    = new TextureSlotTable();
+        holderNotifier  = new HolderNotifier(textureSlots);
+        ownerRegistry   = new OwnerRegistry();
+        holderLifecycle = new HolderLifecycle(holderNotifier);
     }
 
-    void ITextureNotify.ReplaceTextureID(int lastIndex, int tIndex)
-    {
+    void ITextureNotify.ReplaceTextureID(int lastIndex, int tIndex) =>
         holderNotifier.ReplaceTextureID(lastIndex, tIndex);
-    }
 
-    void ITextureNotify.RemoveTextureID(int lastIndex)
-    {
+    void ITextureNotify.RemoveTextureID(int lastIndex) =>
         holderNotifier.RemoveTextureID(lastIndex);
-    }
 
-    public void AddHolder(IUIPrefabHolder holder)
-    {
-        // Only registers in the holders set.
-        // Notifier tracking is deferred to Generate() / RefreshHolder() so that
-        // UIMeshDatas are guaranteed to be populated before tracking begins.
-        holders.Add(holder);
-    }
+    /// <summary>Registers a holder in the lifecycle set; notifier tracking deferred to Generate/RefreshHolder.</summary>
+    public void AddHolder(IUIPrefabHolder holder) => holderLifecycle.Add(holder);
 
-    public void RemoveHolder(IUIPrefabHolder holder)
-    {
-        if (!holders.Remove(holder)) return;
-        holderNotifier.RemoveHolder(holder);
-    }
+    public void RemoveHolder(IUIPrefabHolder holder) => holderLifecycle.Remove(holder);
 
     /// <summary>
     /// Re-syncs the notifier reverse index after a holder's UIMeshDatas have been
-    /// rebuilt outside of Generate (e.g. the UIPrefaHolder.BuildMesh direct path).
+    /// rebuilt outside of Generate (e.g. the UIPrefabHolder.BuildMesh direct path).
     /// </summary>
-    public void RefreshHolder(IUIPrefabHolder holder)
-    {
-        if (!holders.Contains(holder)) return;
-        holderNotifier.RemoveHolder(holder);
-        holderNotifier.AddHolder(holder);
-    }
+    public void RefreshHolder(IUIPrefabHolder holder) => holderLifecycle.Refresh(holder);
 
     public int GetTextureIndex(Texture texture)
     {
@@ -164,18 +151,10 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
             LogDebug("Should Not Be Null::");
             return;
         }
-
-        if (!this.owners.TryGetValue(prefabOwner, out var reg))
-        {
-            reg = new UIPrefabRegistration(prefabOwner, this);
-            this.owners.Add(prefabOwner, reg);
-        }
+        var reg = ownerRegistry.GetOrCreate(prefabOwner, this);
         holder.SetWrapper(reg);  // always set wrapper, even for subsequent holders with the same owner
     }
-    /// <summary>
-    /// </summary>
-    /// <param name="guid"></param>
-    /// <param name="obj"></param>
+
     void ITextureRecorder.OnTextureRegister(int guid, Texture obj)
     {
         var slot = textureSlots.Register(guid, obj);
@@ -190,11 +169,11 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
 
     public UIPrefabRegistration Generate(IUIPrefabHolder holder)
     {
-        if(this.owners.TryGetValue(holder.Target,out var reg)){
+        if (ownerRegistry.TryGet(holder.Target, out var reg))
+        {
             holderNotifier.RemoveHolder(holder);  // untrack stale mesh objects
             reg.Generate(holder);                  // populate UIMeshDatas
-            holders.Add(holder);                   // ensure in lifecycle set (idempotent)
-            holderNotifier.AddHolder(holder);      // track with correct TextureIndex
+            holderLifecycle.Track(holder);         // add to set + notifier atomically
             return reg;
         }
         return null;
@@ -209,23 +188,8 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
 
     public void TrackMesh(IUIData mesh) => holderNotifier.Track(mesh);
 
-    private readonly int[] MaterialProperties = new int[] {
-        Shader.PropertyToID("_MainTex1"),
-        Shader.PropertyToID("_MainTex2"),
-        Shader.PropertyToID("_MainTex3"),
-    };
-
-    public void UpdateTexture(Material comb_Material)
-    {
-        if (comb_Material != null)
-        {
-            var count = Mathf.Min(textureSlots.Textures.Count, MaterialProperties.Length);
-            for (int i = 0; i < count; i++)
-            {
-                comb_Material.SetTexture(MaterialProperties[i], textureSlots.Textures[i]);
-            }
-        }
-    }
+    public void UpdateTexture(Material comb_Material) =>
+        MaterialBinder.Bind(comb_Material, textureSlots.Textures);
 
     [Conditional("UI_VERBOSE")]
     private static void LogDebug(string message)

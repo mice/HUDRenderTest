@@ -13,6 +13,10 @@ public static class MaterialBinder
         Shader.PropertyToID("_MainTex1"),
         Shader.PropertyToID("_MainTex2"),
         Shader.PropertyToID("_MainTex3"),
+        Shader.PropertyToID("_MainTex4"),
+        Shader.PropertyToID("_MainTex5"),
+        Shader.PropertyToID("_MainTex6"),
+        Shader.PropertyToID("_MainTex7"),
     };
 
     /// <summary>

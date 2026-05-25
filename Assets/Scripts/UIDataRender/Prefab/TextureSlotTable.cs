@@ -4,7 +4,7 @@ using UnityEngine;
 
 public sealed class TextureSlotTable
 {
-    private const int DefaultMaxImageSlots = 3;
+    private const int DefaultMaxImageSlots = 7;
     private const int MaxSupportedImageSlots = 7;
 
     private readonly List<Texture> textures = new List<Texture>();

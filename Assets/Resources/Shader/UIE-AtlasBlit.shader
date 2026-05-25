@@ -6,6 +6,10 @@ Shader "Hidden/UIE-AtlasBlit"
         _MainTex1("Texture", any) = "" {}
         _MainTex2("Texture", any) = "" {}
         _MainTex3("Texture", any) = "" {}
+        _MainTex4("Texture", any) = "" {}
+        _MainTex5("Texture", any) = "" {}
+        _MainTex6("Texture", any) = "" {}
+        _MainTex7("Texture", any) = "" {}
     }
     SubShader
     {
@@ -32,6 +36,18 @@ Shader "Hidden/UIE-AtlasBlit"
 
             uniform sampler2D _MainTex3;
             uniform float4 _MainTex3_ST;
+
+            uniform sampler2D _MainTex4;
+            uniform float4 _MainTex4_ST;
+
+            uniform sampler2D _MainTex5;
+            uniform float4 _MainTex5_ST;
+
+            uniform sampler2D _MainTex6;
+            uniform float4 _MainTex6_ST;
+
+            uniform sampler2D _MainTex7;
+            uniform float4 _MainTex7_ST;
 
             struct appdata_t
             {
@@ -66,6 +82,18 @@ Shader "Hidden/UIE-AtlasBlit"
                 case 3:
                     o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex3);
                     break;
+                case 4:
+                    o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex4);
+                    break;
+                case 5:
+                    o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex5);
+                    break;
+                case 6:
+                    o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex6);
+                    break;
+                case 7:
+                    o.texcoord.xy = TRANSFORM_TEX(v.texcoord.xy, _MainTex7);
+                    break;
                 default:
                     o.texcoord.xy = float2(0, 0);
                     break;
@@ -92,6 +120,18 @@ Shader "Hidden/UIE-AtlasBlit"
                     break;
                 case 3:
                     color = tex2D(_MainTex3, i.texcoord.xy);
+                    break;
+                case 4:
+                    color = tex2D(_MainTex4, i.texcoord.xy);
+                    break;
+                case 5:
+                    color = tex2D(_MainTex5, i.texcoord.xy);
+                    break;
+                case 6:
+                    color = tex2D(_MainTex6, i.texcoord.xy);
+                    break;
+                case 7:
+                    color = tex2D(_MainTex7, i.texcoord.xy);
                     break;
                 }
                 if(i.is_text==1){
