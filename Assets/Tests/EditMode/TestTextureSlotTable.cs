@@ -118,7 +118,7 @@ public class TestTextureSlotTable
     }
 
     [Test]
-    public void Register_OverCapacity_ReturnsMinusOneAndWarn()
+    public void Register_OverCapacity_RegistersAndWarns()
     {
         var table = new TextureSlotTable(2);
         var texA = CreateTexture("A");
@@ -128,31 +128,31 @@ public class TestTextureSlotTable
         Assert.AreEqual(1, table.Register(101, texA));
         Assert.AreEqual(2, table.Register(102, texB));
 
-        LogAssert.Expect(LogType.Warning, new Regex(@"\[TextureSlotTable\] over capacity"));
+        LogAssert.Expect(LogType.Warning, new Regex(@"\[TextureSlotTable\] texture count exceeds per-batch limit"));
         var slot = table.Register(103, texC);
 
-        Assert.AreEqual(-1, slot);
-        Assert.AreEqual(2, table.Textures.Count);
-        Assert.AreEqual(-1, table.GetSlot(texC));
+        Assert.AreEqual(3, slot, "over-capacity texture should be registered at next slot");
+        Assert.AreEqual(3, table.Textures.Count);
+        Assert.AreEqual(3, table.GetSlot(texC));
     }
 
     [Test]
-    public void Register_OverCapacity_RetryAfterSlotReleased_Succeeds()
+    public void Register_OverCapacity_UnregisterReassignsSlot()
     {
         var table = new TextureSlotTable(2);
         var texA = CreateTexture("A");
         var texB = CreateTexture("B");
         var texC = CreateTexture("C");
 
-        Assert.AreEqual(1, table.Register(101, texA));
-        Assert.AreEqual(2, table.Register(102, texB));
+        table.Register(101, texA);
+        table.Register(102, texB);
 
-        LogAssert.Expect(LogType.Warning, new Regex(@"\[TextureSlotTable\] over capacity"));
-        Assert.AreEqual(-1, table.Register(103, texC));
+        LogAssert.Expect(LogType.Warning, new Regex(@"\[TextureSlotTable\] texture count exceeds per-batch limit"));
+        Assert.AreEqual(3, table.Register(103, texC));
 
+        // Unregistering texB causes texC (slot 3) to swap into slot 2
         table.Unregister(102);
 
-        Assert.AreEqual(2, table.Register(103, texC));
         Assert.AreEqual(1, table.GetSlot(texA));
         Assert.AreEqual(2, table.GetSlot(texC));
         Assert.AreEqual(-1, table.GetSlot(texB));

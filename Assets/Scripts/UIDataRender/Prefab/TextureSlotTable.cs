@@ -91,8 +91,7 @@ public sealed class TextureSlotTable
 
         if (textures.Count >= MaxImageSlots)
         {
-            UnityEngine.Debug.LogWarning($"[TextureSlotTable] over capacity ({textures.Count + 1}/{MaxImageSlots}), ownerKey={ownerKey}, texture={texture.name}");
-            return -1;
+            UnityEngine.Debug.LogWarning($"[TextureSlotTable] texture count exceeds per-batch limit ({textures.Count + 1}/{MaxImageSlots}); draw calls will be split by MergeBatcher.");
         }
 
         textures.Add(texture);

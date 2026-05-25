@@ -34,4 +34,35 @@ public class RenderBatch
         UsedSlots.UnionWith(needed);
         return true;
     }
+
+    /// <summary>
+    /// Builds a mapping from each global slot index in this batch to a local
+    /// 1-based slot index (1 = _MainTex1, 2 = _MainTex2, …).
+    /// </summary>
+    public IReadOnlyDictionary<int, int> BuildLocalSlotMap()
+    {
+        var sorted = new List<int>(UsedSlots);
+        sorted.Sort();
+        var map = new Dictionary<int, int>(sorted.Count);
+        for (int i = 0; i < sorted.Count; i++)
+            map[sorted[i]] = i + 1;
+        return map;
+    }
+
+    /// <summary>
+    /// Returns the textures required by this batch, ordered by ascending global slot,
+    /// suitable for passing to <see cref="MaterialBinder.Bind"/>.
+    /// </summary>
+    public List<UnityEngine.Texture> GetBatchTextures(IReadOnlyList<UnityEngine.Texture> globalTextures)
+    {
+        var sorted = new List<int>(UsedSlots);
+        sorted.Sort();
+        var list = new List<UnityEngine.Texture>(sorted.Count);
+        foreach (var globalSlot in sorted)
+        {
+            int idx = globalSlot - 1;
+            list.Add(idx >= 0 && idx < globalTextures.Count ? globalTextures[idx] : null);
+        }
+        return list;
+    }
 }

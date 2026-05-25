@@ -197,6 +197,19 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     public void UpdateTexture(Material comb_Material) =>
         MaterialBinder.Bind(comb_Material, textureSlots.Textures);
 
+    /// <summary>
+    /// Returns the global texture list managed by this manager's <see cref="TextureSlotTable"/>.
+    /// Index 0 = slot 1 (font), index 1 = slot 2 (_MainTex1), …
+    /// </summary>
+    public IReadOnlyList<UnityEngine.Texture> GetTextures() => textureSlots.Textures;
+
+    /// <summary>
+    /// Binds the subset of textures required by <paramref name="batch"/> to <paramref name="material"/>,
+    /// remapped to local slots 1..N.  Use this when rendering with <see cref="MergeBatcher"/>.
+    /// </summary>
+    public void UpdateTexture(Material material, RenderBatch batch) =>
+        MaterialBinder.Bind(material, batch.GetBatchTextures(textureSlots.Textures));
+
     private const string Keyword8Tex = "HUD_8_TEX_SLOTS";
 
     /// <summary>
