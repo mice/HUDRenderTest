@@ -10,6 +10,8 @@ using UnityEngine.UI;
 /// </summary>
 public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
 {
+    private static readonly int MainTex0 = Shader.PropertyToID("_MainTex0");
+
     public Font font;
     public Camera uiCamera;
     public Transform uiRoot;
@@ -61,10 +63,22 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
 
     private HolderBatchRenderer batchRenderer;
     private int cycleSpriteIndex;
+    private bool pendingFontRebuildRefresh;
+    private bool suppressFontTextureRebuildCallback;
 
     public UIData.PerfProbe Probe => batchRenderer != null ? batchRenderer.Probe : null;
     public int BatchCount => batchRenderer != null ? batchRenderer.BatchCount : 0;
     public string LastCsvPath { get; private set; }
+
+    private void OnEnable()
+    {
+        Font.textureRebuilt += OnFontTextureRebuilt;
+    }
+
+    private void OnDisable()
+    {
+        Font.textureRebuilt -= OnFontTextureRebuilt;
+    }
 
     private void Start()
     {
@@ -85,6 +99,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
         batchRenderer = new HolderBatchRenderer(enable8TexSlots ? 7 : 3);
 
         CreateActiveOwners();
+        PrepareOwnerFonts();
 
         foreach (var owner in activeOwners)
         {
@@ -116,7 +131,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
             return;
 
         holder.SetText(targetDrawIndex, textOverride);
-        RebuildMesh();
+        RegenerateAllHolders();
     }
 
     public void ApplySpriteOverride()
@@ -164,6 +179,12 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
 
     private void Update()
     {
+        if (pendingFontRebuildRefresh)
+        {
+            pendingFontRebuildRefresh = false;
+            RegenerateAllHolders();
+        }
+
         if (rebuildEveryFrame && runtimeHolders.Count > 0)
             RebuildMesh();
     }
@@ -189,8 +210,85 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
             return;
 
         UpdatePositions();
-        batchRenderer.Rebuild(runtimeHolders, positionMap, CreateMaterial, uiPrefabManager.UpdateTexture);
+        batchRenderer.Rebuild(runtimeHolders, positionMap, CreateMaterial, BindBatchTextures);
         UpdateStatusText();
+    }
+
+    private void BindBatchTextures(Material material, RenderBatch batch)
+    {
+        material.SetTexture(MainTex0, font != null ? font.material.mainTexture : null);
+        uiPrefabManager.UpdateTexture(material, batch);
+    }
+
+    private void RegenerateAllHolders()
+    {
+        if (runtimeHolders.Count == 0)
+            return;
+
+        suppressFontTextureRebuildCallback = true;
+        try
+        {
+            PrepareOwnerFonts();
+            for (int i = 0; i < runtimeHolders.Count; i++)
+                uiPrefabManager.Generate(runtimeHolders[i]);
+        }
+        finally
+        {
+            suppressFontTextureRebuildCallback = false;
+        }
+
+        pendingFontRebuildRefresh = false;
+        RebuildMesh();
+    }
+
+    private void PrepareOwnerFonts()
+    {
+        foreach (var owner in activeOwners)
+        {
+            if (owner == null)
+                continue;
+
+            var texts = owner.GetComponentsInChildren<UIText>(true);
+            for (int i = 0; i < texts.Length; i++)
+            {
+                var text = texts[i];
+                if (text == null || text.font == null || string.IsNullOrEmpty(text.text))
+                    continue;
+
+                text.font.RequestCharactersInTexture(text.text, text.fontSize, text.fontStyle);
+            }
+        }
+    }
+
+    private void OnFontTextureRebuilt(Font rebuiltFont)
+    {
+        if (rebuiltFont == null || suppressFontTextureRebuildCallback || runtimeHolders.Count == 0)
+            return;
+
+        if (UsesFont(rebuiltFont))
+            pendingFontRebuildRefresh = true;
+    }
+
+    private bool UsesFont(Font rebuiltFont)
+    {
+        if (font == rebuiltFont)
+            return true;
+        if (statusText != null && statusText.font == rebuiltFont)
+            return true;
+
+        foreach (var owner in activeOwners)
+        {
+            if (owner == null)
+                continue;
+
+            var texts = owner.GetComponentsInChildren<UIText>(true);
+            for (int i = 0; i < texts.Length; i++)
+            {
+                if (texts[i] != null && texts[i].font == rebuiltFont)
+                    return true;
+            }
+        }
+        return false;
     }
 
     private void UpdatePositions()
@@ -202,7 +300,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
     private Material CreateMaterial()
     {
         var material = new Material(Shader.Find("Hidden/UIE-AtlasBlit"));
-        material.SetTexture("_MainTex0", font != null ? font.material.mainTexture : null);
+        material.SetTexture(MainTex0, font != null ? font.material.mainTexture : null);
         material.renderQueue = 3000;
         if (enable8TexSlots)
             uiPrefabManager.Enable8TexSlots(material);
@@ -348,6 +446,8 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
         if (statusText == null)
             return;
 
-        statusText.text = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)}\n{LastCsvPath}";
+        string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)}\n{LastCsvPath}";
+        if (statusText.text != next)
+            statusText.text = next;
     }
 }
