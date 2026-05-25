@@ -20,6 +20,7 @@ public class UIOutline : Outline
                 tmp_meshData.TransformVertex(mtx);
             }
         }
+
         base.ModifyMesh(vh);
         if (tmp_meshData != null)
         { 

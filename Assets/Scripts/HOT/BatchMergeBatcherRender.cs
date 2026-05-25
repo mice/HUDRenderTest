@@ -369,17 +369,17 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
         int count = 3;
         foreach (var ownerPrefab in ownerPrefabs)
         {
-            j++;
+            position = runtimeStartPosition;
             if (ownerPrefab == null)
                 continue;
             for (int i = 0; i < count; i++)
             {
+                j++;
                 var instance = Instantiate(ownerPrefab, parent);
                 instance.gameObject.name = $"{ownerPrefab.name}_RuntimeSource_{i}";
-                instance.transform.localPosition = position + new Vector3(0, j + 10, 0);
+                instance.transform.localPosition = position + new Vector3((j % 3) * 120, (j / 3) * 80, 0);
                 instance.transform.localRotation = Quaternion.identity;
                 instance.transform.localScale = Vector3.one;
-                position += runtimeStep;
 
                 instantiatedOwnerObjects.Add(instance.gameObject);
                 activeOwners.Add(instance);

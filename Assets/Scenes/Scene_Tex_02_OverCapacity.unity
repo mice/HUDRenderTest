@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -350}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &615214423
@@ -762,14 +762,17 @@ MonoBehaviour:
   ownerPrefabs:
   - {fileID: 763193142617564995, guid: 4136524a58fd0944988aa282bffe68ba, type: 3}
   - {fileID: 957583371931596414, guid: c98f7b97bf697ce4281c685627485737, type: 3}
-  useSlim: 1
+  - {fileID: -4300781021522663617, guid: 9f15ece5f9fb9ca459fdbc0d27cf14f7, type: 3}
+  - {fileID: 957583371931596414, guid: cd1dcc792656c274e90eb48212d5fb7b, type: 3}
+  - {fileID: 957583371931596414, guid: a97b6f2efb11dfc4aa1b84acd7dbacce, type: 3}
+  useSlim: 0
   enable8TexSlots: 0
   autoRecreateOnStart: 1
   rebuildEveryFrame: 0
-  hideSourceGraphics: 1
+  hideSourceGraphics: 0
   instantiateOwnersAtRuntime: 1
   runtimeSourceRoot: {fileID: 216944786}
-  runtimeStartPosition: {x: 0, y: 200, z: 0}
+  runtimeStartPosition: {x: -200, y: 200, z: 0}
   runtimeStep: {x: 0, y: -60, z: 0}
   csvTag: merge_batcher_scene
   targetOwnerIndex: 0
