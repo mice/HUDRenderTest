@@ -1,0 +1,353 @@
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using UnityEngine.UI;
+
+/// <summary>
+/// Manual scene controller for MergeBatcher validation.
+/// Keeps the BatchTextRenderer-style "press button to rebuild" workflow,
+/// but renders through UIPrefabManager + MergeBatcher + HolderBatchRenderer.
+/// </summary>
+public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
+{
+    public Font font;
+    public Camera uiCamera;
+    public Transform uiRoot;
+    public Text statusText;
+    public List<UIPrefabOwner> owners = new List<UIPrefabOwner>();
+    public List<UIPrefabOwner> ownerPrefabs = new List<UIPrefabOwner>();
+    public bool useSlim;
+    public bool enable8TexSlots;
+    public bool autoRecreateOnStart = true;
+    public bool rebuildEveryFrame;
+    public bool hideSourceGraphics = true;
+    public bool instantiateOwnersAtRuntime;
+    public Transform runtimeSourceRoot;
+    public Vector3 runtimeStartPosition;
+    public Vector3 runtimeStep = new Vector3(0f, -60f, 0f);
+    public string csvTag = "merge_batcher_scene";
+
+    [Header("Manual edit")]
+    public int targetOwnerIndex;
+    public int targetDrawIndex = 2;
+    public string textOverride = "HUD-Edited";
+    public Sprite spriteOverride;
+
+    [Header("Manual sprite cycle")]
+    public int cycleOwnerIndex;
+    public int cycleDrawIndex = 2;
+    public Sprite[] spriteCycle = System.Array.Empty<Sprite>();
+
+    [Button(nameof(ReCreate))]
+    public string _recreate;
+    [Button(nameof(ApplyTextOverride))]
+    public string _applyText;
+    [Button(nameof(ApplySpriteOverride))]
+    public string _applySprite;
+    [Button(nameof(CycleSprite))]
+    public string _cycleSprite;
+    [Button(nameof(FlushProbe))]
+    public string _flushProbe;
+    [Button(nameof(OpenCsvFolder))]
+    public string _openCsvFolder;
+
+    private readonly List<IUIPrefabHolder> runtimeHolders = new List<IUIPrefabHolder>();
+    private readonly Dictionary<IUIPrefabHolder, UIPrefabOwner> ownerMap = new Dictionary<IUIPrefabHolder, UIPrefabOwner>();
+    private readonly Dictionary<IUIPrefabHolder, Vector3> positionMap = new Dictionary<IUIPrefabHolder, Vector3>();
+    private readonly List<UIPrefabOwner> activeOwners = new List<UIPrefabOwner>();
+    private readonly List<GameObject> instantiatedOwnerObjects = new List<GameObject>();
+    private readonly Dictionary<UIPrefabOwner, SourceCanvasGroupState> sourceCanvasGroups = new Dictionary<UIPrefabOwner, SourceCanvasGroupState>();
+    private readonly UIPrefabManager uiPrefabManager = UIPrefabManager.Instance;
+
+    private HolderBatchRenderer batchRenderer;
+    private int cycleSpriteIndex;
+
+    public UIData.PerfProbe Probe => batchRenderer != null ? batchRenderer.Probe : null;
+    public int BatchCount => batchRenderer != null ? batchRenderer.BatchCount : 0;
+    public string LastCsvPath { get; private set; }
+
+    private void Start()
+    {
+        if (autoRecreateOnStart)
+            ReCreate();
+    }
+
+    public void ReCreate()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogError("Only Run In PlayMode");
+            return;
+        }
+
+        ClearRuntimeHolders();
+        batchRenderer?.Dispose();
+        batchRenderer = new HolderBatchRenderer(enable8TexSlots ? 7 : 3);
+
+        CreateActiveOwners();
+
+        foreach (var owner in activeOwners)
+        {
+            if (owner == null)
+                continue;
+
+            IUIPrefabHolder holder = useSlim
+                ? new DataPrefabHolder<UIMeshDataX>()
+                : new DataPrefabHolder<UIMeshData>();
+
+            holder.SetTarget(owner);
+            uiPrefabManager.Register(holder);
+            uiPrefabManager.Generate(holder);
+
+            runtimeHolders.Add(holder);
+            ownerMap[holder] = owner;
+            positionMap[holder] = owner.transform.localPosition;
+        }
+
+        if (hideSourceGraphics)
+            SetSourceGraphicsVisible(false);
+
+        RebuildMesh();
+    }
+
+    public void ApplyTextOverride()
+    {
+        if (!TryGetHolder(targetOwnerIndex, out var holder))
+            return;
+
+        holder.SetText(targetDrawIndex, textOverride);
+        RebuildMesh();
+    }
+
+    public void ApplySpriteOverride()
+    {
+        if (!TryGetHolder(targetOwnerIndex, out var holder))
+            return;
+
+        holder.SetSprite(targetDrawIndex, spriteOverride);
+        RebuildMesh();
+    }
+
+    public void CycleSprite()
+    {
+        if (spriteCycle == null || spriteCycle.Length == 0)
+            return;
+        if (!TryGetHolder(cycleOwnerIndex, out var holder))
+            return;
+
+        var sprite = spriteCycle[cycleSpriteIndex % spriteCycle.Length];
+        cycleSpriteIndex++;
+        holder.SetSprite(cycleDrawIndex, sprite);
+        RebuildMesh();
+    }
+
+    public void FlushProbe()
+    {
+        if (Probe == null)
+            return;
+
+        LastCsvPath = Probe.Flush(csvTag);
+        UpdateStatusText();
+    }
+
+    public void OpenCsvFolder()
+    {
+        string directory = string.IsNullOrEmpty(LastCsvPath)
+            ? Application.persistentDataPath
+            : Path.GetDirectoryName(LastCsvPath);
+
+        if (string.IsNullOrEmpty(directory))
+            directory = Application.persistentDataPath;
+
+        Application.OpenURL(new System.Uri(directory).AbsoluteUri);
+    }
+
+    private void Update()
+    {
+        if (rebuildEveryFrame && runtimeHolders.Count > 0)
+            RebuildMesh();
+    }
+
+    private void LateUpdate()
+    {
+        if (batchRenderer == null || uiRoot == null)
+            return;
+
+        batchRenderer.Draw(uiRoot.localToWorldMatrix, 5, uiCamera);
+    }
+
+    private void OnDestroy()
+    {
+        ClearRuntimeHolders();
+        batchRenderer?.Dispose();
+        batchRenderer = null;
+    }
+
+    private void RebuildMesh()
+    {
+        if (batchRenderer == null)
+            return;
+
+        UpdatePositions();
+        batchRenderer.Rebuild(runtimeHolders, positionMap, CreateMaterial, uiPrefabManager.UpdateTexture);
+        UpdateStatusText();
+    }
+
+    private void UpdatePositions()
+    {
+        foreach (var pair in ownerMap)
+            positionMap[pair.Key] = pair.Value != null ? pair.Value.transform.localPosition : Vector3.zero;
+    }
+
+    private Material CreateMaterial()
+    {
+        var material = new Material(Shader.Find("Hidden/UIE-AtlasBlit"));
+        material.SetTexture("_MainTex0", font != null ? font.material.mainTexture : null);
+        material.renderQueue = 3000;
+        if (enable8TexSlots)
+            uiPrefabManager.Enable8TexSlots(material);
+        return material;
+    }
+
+    private bool TryGetHolder(int index, out IUIPrefabHolder holder)
+    {
+        if (index < 0 || index >= runtimeHolders.Count)
+        {
+            holder = null;
+            return false;
+        }
+
+        holder = runtimeHolders[index];
+        return true;
+    }
+
+    private void ClearRuntimeHolders()
+    {
+        SetSourceGraphicsVisible(true);
+
+        foreach (var holder in runtimeHolders)
+        {
+            uiPrefabManager.RemoveHolder(holder);
+            var meshes = holder.UIMeshDatas;
+            if (meshes == null)
+                continue;
+
+            for (int i = 0; i < meshes.Count; i++)
+                meshes[i]?.Dispose();
+        }
+
+        runtimeHolders.Clear();
+        ownerMap.Clear();
+        positionMap.Clear();
+        activeOwners.Clear();
+
+        for (int i = 0; i < instantiatedOwnerObjects.Count; i++)
+        {
+            var obj = instantiatedOwnerObjects[i];
+            if (obj == null)
+                continue;
+
+            if (Application.isPlaying)
+                Destroy(obj);
+            else
+                DestroyImmediate(obj);
+        }
+        instantiatedOwnerObjects.Clear();
+    }
+
+    private void CreateActiveOwners()
+    {
+        activeOwners.Clear();
+
+        if (!instantiateOwnersAtRuntime)
+        {
+            activeOwners.AddRange(owners);
+            return;
+        }
+
+        var parent = runtimeSourceRoot != null ? runtimeSourceRoot : transform;
+        Vector3 position = runtimeStartPosition;
+        int j = 0;
+        int count = 3;
+        foreach (var ownerPrefab in ownerPrefabs)
+        {
+            j++;
+            if (ownerPrefab == null)
+                continue;
+            for (int i = 0; i < count; i++)
+            {
+                var instance = Instantiate(ownerPrefab, parent);
+                instance.gameObject.name = $"{ownerPrefab.name}_RuntimeSource_{i}";
+                instance.transform.localPosition = position + new Vector3(0, j + 10, 0);
+                instance.transform.localRotation = Quaternion.identity;
+                instance.transform.localScale = Vector3.one;
+                position += runtimeStep;
+
+                instantiatedOwnerObjects.Add(instance.gameObject);
+                activeOwners.Add(instance);
+            }
+        }
+    }
+
+    private void SetSourceGraphicsVisible(bool visible)
+    {
+        if (visible)
+        {
+            foreach (var pair in sourceCanvasGroups)
+            {
+                var state = pair.Value;
+                if (state.CanvasGroup == null)
+                    continue;
+
+                state.CanvasGroup.alpha = state.OriginalAlpha;
+                if (state.CreatedByRunner)
+                {
+                    if (Application.isPlaying)
+                        Destroy(state.CanvasGroup);
+                    else
+                        DestroyImmediate(state.CanvasGroup);
+                }
+            }
+            sourceCanvasGroups.Clear();
+            return;
+        }
+
+        sourceCanvasGroups.Clear();
+        foreach (var owner in activeOwners)
+        {
+            if (owner == null)
+                continue;
+
+            bool created = false;
+            if (!owner.TryGetComponent<CanvasGroup>(out var canvasGroup))
+            {
+                canvasGroup = owner.gameObject.AddComponent<CanvasGroup>();
+                created = true;
+            }
+            sourceCanvasGroups[owner] = new SourceCanvasGroupState(canvasGroup, canvasGroup.alpha, created);
+            canvasGroup.alpha = 0f;
+        }
+    }
+
+    private readonly struct SourceCanvasGroupState
+    {
+        public SourceCanvasGroupState(CanvasGroup canvasGroup, float originalAlpha, bool createdByRunner)
+        {
+            CanvasGroup = canvasGroup;
+            OriginalAlpha = originalAlpha;
+            CreatedByRunner = createdByRunner;
+        }
+
+        public CanvasGroup CanvasGroup { get; }
+        public float OriginalAlpha { get; }
+        public bool CreatedByRunner { get; }
+    }
+
+    private void UpdateStatusText()
+    {
+        if (statusText == null)
+            return;
+
+        statusText.text = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)}\n{LastCsvPath}";
+    }
+}
