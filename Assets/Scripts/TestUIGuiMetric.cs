@@ -72,6 +72,8 @@ public class TestUIGuiMetric : MonoBehaviour
         
     }
 
+    private JobHandle _posJobHandle;
+
     public void ReCreate()
     {
         if (!UnityEngine.Application.isPlaying)
@@ -79,6 +81,12 @@ public class TestUIGuiMetric : MonoBehaviour
             UnityEngine.Debug.LogError("Only Run In PlayModel");
             return;
         }
+
+        // Complete any pending job before disposing the array it may still reference.
+        _posJobHandle.Complete();
+        if (tfmArray.isCreated)
+            tfmArray.Dispose();
+
         holders = holders?? new List<UIPrefabOwner>(count);
         holders.Clear();
         tfmArray = new TransformAccessArray(count);
@@ -132,7 +140,7 @@ public class TestUIGuiMetric : MonoBehaviour
                 {
                     localPostions = tmpPos,
                 };
-                job.Schedule(tfmArray, jobHandle);
+                _posJobHandle = job.Schedule(tfmArray, jobHandle);
             }
             else
             {
@@ -165,11 +173,12 @@ public class TestUIGuiMetric : MonoBehaviour
 
     private void LateUpdate()
     {
-        
+        _posJobHandle.Complete();
     }
 
     private void OnDestroy()
     {
+        _posJobHandle.Complete();
         if (tfmArray.isCreated)
         {
             tfmArray.Dispose();
