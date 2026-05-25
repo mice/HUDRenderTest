@@ -159,6 +159,42 @@ public class TestTextureSlotTable
         Assert.AreEqual(2, table.Textures.Count);
     }
 
+    // TC-TST-07: ExpandTo increases MaxImageSlots and allows registering beyond the default limit.
+    [Test]
+    public void ExpandTo_IncreasesCapacityAndAllowsRegistration()
+    {
+        var table = new TextureSlotTable(maxImageSlots: 2);
+        var texA = CreateTexture("A");
+        var texB = CreateTexture("B");
+        var texC = CreateTexture("C");
+
+        table.Register(101, texA);
+        table.Register(102, texB);
+
+        var expanded = table.ExpandTo(4);
+        Assert.IsTrue(expanded, "ExpandTo should return true when capacity increases");
+        Assert.AreEqual(4, table.MaxImageSlots);
+
+        var slotC = table.Register(103, texC);
+        Assert.AreEqual(3, slotC, "third texture should be registered at slot 3 after expansion");
+        Assert.AreEqual(3, table.Textures.Count);
+    }
+
+    // TC-TST-08: ExpandTo is capped at MaxSupportedImageSlots (7); values ≤ current are no-ops.
+    [Test]
+    public void ExpandTo_CappedAt7_AndNoOpBelowCurrent()
+    {
+        var table = new TextureSlotTable(maxImageSlots: 3);
+
+        var noop = table.ExpandTo(2);
+        Assert.IsFalse(noop, "ExpandTo(2) on a table with max=3 should be no-op");
+        Assert.AreEqual(3, table.MaxImageSlots, "MaxImageSlots must not decrease");
+
+        var capped = table.ExpandTo(100);
+        Assert.IsTrue(capped, "ExpandTo(100) should succeed (capped to 7)");
+        Assert.AreEqual(7, table.MaxImageSlots, "MaxImageSlots capped at supported maximum");
+    }
+
     private Texture2D CreateTexture(string name)
     {
         var texture = new Texture2D(2, 2) { name = name };
