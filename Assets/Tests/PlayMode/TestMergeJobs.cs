@@ -96,7 +96,7 @@ public class TestMergeJobs
                 Assert.AreEqual(meshB.triangles[k] + 4,    resultTriangle[6 + k], $"triangle[{k}] for meshB (offset +4)");
             }
 
-            Object.Destroy(go);
+            Object.DestroyImmediate(go);
         }
         finally
         {
