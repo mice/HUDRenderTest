@@ -24,6 +24,12 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
         PrefabAndInstance = 1
     }
 
+    public enum CycleDrawSelectionMode
+    {
+        DrawIndex = 0,
+        TargetName = 1
+    }
+
     private static readonly int MainTex0 = Shader.PropertyToID("_MainTex0");
 
     public Font font;
@@ -57,7 +63,9 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public int cycleOwnerIndex;
     public int cycleOwnerPrefabIndex;
     public int cycleOwnerInstanceIndex;
+    public CycleDrawSelectionMode cycleDrawSelectionMode = CycleDrawSelectionMode.TargetName;
     public int cycleDrawIndex = 2;
+    public string cycleDrawTargetName = string.Empty;
     public Sprite[] spriteCycle = System.Array.Empty<Sprite>();
 
     [Button(nameof(ReCreate))]
@@ -192,11 +200,24 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
             return;
         }
 
+        if (!ownerMap.TryGetValue(holder, out var owner) || owner == null)
+        {
+            ReportAction($"CycleSprite skipped: owner for holder index {resolvedIndex} is unavailable.", logWarning: true);
+            return;
+        }
+
+        if (!TryResolveCycleDrawIndex(owner, holder.UIMeshDatas != null ? holder.UIMeshDatas.Count : 0, out int resolvedDrawIndex, out reason))
+        {
+            ReportAction(reason, logWarning: true);
+            return;
+        }
+
         var sprite = spriteCycle[cycleSpriteIndex % spriteCycle.Length];
         cycleSpriteIndex++;
-        holder.SetSprite(cycleDrawIndex, sprite);
+        holder.SetSprite(resolvedDrawIndex, sprite);
         RebuildMesh();
-        ReportAction($"CycleSprite applied: holder={resolvedIndex}, draw={cycleDrawIndex}, sprite={(sprite != null ? sprite.name : "<null>")}, step={cycleSpriteIndex}/{spriteCycle.Length}");
+        string drawName = TryGetTargetName(owner, resolvedDrawIndex);
+        ReportAction($"CycleSprite applied: holder={resolvedIndex}, draw={resolvedDrawIndex}({drawName}), sprite={(sprite != null ? sprite.name : "<null>")}, step={cycleSpriteIndex}/{spriteCycle.Length}");
     }
 
     public void FlushProbe()
@@ -680,5 +701,144 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
 
         reason = null;
         return true;
+    }
+
+    private bool TryResolveCycleDrawIndex(UIPrefabOwner owner, int drawCount, out int resolvedIndex, out string reason)
+    {
+        if (cycleDrawSelectionMode == CycleDrawSelectionMode.TargetName)
+        {
+            if (owner == null)
+            {
+                resolvedIndex = -1;
+                reason = "CycleSprite skipped: owner is null, cannot resolve cycle draw target.";
+                return false;
+            }
+
+            string query = cycleDrawTargetName != null ? cycleDrawTargetName.Trim() : string.Empty;
+            if (string.IsNullOrEmpty(query))
+            {
+                resolvedIndex = -1;
+                reason = "CycleSprite skipped: cycleDrawTargetName is empty.";
+                return false;
+            }
+
+            if (owner.targets == null || owner.targets.Count == 0)
+            {
+                resolvedIndex = -1;
+                reason = $"CycleSprite skipped: owner '{owner.name}' has no registered targets.";
+                return false;
+            }
+
+            int matchIndex = -1;
+            for (int i = 0; i < owner.targets.Count; i++)
+            {
+                var target = owner.targets[i];
+                if (!IsCycleDrawTargetMatch(owner.transform, target, query))
+                    continue;
+
+                if (matchIndex >= 0)
+                {
+                    resolvedIndex = -1;
+                    reason = $"CycleSprite skipped: cycleDrawTargetName '{query}' is ambiguous on owner '{owner.name}'.";
+                    return false;
+                }
+
+                matchIndex = i;
+            }
+
+            if (matchIndex < 0)
+            {
+                resolvedIndex = -1;
+                reason = $"CycleSprite skipped: cycleDrawTargetName '{query}' was not found on owner '{owner.name}'. Available targets: {DescribeOwnerTargets(owner)}.";
+                return false;
+            }
+
+            if (matchIndex >= drawCount)
+            {
+                resolvedIndex = -1;
+                reason = $"CycleSprite skipped: resolved draw index {matchIndex} is out of range.";
+                return false;
+            }
+
+            resolvedIndex = matchIndex;
+            reason = null;
+            return true;
+        }
+
+        resolvedIndex = cycleDrawIndex;
+        if (resolvedIndex < 0 || resolvedIndex >= drawCount)
+        {
+            reason = $"CycleSprite skipped: cycleDrawIndex {cycleDrawIndex} is out of range.";
+            return false;
+        }
+
+        reason = null;
+        return true;
+    }
+
+    private static bool IsCycleDrawTargetMatch(Transform ownerRoot, Transform target, string query)
+    {
+        if (target == null || string.IsNullOrEmpty(query))
+            return false;
+
+        if (string.Equals(target.name, query, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        string fullPath = BuildTargetPath(ownerRoot, target, includeOwnerRoot: true);
+        if (string.Equals(fullPath, query, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        string relativePath = BuildTargetPath(ownerRoot, target, includeOwnerRoot: false);
+        return string.Equals(relativePath, query, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string BuildTargetPath(Transform ownerRoot, Transform target, bool includeOwnerRoot)
+    {
+        if (target == null)
+            return string.Empty;
+
+        var parts = new List<string>();
+        Transform current = target;
+        while (current != null)
+        {
+            if (current == ownerRoot)
+            {
+                if (includeOwnerRoot)
+                    parts.Add(current.name);
+                break;
+            }
+
+            parts.Add(current.name);
+            current = current.parent;
+        }
+
+        parts.Reverse();
+        return string.Join("/", parts);
+    }
+
+    private static string DescribeOwnerTargets(UIPrefabOwner owner)
+    {
+        if (owner == null || owner.targets == null || owner.targets.Count == 0)
+            return "<none>";
+
+        var entries = new List<string>(owner.targets.Count);
+        for (int i = 0; i < owner.targets.Count; i++)
+        {
+            entries.Add($"{i}:{TryGetTargetName(owner, i)}");
+        }
+        return string.Join(", ", entries);
+    }
+
+    private static string TryGetTargetName(UIPrefabOwner owner, int index)
+    {
+        if (owner == null || owner.targets == null || index < 0 || index >= owner.targets.Count)
+            return "<unknown>";
+
+        var target = owner.targets[index];
+        if (target == null)
+            return "<null>";
+
+        string relativePath = BuildTargetPath(owner.transform, target, includeOwnerRoot: false);
+        return string.IsNullOrEmpty(relativePath) ? target.name : relativePath;
     }
 }

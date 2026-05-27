@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework;
@@ -156,6 +157,80 @@ public class TestDynamicSwapRunner
         }
         finally
         {
+            Object.DestroyImmediate(go);
+        }
+    }
+
+    [Test]
+    public void CycleDrawSelection_UsesTargetName_WhenConfigured()
+    {
+        var go = new GameObject("CycleDrawSelection");
+        var ownerGo = new GameObject("HUDHero");
+        try
+        {
+            var render = go.AddComponent<BatchMergeBatcherRender>();
+            render.cycleDrawSelectionMode = BatchMergeBatcherRender.CycleDrawSelectionMode.TargetName;
+            render.cycleDrawTargetName = "img_icon";
+
+            var owner = ownerGo.AddComponent<UIPrefabOwner>();
+            var icon = new GameObject("img_icon").transform;
+            icon.SetParent(ownerGo.transform, false);
+            var name = new GameObject("txt_name").transform;
+            name.SetParent(ownerGo.transform, false);
+            owner.targets = new List<Transform> { ownerGo.transform, icon, name };
+
+            var method = typeof(BatchMergeBatcherRender).GetMethod(
+                "TryResolveCycleDrawIndex",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(method);
+
+            object[] args = { owner, owner.targets.Count, null, null };
+            bool result = (bool)method.Invoke(render, args);
+
+            Assert.IsTrue(result);
+            Assert.AreEqual(1, args[2]);
+            Assert.IsNull(args[3]);
+        }
+        finally
+        {
+            Object.DestroyImmediate(ownerGo);
+            Object.DestroyImmediate(go);
+        }
+    }
+
+    [Test]
+    public void CycleDrawSelection_ReportsAvailableTargets_WhenNameMissing()
+    {
+        var go = new GameObject("CycleDrawSelectionMissing");
+        var ownerGo = new GameObject("HUDHero");
+        try
+        {
+            var render = go.AddComponent<BatchMergeBatcherRender>();
+            render.cycleDrawSelectionMode = BatchMergeBatcherRender.CycleDrawSelectionMode.TargetName;
+            render.cycleDrawTargetName = "missing_icon";
+
+            var owner = ownerGo.AddComponent<UIPrefabOwner>();
+            var icon = new GameObject("img_icon").transform;
+            icon.SetParent(ownerGo.transform, false);
+            var level = new GameObject("txt_lvl").transform;
+            level.SetParent(ownerGo.transform, false);
+            owner.targets = new List<Transform> { ownerGo.transform, icon, level };
+
+            var method = typeof(BatchMergeBatcherRender).GetMethod(
+                "TryResolveCycleDrawIndex",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(method);
+
+            object[] args = { owner, owner.targets.Count, null, null };
+            bool result = (bool)method.Invoke(render, args);
+
+            Assert.IsFalse(result);
+            StringAssert.Contains("missing_icon", (string)args[3]);
+            StringAssert.Contains("1:img_icon", (string)args[3]);
+        }
+        finally
+        {
+            Object.DestroyImmediate(ownerGo);
             Object.DestroyImmediate(go);
         }
     }

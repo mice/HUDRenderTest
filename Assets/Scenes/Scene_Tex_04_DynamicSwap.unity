@@ -787,7 +787,9 @@ MonoBehaviour:
   cycleOwnerIndex: 6
   cycleOwnerPrefabIndex: 2
   cycleOwnerInstanceIndex: 0
+  cycleDrawSelectionMode: 1
   cycleDrawIndex: 1
+  cycleDrawTargetName: img_icon
   spriteCycle:
   - {fileID: 21300000, guid: b8f9d276f7b82db4a926514e4b4066fe, type: 3}
   - {fileID: 21300000, guid: 3b63d40905fca0041a449e6ffd09d36f, type: 3}
