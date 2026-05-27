@@ -1,32 +1,21 @@
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
 
-public class TestOverCapacityScene
+public class TestThreeSlotScene
 {
     [UnityTest]
-    public IEnumerator BatchMergeBatcherRender_Recreate_ReportsOverCapacity_AndSplitsBatches()
+    public IEnumerator BatchMergeBatcherRender_Recreate_StaysSingleBatch_AndReportsNoOverCapacity()
     {
-        var warnings = new List<string>();
-        void CaptureLog(string condition, string stackTrace, LogType type)
-        {
-            if (type == LogType.Warning)
-                warnings.Add(condition);
-        }
-
-        var root = new GameObject("OverCapacityRoot");
+        var root = new GameObject("ThreeSlotRoot");
         var controllerGo = new GameObject("BatchMergeBatcher");
         var canvasGo = new GameObject("Canvas", typeof(Canvas));
         var uiRootGo = new GameObject("UIRoot", typeof(RectTransform));
         var sourceRootGo = new GameObject("RuntimeSourceRoot", typeof(RectTransform));
         var statusGo = new GameObject("StatusText", typeof(RectTransform), typeof(Text));
         var cameraGo = new GameObject("UICamera");
-
-        LogAssert.ignoreFailingMessages = true;
-        Application.logMessageReceived += CaptureLog;
 
         try
         {
@@ -53,38 +42,26 @@ public class TestOverCapacityScene
             controller.useSlim = true;
             controller.enable8TexSlots = false;
             controller.autoRecreateOnStart = false;
-            controller.csvTag = "overcapacity_test";
+            controller.csvTag = "three_slot_test";
 
             controller.ownerPrefabs.Add(LoadOwnerPrefab("UIName"));
             controller.ownerPrefabs.Add(LoadOwnerPrefab("UITitle"));
-            controller.ownerPrefabs.Add(LoadOwnerPrefab("HUDHero"));
             controller.ownerPrefabs.Add(LoadOwnerPrefab("UIBackground"));
-            controller.ownerPrefabs.Add(LoadOwnerPrefab("UIItem"));
 
             controller.ReCreate();
             yield return null;
 
-            Assert.Greater(controller.UniqueImageTextureCount, controller.BatchTextureLimit);
-            Assert.Greater(controller.BatchCount, 1);
-            StringAssert.Contains("over:yes", statusText.text);
-            StringAssert.Contains(
-                $"textures:{controller.UniqueImageTextureCount}/{controller.BatchTextureLimit}",
-                statusText.text);
+            Assert.AreEqual(3, controller.UniqueImageTextureCount);
+            Assert.AreEqual(controller.BatchTextureLimit, controller.UniqueImageTextureCount);
+            Assert.AreEqual(1, controller.BatchCount);
+            StringAssert.Contains("over:no", statusText.text);
+            StringAssert.Contains("textures:3/3", statusText.text);
 
             controller.ReportBatchLayout();
-            StringAssert.Contains("Batch layout:", statusText.text);
-
-            Assert.IsTrue(
-                warnings.Exists(message => message.Contains("[MergeBatcher] split into")),
-                "expected MergeBatcher split warning");
-            Assert.IsTrue(
-                warnings.Exists(message => message.Contains("[TextureSlotTable] texture count exceeds per-batch limit")),
-                "expected TextureSlotTable over-capacity warning");
+            StringAssert.Contains("overCapacity=no", statusText.text);
         }
         finally
         {
-            Application.logMessageReceived -= CaptureLog;
-            LogAssert.ignoreFailingMessages = false;
             Object.DestroyImmediate(root);
         }
     }
