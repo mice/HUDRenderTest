@@ -82,6 +82,8 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public string _flushProbe;
     [Button(nameof(StartEightSlotComparison))]
     public string _startEightSlotComparison;
+    [Button(nameof(ReportBatchLayout))]
+    public string _reportBatchLayout;
     [Button(nameof(OpenCsvFolder))]
     public string _openCsvFolder;
 
@@ -103,6 +105,9 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
 
     public UIData.PerfProbe Probe => batchRenderer != null ? batchRenderer.Probe : null;
     public int BatchCount => batchRenderer != null ? batchRenderer.BatchCount : 0;
+    public int BatchTextureLimit => enable8TexSlots ? 7 : 3;
+    public int UniqueImageTextureCount => CountUniqueImageTextures();
+    public bool IsOverCapacityActive => UniqueImageTextureCount > BatchTextureLimit;
     public string LastCsvPath { get; private set; }
     public bool Enable8TexSlots { get => enable8TexSlots; set => enable8TexSlots = value; }
     public bool RebuildEveryFrame { get => rebuildEveryFrame; set => rebuildEveryFrame = value; }
@@ -291,6 +296,11 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
             directory = UIData.PerfProbe.GetOutputDirectory();
 
         Application.OpenURL(new System.Uri(directory).AbsoluteUri);
+    }
+
+    public void ReportBatchLayout()
+    {
+        ReportAction(BuildBatchLayoutSummary());
     }
 
     private void Update()
@@ -596,7 +606,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
         if (statusText == null)
             return;
 
-        string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)} mode:{displayMode}";
+        string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} textures:{UniqueImageTextureCount}/{BatchTextureLimit} over:{(IsOverCapacityActive ? "yes" : "no")} probe:{(Probe != null ? Probe.Count : 0)} mode:{displayMode}";
         if (!string.IsNullOrWhiteSpace(actionMessage))
             next += $"\n{actionMessage}";
         next += $"\n{LastCsvPath}";
@@ -654,6 +664,35 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     {
         return !string.IsNullOrEmpty(source) &&
                source.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    private string BuildBatchLayoutSummary()
+    {
+        return $"Batch layout: owners={runtimeHolders.Count}, textures={UniqueImageTextureCount}/{BatchTextureLimit}, overCapacity={(IsOverCapacityActive ? "yes" : "no")}, batches={BatchCount}, mode={displayMode}";
+    }
+
+    private int CountUniqueImageTextures()
+    {
+        if (activeOwners.Count == 0)
+            return 0;
+
+        var textureIds = new HashSet<int>();
+        foreach (var owner in activeOwners)
+        {
+            if (owner == null)
+                continue;
+
+            var images = owner.GetComponentsInChildren<UIImage>(true);
+            for (int i = 0; i < images.Length; i++)
+            {
+                var sprite = images[i] != null ? images[i].sprite : null;
+                var texture = sprite != null ? sprite.texture : null;
+                if (texture != null)
+                    textureIds.Add(texture.GetInstanceID());
+            }
+        }
+
+        return textureIds.Count;
     }
 
     private bool TryResolveCycleHolderIndex(int holderCount, out int resolvedIndex, out string reason)
