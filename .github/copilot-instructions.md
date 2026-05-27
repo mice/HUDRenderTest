@@ -12,17 +12,32 @@ This repository is a Unity project (Unity `2022.3.53f1c1`, see `ProjectSettings/
 
 ### Tests (EditMode, NUnit via Unity Test Runner)
 
-Run all EditMode tests:
+Run repository-owned EditMode tests:
 
 ```powershell
-"C:\Program Files\Unity\Hub\Editor\2022.3.53f1c1\Editor\Unity.exe" -batchmode -quit -nographics -projectPath "D:\ProjCommon\HUDRenderTest" -runTests -testPlatform EditMode -testResults "Logs\EditModeTests.xml"
+"C:\Program Files\Unity\Hub\Editor\2022.3.53f1c1\Editor\Unity.exe" -batchmode -nographics -projectPath "D:\ProjCommon\HUDRenderTest" -runTests -testPlatform EditMode -assemblyNames "Tests" -testResults "Logs\EditModeRepoTests.xml"
+```
+
+Run repository-owned PlayMode tests:
+
+```powershell
+"C:\Program Files\Unity\Hub\Editor\2022.3.53f1c1\Editor\Unity.exe" -batchmode -nographics -projectPath "D:\ProjCommon\HUDRenderTest" -runTests -testPlatform PlayMode -assemblyNames "Tests.PlayMode" -testResults "Logs\PlayMode_TestsPlayMode.xml"
+```
+
+Run the local validation bundle (current working tree, no GitHub Actions license secrets required):
+
+```powershell
+.\Tools\Invoke-LocalValidation.ps1
+.\Tools\Invoke-LocalValidation.ps1 -WithCoverage
 ```
 
 Run a single test:
 
 ```powershell
-"C:\Program Files\Unity\Hub\Editor\2022.3.53f1c1\Editor\Unity.exe" -batchmode -quit -nographics -projectPath "D:\ProjCommon\HUDRenderTest" -runTests -testPlatform EditMode -testFilter "TestUIGeometry.TestUIGeometryAlloc46" -testResults "Logs\SingleTest.xml"
+"C:\Program Files\Unity\Hub\Editor\2022.3.53f1c1\Editor\Unity.exe" -batchmode -nographics -projectPath "D:\ProjCommon\HUDRenderTest" -runTests -testPlatform EditMode -assemblyNames "Tests" -testFilter "TestUIGeometry.TestUIGeometryAlloc46" -testResults "Logs\SingleTest.xml"
 ```
+
+Do not add `-quit` when running Unity Test Runner commands in this repository; it can exit before the XML results are written.
 
 ### Lint
 
