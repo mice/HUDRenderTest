@@ -117,6 +117,8 @@ public class PrefabBatchSceneRunner : MonoBehaviour, IPerfProbeSource
         if (ownerTemplates == null || ownerTemplates.Length == 0)
             throw new InvalidOperationException("ownerTemplates must contain at least one UIPrefabOwner.");
 
+        uiPrefabManager.SetBatchTextureLimit(enable8TexSlots ? 7 : 3);
+
         for (int i = 0; i < count; i++)
         {
             var holder = CreateHolder();

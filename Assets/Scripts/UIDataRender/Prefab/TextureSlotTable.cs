@@ -43,6 +43,20 @@ public sealed class TextureSlotTable
         return true;
     }
 
+    public void SetMaxImageSlots(int maxImageSlots)
+    {
+        if (maxImageSlots < 1)
+        {
+            maxImageSlots = 1;
+        }
+        else if (maxImageSlots > MaxSupportedImageSlots)
+        {
+            maxImageSlots = MaxSupportedImageSlots;
+        }
+
+        MaxImageSlots = maxImageSlots;
+    }
+
     public int GetSlot(Texture texture)
     {
         if (texture == null)

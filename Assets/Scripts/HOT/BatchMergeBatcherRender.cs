@@ -97,6 +97,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
         ClearRuntimeHolders();
         batchRenderer?.Dispose();
         batchRenderer = new HolderBatchRenderer(enable8TexSlots ? 7 : 3);
+        uiPrefabManager.SetBatchTextureLimit(enable8TexSlots ? 7 : 3);
 
         CreateActiveOwners();
         PrepareOwnerFonts();
@@ -377,7 +378,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
                 j++;
                 var instance = Instantiate(ownerPrefab, parent);
                 instance.gameObject.name = $"{ownerPrefab.name}_RuntimeSource_{i}";
-                instance.transform.localPosition = position + new Vector3((j % 3) * 120, (j / 3) * 80, 0);
+                instance.transform.localPosition = position + new Vector3((j % 3) * runtimeStep.x, (j / 3) * runtimeStep.y, 0);
                 instance.transform.localRotation = Quaternion.identity;
                 instance.transform.localScale = Vector3.one;
 

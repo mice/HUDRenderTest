@@ -200,8 +200,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
@@ -220,8 +220,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
@@ -272,8 +272,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
@@ -448,8 +448,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
   m_BlockingMask:
@@ -465,8 +465,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
@@ -752,8 +752,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95e728942351448faa0719562f794285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   uiCamera: {fileID: 1558523180}
   uiRoot: {fileID: 935420797}
@@ -765,15 +765,16 @@ MonoBehaviour:
   - {fileID: -4300781021522663617, guid: 9f15ece5f9fb9ca459fdbc0d27cf14f7, type: 3}
   - {fileID: 957583371931596414, guid: cd1dcc792656c274e90eb48212d5fb7b, type: 3}
   - {fileID: 957583371931596414, guid: a97b6f2efb11dfc4aa1b84acd7dbacce, type: 3}
-  useSlim: 1
-  enable8TexSlots: 0
+  - {fileID: 957583371931596414, guid: 6a6bc0ec380c8074e83b8e7d5b98cdaa, type: 3}
+  useSlim: 0
+  enable8TexSlots: 1
   autoRecreateOnStart: 1
   rebuildEveryFrame: 0
   hideSourceGraphics: 0
   instantiateOwnersAtRuntime: 1
   runtimeSourceRoot: {fileID: 216944786}
   runtimeStartPosition: {x: -200, y: 200, z: 0}
-  runtimeStep: {x: 0, y: -60, z: 0}
+  runtimeStep: {x: 120, y: -60, z: 0}
   csvTag: merge_batcher_scene
   targetOwnerIndex: 0
   targetDrawIndex: 2
@@ -782,12 +783,12 @@ MonoBehaviour:
   cycleOwnerIndex: 0
   cycleDrawIndex: 2
   spriteCycle: []
-  _recreate: 
-  _applyText: 
-  _applySprite: 
-  _cycleSprite: 
-  _flushProbe: 
-  _openCsvFolder: 
+  _recreate:
+  _applyText:
+  _applySprite:
+  _cycleSprite:
+  _flushProbe:
+  _openCsvFolder:
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

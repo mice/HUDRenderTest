@@ -195,6 +195,44 @@ public class TestTextureSlotTable
         Assert.AreEqual(7, table.MaxImageSlots, "MaxImageSlots capped at supported maximum");
     }
 
+    [Test]
+    public void SetMaxImageSlots_BeforeRegister_AvoidsOverCapacityWarning()
+    {
+        var table = new TextureSlotTable(maxImageSlots: 3);
+
+        table.SetMaxImageSlots(7);
+
+        for (int i = 0; i < 6; i++)
+        {
+            var texture = CreateTexture($"T{i}");
+            var slot = table.Register(100 + i, texture);
+            Assert.AreEqual(i + 1, slot);
+        }
+
+        Assert.AreEqual(7, table.MaxImageSlots);
+        Assert.AreEqual(6, table.Textures.Count);
+    }
+
+    [Test]
+    public void SetMaxImageSlots_CanReduceCapacityForFutureWarnings()
+    {
+        var table = new TextureSlotTable(maxImageSlots: 7);
+        var texA = CreateTexture("A");
+        var texB = CreateTexture("B");
+        var texC = CreateTexture("C");
+        var texD = CreateTexture("D");
+
+        table.SetMaxImageSlots(3);
+
+        Assert.AreEqual(1, table.Register(101, texA));
+        Assert.AreEqual(2, table.Register(102, texB));
+        Assert.AreEqual(3, table.Register(103, texC));
+
+        LogAssert.Expect(LogType.Warning, new Regex(@"\[TextureSlotTable\] texture count exceeds per-batch limit"));
+        Assert.AreEqual(4, table.Register(104, texD));
+        Assert.AreEqual(3, table.MaxImageSlots);
+    }
+
     private Texture2D CreateTexture(string name)
     {
         var texture = new Texture2D(2, 2) { name = name };

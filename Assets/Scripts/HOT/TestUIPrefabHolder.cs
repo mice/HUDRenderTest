@@ -58,6 +58,7 @@ public class TestUIPrefabHolder : MonoBehaviour, IPerfProbeSource
         }
 
         created = true;
+        uiPrefabManager.SetBatchTextureLimit(enable8TexSlots ? 7 : MaxSlotsPerBatch);
         foreach (var holder in holders)
         {
             holder.UseSlim(useSlim);
