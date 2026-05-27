@@ -68,7 +68,15 @@ public class PrefabBatchSceneRunner : MonoBehaviour, IPerfProbeSource
         if (Probe == null)
             return;
 
-        LastCsvPath = Probe.Flush(csvTag);
+        LastCsvPath = Probe.Flush(
+            csvTag,
+            new Dictionary<string, string>
+            {
+                { "useSlim", useSlim.ToString() },
+                { "enable8TexSlots", enable8TexSlots.ToString() },
+                { "holderCount", holders.Count.ToString() },
+                { "batchCount", BatchCount.ToString() }
+            });
         UpdateStatusText();
     }
 

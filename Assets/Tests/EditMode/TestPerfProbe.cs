@@ -1,4 +1,5 @@
 using System.IO;
+using System.Collections.Generic;
 using NUnit.Framework;
 using UIData;
 
@@ -102,6 +103,44 @@ public class TestPerfProbe
         string[] parts = drawRow.Split(',');
         float max = float.Parse(parts[2], System.Globalization.CultureInfo.InvariantCulture);
         Assert.That(max, Is.EqualTo(0f), "MaxDrawCalls must be 0 for empty probe, not int.MinValue");
+
+        File.Delete(path);
+    }
+
+    [Test]
+    public void Flush_Sanitizes_FileName_Tag()
+    {
+        var probe = new PerfProbe(windowSize: 2);
+        probe.Record(1f, 1);
+
+        string path = probe.Flush("merge batcher/scene 8slot");
+        string fileName = Path.GetFileName(path);
+
+        StringAssert.StartsWith("perf_merge-batcher-scene-8slot_", fileName);
+        Assert.IsFalse(fileName.Contains(" "), "filename should not preserve whitespace");
+        Assert.IsFalse(fileName.Contains("/"), "filename should not preserve path separators");
+
+        File.Delete(path);
+    }
+
+    [Test]
+    public void Flush_Writes_Context_Metadata()
+    {
+        var probe = new PerfProbe(windowSize: 2);
+        probe.Record(2f, 3);
+
+        string path = probe.Flush(
+            "context_case",
+            new Dictionary<string, string>
+            {
+                { "useSlim", bool.TrueString },
+                { "batchCount", "2" }
+            });
+
+        string text = File.ReadAllText(path);
+        StringAssert.Contains("context,value", text);
+        StringAssert.Contains("useSlim,True", text);
+        StringAssert.Contains("batchCount,2", text);
 
         File.Delete(path);
     }

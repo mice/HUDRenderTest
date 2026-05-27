@@ -113,4 +113,37 @@ public class TestEightSlotPerfRunner
 
         Object.DestroyImmediate(go);
     }
+
+    [UnityTest]
+    public IEnumerator BatchMergeBatcherRender_Button_Starts_Comparison()
+    {
+        var go = new GameObject("EightSlotPerfRunnerButton");
+        var target = go.AddComponent<StubEightSlotPerfTarget>();
+        var controller = go.AddComponent<BatchMergeBatcherRender>();
+        var runner = go.AddComponent<EightSlotPerfRunner>();
+
+        runner.targetBehaviour = target;
+        runner.autoStart = false;
+        runner.warmupFrames = 0;
+        runner.sampleFrames = 1;
+        runner.baseTag = "button_case";
+        runner.forceRebuildEveryFrame = true;
+        runner.restoreOriginalStateOnComplete = false;
+
+        controller.StartEightSlotComparison();
+
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+
+        Assert.IsFalse(string.IsNullOrEmpty(runner.ThreeSlotCsvPath));
+        Assert.IsFalse(string.IsNullOrEmpty(runner.EightSlotCsvPath));
+        Assert.IsTrue(File.Exists(runner.ThreeSlotCsvPath));
+        Assert.IsTrue(File.Exists(runner.EightSlotCsvPath));
+
+        File.Delete(runner.ThreeSlotCsvPath);
+        File.Delete(runner.EightSlotCsvPath);
+        Object.DestroyImmediate(go);
+    }
 }

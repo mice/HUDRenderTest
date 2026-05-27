@@ -126,7 +126,15 @@ public class TestUIPrefabHolder : MonoBehaviour, IPerfProbeSource
         if (Probe == null)
             return;
 
-        LastCsvPath = Probe.Flush(csvTag);
+        LastCsvPath = Probe.Flush(
+            csvTag,
+            new Dictionary<string, string>
+            {
+                { "useSlim", useSlim.ToString() },
+                { "enable8TexSlots", enable8TexSlots.ToString() },
+                { "holderCount", holders != null ? holders.Count.ToString() : "0" },
+                { "batchCount", BatchCount.ToString() }
+            });
     }
 
     private void OpenCsvFolder()

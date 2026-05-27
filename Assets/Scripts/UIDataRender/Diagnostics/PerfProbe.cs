@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Unity.Profiling;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace UIData
     public class PerfProbe
     {
         public const int DefaultWindowSize = 10800;
+        private const string DefaultTag = "probe";
 
         public static readonly ProfilerMarker FillMarker     = new ProfilerMarker("UIData.Fill");
         public static readonly ProfilerMarker MergeJobMarker = new ProfilerMarker("UIData.MergeJob");
@@ -48,17 +50,26 @@ namespace UIData
         /// running in the Unity Editor, otherwise falls back to Application.persistentDataPath.
         /// Returns the full path of the written file.
         /// </summary>
-        public string Flush(string deviceTag)
+        public string Flush(string deviceTag, IReadOnlyDictionary<string, string> context = null)
         {
             string dir  = GetOutputDirectory();
             Directory.CreateDirectory(dir);
             string ts   = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-            string path = Path.Combine(dir, $"perf_{deviceTag}_{ts}.csv");
+            string tag  = SanitizeTag(deviceTag);
+            string path = Path.Combine(dir, $"perf_{tag}_{ts}.csv");
             using (var w = new StreamWriter(path))
             {
                 w.WriteLine("metric,avg,max");
                 w.WriteLine(FormattableString.Invariant($"fill_ms,{AvgMs:F3},{MaxMs:F3}"));
                 w.WriteLine(FormattableString.Invariant($"draw_calls,{AvgDrawCalls:F3},{(float)MaxDrawCalls:F3}"));
+
+                if (context != null && context.Count > 0)
+                {
+                    w.WriteLine();
+                    w.WriteLine("context,value");
+                    foreach (var pair in context)
+                        w.WriteLine($"{EscapeCsv(pair.Key)},{EscapeCsv(pair.Value)}");
+                }
             }
             return path;
         }
@@ -77,6 +88,41 @@ namespace UIData
             }
 
             return Application.persistentDataPath;
+        }
+
+        public static string SanitizeTag(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return DefaultTag;
+
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var chars = value.Trim().ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (char.IsWhiteSpace(chars[i]) || Array.IndexOf(invalidChars, chars[i]) >= 0)
+                {
+                    chars[i] = '-';
+                    continue;
+                }
+
+                if (chars[i] == Path.DirectorySeparatorChar || chars[i] == Path.AltDirectorySeparatorChar)
+                    chars[i] = '-';
+            }
+
+            string sanitized = new string(chars).Trim('-', '_');
+            return string.IsNullOrEmpty(sanitized) ? DefaultTag : sanitized;
+        }
+
+        private static string EscapeCsv(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+
+            bool needsQuotes = value.IndexOfAny(new[] { ',', '"', '\r', '\n' }) >= 0;
+            if (!needsQuotes)
+                return value;
+
+            return $"\"{value.Replace("\"", "\"\"")}\"";
         }
 
         private float SumDurations()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -35,6 +36,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public Vector3 runtimeStartPosition;
     public Vector3 runtimeStep = new Vector3(0f, -60f, 0f);
     public string csvTag = "merge_batcher_scene";
+    public EightSlotPerfRunner comparisonRunner;
 
     [Header("Manual edit")]
     public int targetOwnerIndex;
@@ -57,6 +59,8 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public string _cycleSprite;
     [Button(nameof(FlushProbe))]
     public string _flushProbe;
+    [Button(nameof(StartEightSlotComparison))]
+    public string _startEightSlotComparison;
     [Button(nameof(OpenCsvFolder))]
     public string _openCsvFolder;
 
@@ -172,8 +176,32 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
         if (Probe == null)
             return;
 
-        LastCsvPath = Probe.Flush(csvTag);
+        LastCsvPath = Probe.Flush(BuildProbeTag(), BuildProbeContext());
         UpdateStatusText();
+    }
+
+    public void StartEightSlotComparison()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogError("Only Run In PlayMode");
+            return;
+        }
+
+        var runner = comparisonRunner != null ? comparisonRunner : GetComponent<EightSlotPerfRunner>();
+        if (runner == null)
+        {
+            runner = gameObject.AddComponent<EightSlotPerfRunner>();
+            runner.autoStart = false;
+            if (!string.IsNullOrWhiteSpace(csvTag))
+                runner.baseTag = $"{csvTag}_compare";
+            comparisonRunner = runner;
+        }
+
+        if (runner.target == null && runner.targetBehaviour == null)
+            runner.target = this;
+
+        runner.StartComparison();
     }
 
     public void OpenCsvFolder()
@@ -494,5 +522,48 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
         string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)} mode:{displayMode}\n{LastCsvPath}";
         if (statusText.text != next)
             statusText.text = next;
+    }
+
+    private string BuildProbeTag()
+    {
+        var parts = new List<string>(6);
+        AddTagPart(parts, csvTag);
+
+        string slotTag = enable8TexSlots ? "8slot" : "3slot";
+        if (!ContainsTag(csvTag, slotTag))
+            AddTagPart(parts, slotTag);
+
+        AddTagPart(parts, useSlim ? "slim" : "managed");
+        AddTagPart(parts, rebuildEveryFrame ? "rebuild-every-frame" : "rebuild-on-demand");
+        AddTagPart(parts, $"owners{runtimeHolders.Count}");
+        AddTagPart(parts, $"batches{BatchCount}");
+        AddTagPart(parts, displayMode.ToString());
+
+        return string.Join("_", parts);
+    }
+
+    private Dictionary<string, string> BuildProbeContext()
+    {
+        return new Dictionary<string, string>
+        {
+            { "useSlim", useSlim.ToString() },
+            { "enable8TexSlots", enable8TexSlots.ToString() },
+            { "rebuildEveryFrame", rebuildEveryFrame.ToString() },
+            { "owners", runtimeHolders.Count.ToString() },
+            { "batches", BatchCount.ToString() },
+            { "displayMode", displayMode.ToString() }
+        };
+    }
+
+    private static void AddTagPart(List<string> parts, string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+            parts.Add(UIData.PerfProbe.SanitizeTag(value));
+    }
+
+    private static bool ContainsTag(string source, string tag)
+    {
+        return !string.IsNullOrEmpty(source) &&
+               source.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0;
     }
 }
