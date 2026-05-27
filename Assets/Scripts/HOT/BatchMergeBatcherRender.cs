@@ -9,13 +9,19 @@ using UnityEngine.UI;
 /// Keeps the BatchTextRenderer-style "press button to rebuild" workflow,
 /// but renders through UIPrefabManager + MergeBatcher + HolderBatchRenderer.
 /// </summary>
-public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSlotPerfTarget
+public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSlotPerfTarget, IDynamicSwapTarget
 {
     public enum DisplayMode
     {
         UIAndDataRender = 0,
         UIOnly = 1,
         DataRenderOnly = 2
+    }
+
+    public enum CycleOwnerSelectionMode
+    {
+        RuntimeIndex = 0,
+        PrefabAndInstance = 1
     }
 
     private static readonly int MainTex0 = Shader.PropertyToID("_MainTex0");
@@ -32,11 +38,13 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public bool rebuildEveryFrame;
     public DisplayMode displayMode = DisplayMode.DataRenderOnly;
     public bool instantiateOwnersAtRuntime;
+    public int runtimeInstancesPerPrefab = 3;
     public Transform runtimeSourceRoot;
     public Vector3 runtimeStartPosition;
     public Vector3 runtimeStep = new Vector3(0f, -60f, 0f);
     public string csvTag = "merge_batcher_scene";
     public EightSlotPerfRunner comparisonRunner;
+    public DynamicSwapRunner dynamicSwapRunner;
 
     [Header("Manual edit")]
     public int targetOwnerIndex;
@@ -45,7 +53,10 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public Sprite spriteOverride;
 
     [Header("Manual sprite cycle")]
+    public CycleOwnerSelectionMode cycleOwnerSelectionMode = CycleOwnerSelectionMode.PrefabAndInstance;
     public int cycleOwnerIndex;
+    public int cycleOwnerPrefabIndex;
+    public int cycleOwnerInstanceIndex;
     public int cycleDrawIndex = 2;
     public Sprite[] spriteCycle = System.Array.Empty<Sprite>();
 
@@ -57,6 +68,8 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public string _applySprite;
     [Button(nameof(CycleSprite))]
     public string _cycleSprite;
+    [Button(nameof(StartDynamicSwapSequence))]
+    public string _startDynamicSwapSequence;
     [Button(nameof(FlushProbe))]
     public string _flushProbe;
     [Button(nameof(StartEightSlotComparison))]
@@ -78,6 +91,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     private bool suppressFontTextureRebuildCallback;
     private DisplayMode appliedDisplayMode;
     private bool displayModeInitialized;
+    private string actionMessage;
 
     public UIData.PerfProbe Probe => batchRenderer != null ? batchRenderer.Probe : null;
     public int BatchCount => batchRenderer != null ? batchRenderer.BatchCount : 0;
@@ -161,14 +175,28 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     public void CycleSprite()
     {
         if (spriteCycle == null || spriteCycle.Length == 0)
+        {
+            ReportAction("CycleSprite skipped: spriteCycle is empty.", logWarning: true);
             return;
-        if (!TryGetHolder(cycleOwnerIndex, out var holder))
+        }
+
+        if (!TryResolveCycleHolderIndex(runtimeHolders.Count, out int resolvedIndex, out string reason))
+        {
+            ReportAction(reason, logWarning: true);
             return;
+        }
+
+        if (!TryGetHolder(resolvedIndex, out var holder))
+        {
+            ReportAction($"CycleSprite skipped: resolved holder index {resolvedIndex} is out of range.", logWarning: true);
+            return;
+        }
 
         var sprite = spriteCycle[cycleSpriteIndex % spriteCycle.Length];
         cycleSpriteIndex++;
         holder.SetSprite(cycleDrawIndex, sprite);
         RebuildMesh();
+        ReportAction($"CycleSprite applied: holder={resolvedIndex}, draw={cycleDrawIndex}, sprite={(sprite != null ? sprite.name : "<null>")}, step={cycleSpriteIndex}/{spriteCycle.Length}");
     }
 
     public void FlushProbe()
@@ -202,6 +230,34 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
             runner.target = this;
 
         runner.StartComparison();
+    }
+
+    public void StartDynamicSwapSequence()
+    {
+        if (!Application.isPlaying)
+        {
+            Debug.LogError("Only Run In PlayMode");
+            return;
+        }
+
+        var runner = dynamicSwapRunner != null ? dynamicSwapRunner : GetComponent<DynamicSwapRunner>();
+        if (runner == null)
+        {
+            runner = gameObject.AddComponent<DynamicSwapRunner>();
+            runner.autoStart = false;
+            if (!string.IsNullOrWhiteSpace(csvTag))
+                runner.baseTag = $"{csvTag}_dynamic_swap";
+            dynamicSwapRunner = runner;
+        }
+
+        if (runner.outputText == null && statusText != null)
+            runner.outputText = statusText;
+
+        if (runner.target == null && runner.targetBehaviour == null)
+            runner.target = this;
+
+        ReportAction("DynamicSwap sequence started.");
+        runner.StartSequence();
     }
 
     public void OpenCsvFolder()
@@ -410,7 +466,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
         var parent = runtimeSourceRoot != null ? runtimeSourceRoot : transform;
         Vector3 position = runtimeStartPosition;
         int j = 0;
-        int count = 3;
+        int count = Mathf.Max(runtimeInstancesPerPrefab, 1);
         foreach (var ownerPrefab in ownerPrefabs)
         {
             position = runtimeStartPosition;
@@ -519,9 +575,21 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
         if (statusText == null)
             return;
 
-        string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)} mode:{displayMode}\n{LastCsvPath}";
+        string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)} mode:{displayMode}";
+        if (!string.IsNullOrWhiteSpace(actionMessage))
+            next += $"\n{actionMessage}";
+        next += $"\n{LastCsvPath}";
         if (statusText.text != next)
             statusText.text = next;
+    }
+
+    private void ReportAction(string message, bool logWarning = false)
+    {
+        actionMessage = message;
+        UpdateStatusText();
+
+        if (logWarning)
+            Debug.LogWarning(message);
     }
 
     private string BuildProbeTag()
@@ -565,5 +633,52 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
     {
         return !string.IsNullOrEmpty(source) &&
                source.IndexOf(tag, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    private bool TryResolveCycleHolderIndex(int holderCount, out int resolvedIndex, out string reason)
+    {
+        if (instantiateOwnersAtRuntime && cycleOwnerSelectionMode == CycleOwnerSelectionMode.PrefabAndInstance)
+        {
+            if (runtimeInstancesPerPrefab <= 0)
+            {
+                resolvedIndex = -1;
+                reason = "CycleSprite skipped: runtimeInstancesPerPrefab must be > 0.";
+                return false;
+            }
+
+            if (cycleOwnerPrefabIndex < 0 || cycleOwnerPrefabIndex >= ownerPrefabs.Count)
+            {
+                resolvedIndex = -1;
+                reason = $"CycleSprite skipped: cycleOwnerPrefabIndex {cycleOwnerPrefabIndex} is out of range for ownerPrefabs.";
+                return false;
+            }
+
+            if (cycleOwnerInstanceIndex < 0 || cycleOwnerInstanceIndex >= runtimeInstancesPerPrefab)
+            {
+                resolvedIndex = -1;
+                reason = $"CycleSprite skipped: cycleOwnerInstanceIndex {cycleOwnerInstanceIndex} must be between 0 and {runtimeInstancesPerPrefab - 1}.";
+                return false;
+            }
+
+            resolvedIndex = cycleOwnerPrefabIndex * runtimeInstancesPerPrefab + cycleOwnerInstanceIndex;
+            if (resolvedIndex < 0 || resolvedIndex >= holderCount)
+            {
+                reason = $"CycleSprite skipped: resolved holder index {resolvedIndex} is out of range.";
+                return false;
+            }
+
+            reason = null;
+            return true;
+        }
+
+        resolvedIndex = cycleOwnerIndex;
+        if (resolvedIndex < 0 || resolvedIndex >= holderCount)
+        {
+            reason = $"CycleSprite skipped: cycleOwnerIndex {cycleOwnerIndex} is out of range.";
+            return false;
+        }
+
+        reason = null;
+        return true;
     }
 }
