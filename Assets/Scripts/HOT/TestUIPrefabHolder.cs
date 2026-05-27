@@ -132,11 +132,11 @@ public class TestUIPrefabHolder : MonoBehaviour, IPerfProbeSource
     private void OpenCsvFolder()
     {
         string directory = string.IsNullOrEmpty(LastCsvPath)
-            ? Application.persistentDataPath
+            ? UIData.PerfProbe.GetOutputDirectory()
             : Path.GetDirectoryName(LastCsvPath);
 
         if (string.IsNullOrEmpty(directory))
-            directory = Application.persistentDataPath;
+            directory = UIData.PerfProbe.GetOutputDirectory();
 
         Application.OpenURL(new System.Uri(directory).AbsoluteUri);
     }

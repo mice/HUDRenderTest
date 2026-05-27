@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// Keeps the BatchTextRenderer-style "press button to rebuild" workflow,
 /// but renders through UIPrefabManager + MergeBatcher + HolderBatchRenderer.
 /// </summary>
-public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
+public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSlotPerfTarget
 {
     public enum DisplayMode
     {
@@ -78,6 +78,9 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
     public UIData.PerfProbe Probe => batchRenderer != null ? batchRenderer.Probe : null;
     public int BatchCount => batchRenderer != null ? batchRenderer.BatchCount : 0;
     public string LastCsvPath { get; private set; }
+    public bool Enable8TexSlots { get => enable8TexSlots; set => enable8TexSlots = value; }
+    public bool RebuildEveryFrame { get => rebuildEveryFrame; set => rebuildEveryFrame = value; }
+    public string CsvTag { get => csvTag; set => csvTag = value; }
 
     private void OnEnable()
     {
@@ -176,11 +179,11 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
     public void OpenCsvFolder()
     {
         string directory = string.IsNullOrEmpty(LastCsvPath)
-            ? Application.persistentDataPath
+            ? UIData.PerfProbe.GetOutputDirectory()
             : Path.GetDirectoryName(LastCsvPath);
 
         if (string.IsNullOrEmpty(directory))
-            directory = Application.persistentDataPath;
+            directory = UIData.PerfProbe.GetOutputDirectory();
 
         Application.OpenURL(new System.Uri(directory).AbsoluteUri);
     }

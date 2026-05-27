@@ -16,7 +16,6 @@ namespace UIData
         public static readonly ProfilerMarker FillMarker     = new ProfilerMarker("UIData.Fill");
         public static readonly ProfilerMarker MergeJobMarker = new ProfilerMarker("UIData.MergeJob");
         public static readonly ProfilerMarker DrawMarker     = new ProfilerMarker("UIData.Draw");
-
         private readonly float[] _durations;
         private readonly int[]   _drawCallCounts;
         private int _writePos;
@@ -45,12 +44,13 @@ namespace UIData
         }
 
         /// <summary>
-        /// Writes aggregated stats to a CSV file in Application.persistentDataPath.
+        /// Writes aggregated stats to a CSV file in a project-local temporary folder when
+        /// running in the Unity Editor, otherwise falls back to Application.persistentDataPath.
         /// Returns the full path of the written file.
         /// </summary>
         public string Flush(string deviceTag)
         {
-            string dir  = Application.persistentDataPath;
+            string dir  = GetOutputDirectory();
             Directory.CreateDirectory(dir);
             string ts   = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             string path = Path.Combine(dir, $"perf_{deviceTag}_{ts}.csv");
@@ -61,6 +61,22 @@ namespace UIData
                 w.WriteLine(FormattableString.Invariant($"draw_calls,{AvgDrawCalls:F3},{(float)MaxDrawCalls:F3}"));
             }
             return path;
+        }
+
+        public static string GetOutputDirectory()
+        {
+            if (Application.isEditor)
+            {
+                string dataPath = Application.dataPath;
+                if (!string.IsNullOrEmpty(dataPath))
+                {
+                    var projectDir = Directory.GetParent(dataPath);
+                    if (projectDir != null)
+                        return Path.GetFullPath(Path.Combine(projectDir.FullName, "Logs", "PerfProbe"));
+                }
+            }
+
+            return Application.persistentDataPath;
         }
 
         private float SumDurations()

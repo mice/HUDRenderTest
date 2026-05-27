@@ -75,11 +75,11 @@ public class PrefabBatchSceneRunner : MonoBehaviour, IPerfProbeSource
     public void OpenCsvFolder()
     {
         string directory = string.IsNullOrEmpty(LastCsvPath)
-            ? Application.persistentDataPath
+            ? PerfProbe.GetOutputDirectory()
             : Path.GetDirectoryName(LastCsvPath);
 
         if (string.IsNullOrEmpty(directory))
-            directory = Application.persistentDataPath;
+            directory = PerfProbe.GetOutputDirectory();
 
         Application.OpenURL(new Uri(directory).AbsoluteUri);
     }

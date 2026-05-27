@@ -8,6 +8,12 @@ using UIData;
 /// </summary>
 public class TestPerfProbe
 {
+    private static string NormalizePath(string path)
+    {
+        return Path.GetFullPath(path)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    }
+
     // TC-PP-01
     [Test]
     public void Window_AvgMaxCorrect()
@@ -52,6 +58,9 @@ public class TestPerfProbe
         string path = probe.Flush("test");
 
         Assert.IsTrue(File.Exists(path), "CSV file must exist after Flush");
+        Assert.That(
+            NormalizePath(Path.GetDirectoryName(path)),
+            Is.EqualTo(NormalizePath(PerfProbe.GetOutputDirectory())));
 
         string[] lines = File.ReadAllLines(path);
         Assert.GreaterOrEqual(lines.Length, 2, "CSV must have at least a header row and one data row");
@@ -83,6 +92,9 @@ public class TestPerfProbe
         string path = probe.Flush("empty");
 
         Assert.IsTrue(File.Exists(path));
+        Assert.That(
+            NormalizePath(Path.GetDirectoryName(path)),
+            Is.EqualTo(NormalizePath(PerfProbe.GetOutputDirectory())));
         string[] lines = File.ReadAllLines(path);
         // draw_calls row: avg and max must both be 0, not int.MinValue
         string drawRow = System.Array.Find(lines, l => l.StartsWith("draw_calls"));

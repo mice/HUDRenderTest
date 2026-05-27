@@ -4,7 +4,8 @@ param(
     [string]$ProjectPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
     [switch]$SkipEditMode,
     [switch]$SkipPlayMode,
-    [switch]$WithCoverage
+    [switch]$WithCoverage,
+    [double]$CoverageThreshold = -1
 )
 
 Set-StrictMode -Version Latest
@@ -18,12 +19,28 @@ function Remove-PathIfExists {
     }
 }
 
+function Get-UnityLockMessage {
+    param([string]$LogPath)
+
+    if (-not (Test-Path -LiteralPath $LogPath)) {
+        return $null
+    }
+
+    $match = Select-String -Path $LogPath -Pattern "another Unity instance is running with this project open" -SimpleMatch -ErrorAction SilentlyContinue
+    if ($null -ne $match) {
+        return "Unity project is locked by an already running Editor instance. Close the Unity Editor for this project, then rerun validation."
+    }
+
+    return $null
+}
+
 function Invoke-UnityTestRun {
     param(
         [string]$Name,
         [string[]]$Arguments,
         [string]$ResultPath,
-        [string]$LogPath
+        [string]$LogPath,
+        [int]$ResultWaitSeconds = 300
     )
 
     Remove-PathIfExists -Path $ResultPath
@@ -33,12 +50,17 @@ function Invoke-UnityTestRun {
     & $script:UnityExe @Arguments
     $exitCode = $LASTEXITCODE
 
+    $lockMessage = Get-UnityLockMessage -LogPath $LogPath
+    if ($null -ne $lockMessage) {
+        throw $lockMessage
+    }
+
     if ($exitCode -ne 0) {
         throw "$Name failed with exit code $exitCode. See $LogPath"
     }
 
     $run = $null
-    for ($i = 0; $i -lt 60 -and $null -eq $run; $i++) {
+    for ($i = 0; $i -lt $ResultWaitSeconds -and $null -eq $run; $i++) {
         if (Test-Path -LiteralPath $ResultPath) {
             try {
                 [xml]$xml = Get-Content -LiteralPath $ResultPath
@@ -55,6 +77,11 @@ function Invoke-UnityTestRun {
     }
 
     if ($null -eq $run) {
+        $lockMessage = Get-UnityLockMessage -LogPath $LogPath
+        if ($null -ne $lockMessage) {
+            throw $lockMessage
+        }
+
         throw "$Name produced an invalid NUnit XML: $ResultPath"
     }
 
@@ -151,6 +178,12 @@ if ($WithCoverage) {
     foreach ($artifact in $coverageArtifacts) {
         Write-Host "  $($artifact.FullName)"
     }
+
+    if ($CoverageThreshold -ge 0) {
+        $summaryPath = Join-Path $coveragePath "Report\Summary.xml"
+        $gateScript = Join-Path $PSScriptRoot "Test-CoverageGate.ps1"
+        & $gateScript -SummaryPath $summaryPath -AssemblyName "UIDataRender" -MinimumLineCoverage $CoverageThreshold
+    }
 }
 
 Write-Host ""
@@ -162,4 +195,10 @@ foreach ($summary in $summaries) {
 
 if ($WithCoverage) {
     Write-Host ("  {0}" -f $coveragePath)
+}
+
+$failedSummaries = @($summaries | Where-Object { $_.Result -ne "Passed" -or $_.Failed -gt 0 })
+if ($failedSummaries.Count -gt 0) {
+    $names = ($failedSummaries | ForEach-Object { $_.Name }) -join ", "
+    throw "Validation failed: $names"
 }

@@ -35,11 +35,16 @@ jobs:
           projectPath: .
           unityVersion: 2022.3.53f1c1
           testMode: editmode
+          customParameters: -assemblyNames Tests
           artifactsPath: TestResults
           coverageOptions: >
             generateAdditionalMetrics;
             generateHtmlReport;
             assemblyFilters:+UIDataRender
+
+      - name: Enforce UIDataRender coverage gate
+        shell: pwsh
+        run: .\Tools\Test-CoverageGate.ps1 -SummaryPath "CodeCoverage/Report/Summary.xml" -AssemblyName "UIDataRender" -MinimumLineCoverage 70
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
