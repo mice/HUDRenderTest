@@ -769,7 +769,7 @@ MonoBehaviour:
   enable8TexSlots: 0
   autoRecreateOnStart: 1
   rebuildEveryFrame: 0
-  hideSourceGraphics: 0
+  displayMode: 0
   instantiateOwnersAtRuntime: 1
   runtimeSourceRoot: {fileID: 216944786}
   runtimeStartPosition: {x: -200, y: 200, z: 0}

@@ -10,6 +10,13 @@ using UnityEngine.UI;
 /// </summary>
 public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
 {
+    public enum DisplayMode
+    {
+        UIAndDataRender = 0,
+        UIOnly = 1,
+        DataRenderOnly = 2
+    }
+
     private static readonly int MainTex0 = Shader.PropertyToID("_MainTex0");
 
     public Font font;
@@ -22,7 +29,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
     public bool enable8TexSlots;
     public bool autoRecreateOnStart = true;
     public bool rebuildEveryFrame;
-    public bool hideSourceGraphics = true;
+    public DisplayMode displayMode = DisplayMode.DataRenderOnly;
     public bool instantiateOwnersAtRuntime;
     public Transform runtimeSourceRoot;
     public Vector3 runtimeStartPosition;
@@ -65,6 +72,8 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
     private int cycleSpriteIndex;
     private bool pendingFontRebuildRefresh;
     private bool suppressFontTextureRebuildCallback;
+    private DisplayMode appliedDisplayMode;
+    private bool displayModeInitialized;
 
     public UIData.PerfProbe Probe => batchRenderer != null ? batchRenderer.Probe : null;
     public int BatchCount => batchRenderer != null ? batchRenderer.BatchCount : 0;
@@ -120,9 +129,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
             positionMap[holder] = owner.transform.localPosition;
         }
 
-        if (hideSourceGraphics)
-            SetSourceGraphicsVisible(false);
-
+        ApplyDisplayMode(true);
         RebuildMesh();
     }
 
@@ -186,13 +193,16 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
             RegenerateAllHolders();
         }
 
+        if (displayModeInitialized && appliedDisplayMode != displayMode)
+            ApplyDisplayMode(false);
+
         if (rebuildEveryFrame && runtimeHolders.Count > 0)
             RebuildMesh();
     }
 
     private void LateUpdate()
     {
-        if (batchRenderer == null || uiRoot == null)
+        if (batchRenderer == null || uiRoot == null || displayMode == DisplayMode.UIOnly)
             return;
 
         batchRenderer.Draw(uiRoot.localToWorldMatrix, 5, uiCamera);
@@ -323,6 +333,8 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
     private void ClearRuntimeHolders()
     {
         SetSourceGraphicsVisible(true);
+        appliedDisplayMode = DisplayMode.DataRenderOnly;
+        displayModeInitialized = false;
 
         foreach (var holder in runtimeHolders)
         {
@@ -388,6 +400,17 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
         }
     }
 
+    private void ApplyDisplayMode(bool force)
+    {
+        if (!force && displayModeInitialized && appliedDisplayMode == displayMode)
+            return;
+
+        SetSourceGraphicsVisible(displayMode != DisplayMode.DataRenderOnly);
+        appliedDisplayMode = displayMode;
+        displayModeInitialized = true;
+        UpdateStatusText();
+    }
+
     private void SetSourceGraphicsVisible(bool visible)
     {
         if (visible)
@@ -399,6 +422,8 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
                     continue;
 
                 state.CanvasGroup.alpha = state.OriginalAlpha;
+                state.CanvasGroup.interactable = state.OriginalInteractable;
+                state.CanvasGroup.blocksRaycasts = state.OriginalBlocksRaycasts;
                 if (state.CreatedByRunner)
                 {
                     if (Application.isPlaying)
@@ -423,22 +448,38 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
                 canvasGroup = owner.gameObject.AddComponent<CanvasGroup>();
                 created = true;
             }
-            sourceCanvasGroups[owner] = new SourceCanvasGroupState(canvasGroup, canvasGroup.alpha, created);
+            sourceCanvasGroups[owner] = new SourceCanvasGroupState(
+                canvasGroup,
+                canvasGroup.alpha,
+                canvasGroup.interactable,
+                canvasGroup.blocksRaycasts,
+                created);
             canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
         }
     }
 
     private readonly struct SourceCanvasGroupState
     {
-        public SourceCanvasGroupState(CanvasGroup canvasGroup, float originalAlpha, bool createdByRunner)
+        public SourceCanvasGroupState(
+            CanvasGroup canvasGroup,
+            float originalAlpha,
+            bool originalInteractable,
+            bool originalBlocksRaycasts,
+            bool createdByRunner)
         {
             CanvasGroup = canvasGroup;
             OriginalAlpha = originalAlpha;
+            OriginalInteractable = originalInteractable;
+            OriginalBlocksRaycasts = originalBlocksRaycasts;
             CreatedByRunner = createdByRunner;
         }
 
         public CanvasGroup CanvasGroup { get; }
         public float OriginalAlpha { get; }
+        public bool OriginalInteractable { get; }
+        public bool OriginalBlocksRaycasts { get; }
         public bool CreatedByRunner { get; }
     }
 
@@ -447,7 +488,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource
         if (statusText == null)
             return;
 
-        string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)}\n{LastCsvPath}";
+        string next = $"owners:{runtimeHolders.Count} batches:{BatchCount} probe:{(Probe != null ? Probe.Count : 0)} mode:{displayMode}\n{LastCsvPath}";
         if (statusText.text != next)
             statusText.text = next;
     }
