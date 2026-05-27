@@ -231,6 +231,7 @@ public class BatchMergeBatcherRender : MonoBehaviour, IPerfProbeSource, IEightSl
             return;
 
         LastCsvPath = Probe.Flush(BuildProbeTag(), BuildProbeContext());
+        actionMessage = $"CSV flushed: {Path.GetFileName(LastCsvPath)}";
         UpdateStatusText();
     }
 
