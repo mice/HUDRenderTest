@@ -34,7 +34,9 @@ public class TestMergeJobs
     }
 
     // TC-JOB-02
+    // TestRecord: Documentation~/Testing/Unit/Jobs/UT_JOB_005.md
     [UnityTest]
+    [Category("UT_JOB_005")]
     public IEnumerator Merge_EquivalentToSingleThread()
     {
         const int meshCount = 2;

@@ -38,7 +38,9 @@ public class TestEightSlotPerfRunner
         }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_008.md
     [UnityTest]
+    [Category("UT_PERF_008")]
     public IEnumerator Runner_Flushes_ThreeSlot_And_EightSlot_Csvs()
     {
         var go = new GameObject("EightSlotPerfRunner");
@@ -77,7 +79,9 @@ public class TestEightSlotPerfRunner
         Object.DestroyImmediate(go);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_009.md
     [UnityTest]
+    [Category("UT_PERF_009")]
     public IEnumerator Runner_Restores_Target_State_On_Completion()
     {
         var go = new GameObject("EightSlotPerfRunnerRestore");
@@ -114,7 +118,9 @@ public class TestEightSlotPerfRunner
         Object.DestroyImmediate(go);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_007.md
     [UnityTest]
+    [Category("UT_PERF_007")]
     public IEnumerator BatchMergeBatcherRender_Button_Starts_Comparison()
     {
         var go = new GameObject("EightSlotPerfRunnerButton");

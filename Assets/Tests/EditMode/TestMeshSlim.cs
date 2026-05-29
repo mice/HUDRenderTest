@@ -2,7 +2,9 @@ using NUnit.Framework;
 
 public class TestMeshSlim
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_001.md
     [Test]
+    [Category("UT_MESH_001")]
     public void Dispose_Resets_AllFields()
     {
         var mesh = new MeshSlim
@@ -23,7 +25,9 @@ public class TestMeshSlim
         Assert.AreEqual(0, mesh.IndicesCount);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_002.md
     [Test]
+    [Category("UT_MESH_002")]
     public void Equals_AndComparer_Ignore_Index_But_UseGeometryFields()
     {
         var left = new MeshSlim

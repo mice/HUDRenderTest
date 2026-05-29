@@ -11,7 +11,9 @@ public class TestCalcMatrix
     // Note: CalcMatrix walks up from subNode until parent==root.
     // When subNode is a direct child of root with identity local transform,
     // the single TRS(zero, identity, one) == Matrix4x4.identity.
+    // TestRecord: Documentation~/Testing/Unit/Matrix/UT_MTX_002.md
     [Test]
+    [Category("UT_MTX_002")]
     public void SameLevel_IdentityLocal_ReturnsIdentity()
     {
         var rootGO  = new GameObject("root");
@@ -36,7 +38,9 @@ public class TestCalcMatrix
     }
 
     // TC-MTX-02
+    // TestRecord: Documentation~/Testing/Unit/Matrix/UT_MTX_001.md
     [Test]
+    [Category("UT_MTX_001")]
     public void Nested_ReturnsRelativeTRS()
     {
         var rootGO = new GameObject("root");

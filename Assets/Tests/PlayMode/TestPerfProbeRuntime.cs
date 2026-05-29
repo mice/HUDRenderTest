@@ -66,7 +66,9 @@ public class TestPerfProbeRuntime
         public void Fill(List<int> triangles, Vector3 localPosition) { }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_009.md
     [UnityTest]
+    [Category("UT_DIAG_009")]
     public IEnumerator ProbeFlush_AfterRuntimeRebuild_WritesCsv()
     {
         var probe = new PerfProbe(windowSize: 4);

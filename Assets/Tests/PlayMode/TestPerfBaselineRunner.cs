@@ -12,7 +12,9 @@ public class TestPerfBaselineRunner
         public PerfProbe Probe { get; } = new PerfProbe(4);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_011.md
     [UnityTest]
+    [Category("UT_PERF_011")]
     public IEnumerator Runner_Flushes_SourceProbe_AfterWindow()
     {
         var go = new GameObject("PerfRunner");
@@ -39,7 +41,9 @@ public class TestPerfBaselineRunner
         Object.DestroyImmediate(go);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_010.md
     [UnityTest]
+    [Category("UT_PERF_010")]
     public IEnumerator Runner_Fallback_Records_FrameTime_When_SourceMissing()
     {
         var go = new GameObject("PerfRunnerFallback");

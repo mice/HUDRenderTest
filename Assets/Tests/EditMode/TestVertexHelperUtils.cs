@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 public class TestVertexHelperUtils
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_013.md
     [Test]
+    [Category("UT_MESH_013")]
     public void FillData2_WritesTextureIndexAndFlags()
     {
         var verts = new Vector3[0];
@@ -27,7 +29,9 @@ public class TestVertexHelperUtils
         }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_014.md
     [Test]
+    [Category("UT_MESH_014")]
     public void FillData3_IndicesIncludeVertexOffset()
     {
         var verts = new Vector3[0];

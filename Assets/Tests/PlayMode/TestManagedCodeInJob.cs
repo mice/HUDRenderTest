@@ -16,7 +16,9 @@ public class TestManagedCodeInJob
     }
 
     // TC-JOB-01
+    // TestRecord: Documentation~/Testing/Unit/Jobs/UT_JOB_003.md
     [UnityTest]
+    [Category("UT_JOB_003")]
     public IEnumerator Complete_FreesGCHandle()
     {
         var go = new GameObject("ManagedCodeInJob");
@@ -35,7 +37,9 @@ public class TestManagedCodeInJob
     }
 
     // Additional: scheduling multiple tasks in one frame all complete.
+    // TestRecord: Documentation~/Testing/Unit/Jobs/UT_JOB_004.md
     [UnityTest]
+    [Category("UT_JOB_004")]
     public IEnumerator MultipleSchedule_AllComplete()
     {
         var go = new GameObject("ManagedCodeInJobMulti");

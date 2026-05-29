@@ -10,7 +10,9 @@ using UnityEngine;
 public class TestUnsafeFastCopy
 {
     // TC-UFC-01
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_017.md
     [Test]
+    [Category("UT_UTIL_017")]
     public unsafe void CopyVec4_EquivalentToArrayCopy()
     {
         var src = new Vector4[]
@@ -39,7 +41,9 @@ public class TestUnsafeFastCopy
     }
 
     // TC-UFC-01 extended: destIndex offset shifts write position
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_016.md
     [Test]
+    [Category("UT_UTIL_016")]
     public unsafe void CopyVec4_DestIndex_ShiftsWritePosition()
     {
         const int destOffset = 2;
@@ -63,7 +67,9 @@ public class TestUnsafeFastCopy
     }
 
     // TC-UFC-02
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_015.md
     [Test]
+    [Category("UT_UTIL_015")]
     public unsafe void CopyColor32_EquivalentToArrayCopy()
     {
         var src = new Color32[]

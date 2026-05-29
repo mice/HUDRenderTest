@@ -56,7 +56,9 @@ public class TestHolderNotifier
     }
 
     // TC-HN-01: SlotReplaced only calls UpdateTextureIndex on meshes mapped to the 'from' slot.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_009.md
     [Test]
+    [Category("UT_PREF_009")]
     public void SlotReplaced_TargetedNotify()
     {
         var meshFrom = new StubMesh { TextureIndex = 1 };
@@ -73,7 +75,9 @@ public class TestHolderNotifier
     }
 
     // TC-HN-02: SlotRemoved sets TextureIndex = -1 only on meshes mapped to the given slot.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_007.md
     [Test]
+    [Category("UT_PREF_007")]
     public void SlotRemoved_SetsMinusOne()
     {
         var meshTarget = new StubMesh { TextureIndex = 1 };
@@ -89,7 +93,9 @@ public class TestHolderNotifier
     }
 
     // Verifies the event subscription chain: TextureSlotTable.SlotReplaced → HolderNotifier.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_010.md
     [Test]
+    [Category("UT_PREF_010")]
     public void SlotReplaced_ViaTSlotEvent_UpdatesMesh()
     {
         var texA = new Texture2D(2, 2) { name = "A" };
@@ -123,7 +129,9 @@ public class TestHolderNotifier
     }
 
     // Verifies the event subscription chain: TextureSlotTable.SlotRemoved → HolderNotifier.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_008.md
     [Test]
+    [Category("UT_PREF_008")]
     public void SlotRemoved_ViaTSlotEvent_SetsMinusOne()
     {
         var texA = new Texture2D(2, 2) { name = "A" };
@@ -154,7 +162,9 @@ public class TestHolderNotifier
 
     // TC-HN-03: After Untrack → TextureIndex change → Track (simulating SetSprite/UntrackMesh+TrackMesh),
     // events at the OLD slot no longer reach the mesh; events at the NEW slot do.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_006.md
     [Test]
+    [Category("UT_PREF_006")]
     public void Retrack_AfterTextureIndexChange_SlotEventHitsNewSlotOnly()
     {
         var mesh = new StubMesh { TextureIndex = 1 };
@@ -178,7 +188,9 @@ public class TestHolderNotifier
 
     // TC-HN-04: AddHolder registers all holder meshes; RemoveHolder clears all tracking;
     // subsequent slot events do not reach removed meshes.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_005.md
     [Test]
+    [Category("UT_PREF_005")]
     public void RemoveHolder_AfterAddHolder_ClearsAllMeshTracking()
     {
         var mesh1 = new StubMesh { TextureIndex = 1 };

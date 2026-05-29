@@ -9,7 +9,9 @@ using NUnit.Framework;
 public class TestFreeListAllocator
 {
     // TC-FA-01
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_004.md
     [Test]
+    [Category("UT_UTIL_004")]
     public void Ctor_SingleFullSlice()
     {
         const int cap = 100;
@@ -22,7 +24,9 @@ public class TestFreeListAllocator
     }
 
     // TC-FA-02
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_001.md
     [Test]
+    [Category("UT_UTIL_001")]
     public void Alloc_ExactMatch_RemovesSlice()
     {
         var alloc = new FreeListAllocator(10);
@@ -35,7 +39,9 @@ public class TestFreeListAllocator
     }
 
     // TC-FA-03
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_003.md
     [Test]
+    [Category("UT_UTIL_003")]
     public void Alloc_Split_LargerSlice()
     {
         var alloc = new FreeListAllocator(20);
@@ -50,7 +56,9 @@ public class TestFreeListAllocator
     }
 
     // TC-FA-04: no GrowCallback in this implementation; Alloc returns false when exhausted
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_002.md
     [Test]
+    [Category("UT_UTIL_002")]
     public void Alloc_NoFit_ReturnsFalse()
     {
         var alloc = new FreeListAllocator(4);
@@ -63,7 +71,9 @@ public class TestFreeListAllocator
     }
 
     // TC-FA-05: Release case1..5 – merging behavior
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_010.md
     [Test]
+    [Category("UT_UTIL_010")]
     public void Release_LeftAdjacent_MergesForward()
     {
         // Free list: [(8,4)]. Release (4,4) → adjacent from left → merge to [(4,8)]
@@ -76,7 +86,9 @@ public class TestFreeListAllocator
         Assert.AreEqual(8, alloc.FreeList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_012.md
     [Test]
+    [Category("UT_UTIL_012")]
     public void Release_RightAdjacent_MergesBackward()
     {
         // Free list: [(0,4)]. Release (4,4) → adjacent from right → merge to [(0,8)]
@@ -89,7 +101,9 @@ public class TestFreeListAllocator
         Assert.AreEqual(8, alloc.FreeList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_006.md
     [Test]
+    [Category("UT_UTIL_006")]
     public void Release_BothAdjacent_MergesThreeWay()
     {
         // Free list: [(0,4),(8,4)]. Release (4,4) → bridges both → merge to [(0,12)]
@@ -103,7 +117,9 @@ public class TestFreeListAllocator
         Assert.AreEqual(12, alloc.FreeList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_009.md
     [Test]
+    [Category("UT_UTIL_009")]
     public void Release_InsertBeforeHead_NotAdjacent()
     {
         // Free list: [(8,4)]. Release (0,4) → before head, gap → [(0,4),(8,4)]
@@ -117,7 +133,9 @@ public class TestFreeListAllocator
         Assert.AreEqual(8, alloc.FreeList.Last.Value.start);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_008.md
     [Test]
+    [Category("UT_UTIL_008")]
     public void Release_InsertAfterTail_NotAdjacent()
     {
         // Free list: [(0,4)]. Release (8,4) → after tail, gap → [(0,4),(8,4)]
@@ -132,7 +150,9 @@ public class TestFreeListAllocator
     }
 
     // TC-FA-06
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_007.md
     [Test]
+    [Category("UT_UTIL_007")]
     public void Release_Case0_Middle_Standalone()
     {
         // Free list: [(0,4),(8,4)]. Release (5,2) – middle, not adjacent to either.
@@ -151,7 +171,9 @@ public class TestFreeListAllocator
     }
 
     // TC-FA-07: Fuzz – free + allocated = capacity at every step
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_005.md
     [Test]
+    [Category("UT_UTIL_005")]
     public void Fuzz_RandomAllocRelease()
     {
         const int cap = 100;
@@ -193,7 +215,9 @@ public class TestFreeListAllocator
     }
 
     // TC-FA-08
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_011.md
     [Test]
+    [Category("UT_UTIL_011")]
     public void Release_OrderIndependence()
     {
         // Releasing two non-adjacent slices in either order produces the same free list.

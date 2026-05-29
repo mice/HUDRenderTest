@@ -7,7 +7,9 @@ using UnityEngine.UI;
 
 public class TestOverCapacityScene
 {
+    // TestRecord: Documentation~/Testing/Unit/Scenes/UT_SCENE_001.md
     [UnityTest]
+    [Category("UT_SCENE_001")]
     public IEnumerator BatchMergeBatcherRender_Recreate_ReportsOverCapacity_AndSplitsBatches()
     {
         var warnings = new List<string>();

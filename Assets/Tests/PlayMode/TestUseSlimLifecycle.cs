@@ -28,7 +28,9 @@ public class TestUseSlimLifecycle
     }
 
     // TC-LIFE-01
+    // TestRecord: Documentation~/Testing/Unit/Scenes/UT_SCENE_003.md
     [UnityTest]
+    [Category("UT_SCENE_003")]
     public IEnumerator UseSlim_Switch_ReRegisters()
     {
         var owner  = _ownerGO.AddComponent<UIPrefabOwner>();

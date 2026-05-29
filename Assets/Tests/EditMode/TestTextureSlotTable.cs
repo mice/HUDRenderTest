@@ -20,7 +20,9 @@ public class TestTextureSlotTable
         LogAssert.NoUnexpectedReceived();
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_003.md
     [Test]
+    [Category("UT_TEX_003")]
     public void Register_First_ReturnsSlot1()
     {
         var table = new TextureSlotTable();
@@ -32,7 +34,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(1, table.Textures.Count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_007.md
     [Test]
+    [Category("UT_TEX_007")]
     public void Register_SameTexture_SharesSlot()
     {
         var table = new TextureSlotTable();
@@ -46,7 +50,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(1, table.Textures.Count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_006.md
     [Test]
+    [Category("UT_TEX_006")]
     public void Register_SameOwnerNewTex_ReplacesOld()
     {
         var table = new TextureSlotTable();
@@ -69,7 +75,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(-1, table.GetSlot(texA));
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_011.md
     [Test]
+    [Category("UT_TEX_011")]
     public void Unregister_TriggersSwapWithLast()
     {
         var table = new TextureSlotTable();
@@ -93,7 +101,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(2, table.Textures.Count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_010.md
     [Test]
+    [Category("UT_TEX_010")]
     public void Unregister_LastSlot_OnlyRemoved()
     {
         var table = new TextureSlotTable();
@@ -117,7 +127,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(1, table.Textures.Count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_004.md
     [Test]
+    [Category("UT_TEX_004")]
     public void Register_OverCapacity_RegistersAndWarns()
     {
         var table = new TextureSlotTable(2);
@@ -136,7 +148,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(3, table.GetSlot(texC));
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_005.md
     [Test]
+    [Category("UT_TEX_005")]
     public void Register_OverCapacity_UnregisterReassignsSlot()
     {
         var table = new TextureSlotTable(2);
@@ -160,7 +174,9 @@ public class TestTextureSlotTable
     }
 
     // TC-TST-07: ExpandTo increases MaxImageSlots and allows registering beyond the default limit.
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_002.md
     [Test]
+    [Category("UT_TEX_002")]
     public void ExpandTo_IncreasesCapacityAndAllowsRegistration()
     {
         var table = new TextureSlotTable(maxImageSlots: 2);
@@ -181,7 +197,9 @@ public class TestTextureSlotTable
     }
 
     // TC-TST-08: ExpandTo is capped at MaxSupportedImageSlots (7); values ≤ current are no-ops.
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_001.md
     [Test]
+    [Category("UT_TEX_001")]
     public void ExpandTo_CappedAt7_AndNoOpBelowCurrent()
     {
         var table = new TextureSlotTable(maxImageSlots: 3);
@@ -195,7 +213,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(7, table.MaxImageSlots, "MaxImageSlots capped at supported maximum");
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_008.md
     [Test]
+    [Category("UT_TEX_008")]
     public void SetMaxImageSlots_BeforeRegister_AvoidsOverCapacityWarning()
     {
         var table = new TextureSlotTable(maxImageSlots: 3);
@@ -213,7 +233,9 @@ public class TestTextureSlotTable
         Assert.AreEqual(6, table.Textures.Count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Texture/UT_TEX_009.md
     [Test]
+    [Category("UT_TEX_009")]
     public void SetMaxImageSlots_CanReduceCapacityForFutureWarnings()
     {
         var table = new TextureSlotTable(maxImageSlots: 7);

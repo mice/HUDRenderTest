@@ -16,7 +16,9 @@ public class TestPerfProbe
     }
 
     // TC-PP-01
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_006.md
     [Test]
+    [Category("UT_DIAG_006")]
     public void Window_AvgMaxCorrect()
     {
         var probe = new PerfProbe(windowSize: 5);
@@ -34,7 +36,9 @@ public class TestPerfProbe
     }
 
     // TC-PP-01 extended: wrap-around in circular buffer
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_007.md
     [Test]
+    [Category("UT_DIAG_007")]
     public void Window_CircularBuffer_WrapsCorrectly()
     {
         var probe = new PerfProbe(windowSize: 3);
@@ -49,7 +53,9 @@ public class TestPerfProbe
     }
 
     // TC-PP-02
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_005.md
     [Test]
+    [Category("UT_DIAG_005")]
     public void Flush_WritesCsv()
     {
         var probe = new PerfProbe(windowSize: 4);
@@ -85,7 +91,9 @@ public class TestPerfProbe
     }
 
     // TC-PP-02 extended: Flush on empty probe must not produce sentinel values
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_002.md
     [Test]
+    [Category("UT_DIAG_002")]
     public void Flush_EmptyProbe_WritesZeroes()
     {
         var probe = new PerfProbe(windowSize: 4);
@@ -107,7 +115,9 @@ public class TestPerfProbe
         File.Delete(path);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_003.md
     [Test]
+    [Category("UT_DIAG_003")]
     public void Flush_Sanitizes_FileName_Tag()
     {
         var probe = new PerfProbe(windowSize: 2);
@@ -123,7 +133,9 @@ public class TestPerfProbe
         File.Delete(path);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_004.md
     [Test]
+    [Category("UT_DIAG_004")]
     public void Flush_Writes_Context_Metadata()
     {
         var probe = new PerfProbe(windowSize: 2);

@@ -23,7 +23,9 @@ public class TestOwnerRegistry
     }
 
     // TC-OR-01: Two GetOrCreate calls with the same owner return the exact same registration.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_011.md
     [Test]
+    [Category("UT_PREF_011")]
     public void GetOrCreate_SameOwner_ReturnsSameRegistration()
     {
         var owner = _go.AddComponent<UIPrefabOwner>();
@@ -39,7 +41,9 @@ public class TestOwnerRegistry
 
     // TC-OR-02: TryGet returns false for an unknown owner; after GetOrCreate it returns true and
     // the same instance.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_012.md
     [Test]
+    [Category("UT_PREF_012")]
     public void TryGet_ReturnsFalseBeforeCreate_TrueAfter()
     {
         var owner = _go.AddComponent<UIPrefabOwner>();

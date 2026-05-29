@@ -139,7 +139,7 @@ if (-not $SkipEditMode) {
             "-debugCodeOptimization",
             "-enableCodeCoverage",
             "-coverageResultsPath", $coveragePath,
-            "-coverageOptions", "generateAdditionalMetrics;generateHtmlReport;assemblyFilters:+UIDataRender"
+            "-coverageOptions", "generateAdditionalMetrics;generateHtmlReport;assemblyFilters:+UIDataRender,+UGui.Extends,+HOT,+managedTask"
         )
     }
 
@@ -159,6 +159,15 @@ if (-not $SkipPlayMode) {
         "-testResults", $playResultPath,
         "-logFile", $playLogPath
     )
+
+    if ($WithCoverage) {
+        $playArgs += @(
+            "-debugCodeOptimization",
+            "-enableCodeCoverage",
+            "-coverageResultsPath", $coveragePath,
+            "-coverageOptions", "generateAdditionalMetrics;generateHtmlReport;assemblyFilters:+UIDataRender,+UGui.Extends,+HOT,+managedTask"
+        )
+    }
 
     $summaries += Invoke-UnityTestRun -Name "PlayMode repo tests" -Arguments $playArgs -ResultPath $playResultPath -LogPath $playLogPath
 }

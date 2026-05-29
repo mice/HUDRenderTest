@@ -77,7 +77,9 @@ public class TestHolderBatchRenderer
         public void Fill(List<int> triangles, Vector3 localPosition) { }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_002.md
     [Test]
+    [Category("UT_BATCH_002")]
     public void Rebuild_SplitsThroughMergeBatcher_AndRecordsPerf()
     {
         var renderer = new HolderBatchRenderer(maxSlots: 3, probe: new PerfProbe(windowSize: 4));
@@ -97,7 +99,9 @@ public class TestHolderBatchRenderer
         renderer.Dispose();
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_001.md
     [Test]
+    [Category("UT_BATCH_001")]
     public void Rebuild_RemapsGlobalSlotsToBatchLocalSlots()
     {
         var renderer = new HolderBatchRenderer(maxSlots: 3, probe: new PerfProbe(windowSize: 4));

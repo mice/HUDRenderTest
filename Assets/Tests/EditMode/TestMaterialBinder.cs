@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class TestMaterialBinder
 {
+    // TestRecord: Documentation~/Testing/Unit/Material/UT_MAT_001.md
     [Test]
+    [Category("UT_MAT_001")]
     public void Bind_NullMaterial_DoesNotThrow()
     {
         var texture = new Texture2D(1, 1);
@@ -13,7 +15,9 @@ public class TestMaterialBinder
         Object.DestroyImmediate(texture);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Material/UT_MAT_002.md
     [Test]
+    [Category("UT_MAT_002")]
     public void Bind_WritesSequentialSlots_AndCapsAtSeven()
     {
         var shader = Shader.Find("Hidden/UIE-AtlasBlit");

@@ -23,7 +23,9 @@ public class TestUIPrefabRegistration
     }
 
     // TC-REG-01
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_013.md
     [Test]
+    [Category("UT_PREF_013")]
     public void MultiInstance_TextIndependent()
     {
         var owner = _ownerGO.AddComponent<UIPrefabOwner>();

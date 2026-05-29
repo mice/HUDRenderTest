@@ -12,7 +12,9 @@ public class TestLogHygiene
         UIMeshDataX.geometry.Reset();
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_001.md
     [Test]
+    [Category("UT_DIAG_001")]
     public void NoUnexpectedErrors_OnHotPath()
     {
         var meshData = new UIMeshData();

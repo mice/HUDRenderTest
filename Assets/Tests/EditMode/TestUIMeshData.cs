@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class TestUIMeshData
 {
     // TC-UM-01
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_003.md
     [Test]
+    [Category("UT_MESH_003")]
     public void FillToDrawData_AppliesLocalPosition()
     {
         var meshData = new UIMeshData();
@@ -32,7 +34,9 @@ public class TestUIMeshData
     }
 
     // TC-UM-02
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_004.md
     [Test]
+    [Category("UT_MESH_004")]
     public void FillToDrawData_RebasesIndices()
     {
         var meshData = new UIMeshData();
@@ -61,7 +65,9 @@ public class TestUIMeshData
     }
 
     // TC-UM-04
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_006.md
     [Test]
+    [Category("UT_MESH_006")]
     public void UpdateTextureIndex_WritesUvZForAll()
     {
         var meshData = new UIMeshData();
@@ -79,7 +85,9 @@ public class TestUIMeshData
     }
 
     // TC-UM-03
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_005.md
     [Test]
+    [Category("UT_MESH_005")]
     public void FillWithMatrix_ScaleRotation()
     {
         var meshData = new UIMeshData();

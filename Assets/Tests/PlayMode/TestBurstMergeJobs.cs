@@ -13,7 +13,9 @@ public class TestBurstMergeJobs
 {
     private static readonly int[] QuadIndices = { 0, 1, 2, 2, 3, 0 };
 
+    // TestRecord: Documentation~/Testing/Unit/Jobs/UT_JOB_001.md
     [UnityTest]
+    [Category("UT_JOB_001")]
     public IEnumerator BurstMerge_EquivalentToSoAMerge()
     {
         const int meshCount = 2;
@@ -97,7 +99,9 @@ public class TestBurstMergeJobs
         }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Jobs/UT_JOB_002.md
     [UnityTest]
+    [Category("UT_JOB_002")]
     public IEnumerator BurstMerge_UsesWhiteWhenSourceColorsAreEmpty()
     {
         var meshes = new NativeArray<MeshSlimSoA>(1, Allocator.TempJob);

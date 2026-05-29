@@ -48,7 +48,9 @@ public class TestMergeBatcher
     }
 
     // TC-MB-01: Holders whose combined slot count fits in MaxImageSlots produce a single batch.
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_004.md
     [Test]
+    [Category("UT_BATCH_004")]
     public void Plan_FitsInOneBatch()
     {
         var batcher = new MergeBatcher(maxSlots: 3);
@@ -63,7 +65,9 @@ public class TestMergeBatcher
     }
 
     // TC-MB-02: When combined slots exceed MaxImageSlots, batches split and LogWarning fires.
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_005.md
     [Test]
+    [Category("UT_BATCH_005")]
     public void Plan_SplitsWhenOver()
     {
         var batcher = new MergeBatcher(maxSlots: 3);
@@ -79,7 +83,9 @@ public class TestMergeBatcher
     }
 
     // TC-MB-03: Greedy first-fit packs overlapping holders into the first available batch.
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_003.md
     [Test]
+    [Category("UT_BATCH_003")]
     public void Plan_FirstFit_MinimizesBatches()
     {
         var batcher = new MergeBatcher(maxSlots: 3);

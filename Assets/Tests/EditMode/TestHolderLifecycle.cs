@@ -50,7 +50,9 @@ public class TestHolderLifecycle
     }
 
     // TC-HL-01: Add places the holder in the lifecycle set.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_001.md
     [Test]
+    [Category("UT_PREF_001")]
     public void Add_MarksHolderInLifecycle()
     {
         var holder = new StubHolder();
@@ -63,7 +65,9 @@ public class TestHolderLifecycle
 
     // TC-HL-02: Remove removes from lifecycle and clears notifier tracking so slot events no
     // longer reach the holder's meshes.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_002.md
     [Test]
+    [Category("UT_PREF_002")]
     public void Remove_AfterTrack_ClearsLifecycleAndNotifier()
     {
         var mesh = new StubMesh { TextureIndex = 1 };
@@ -82,7 +86,9 @@ public class TestHolderLifecycle
     }
 
     // TC-HL-03: Remove on a holder that was never added is a safe no-op (must not throw).
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_003.md
     [Test]
+    [Category("UT_PREF_003")]
     public void Remove_WhenNotAdded_IsNoOp()
     {
         var holder = new StubHolder();
@@ -92,7 +98,9 @@ public class TestHolderLifecycle
     }
 
     // TC-HL-04: Track adds holder to both the lifecycle set and the notifier atomically.
+    // TestRecord: Documentation~/Testing/Unit/Prefab/UT_PREF_004.md
     [Test]
+    [Category("UT_PREF_004")]
     public void Track_RegistersMeshInNotifier_AndLifecycle()
     {
         var mesh = new StubMesh { TextureIndex = 2 };

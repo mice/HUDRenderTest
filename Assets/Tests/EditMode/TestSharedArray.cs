@@ -8,7 +8,9 @@ using Stella3D;
 public class TestSharedArray
 {
     // TC-SA-01
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_013.md
     [Test]
+    [Category("UT_UTIL_013")]
     public void ManagedWrite_NativeRead()
     {
         using var sa = new SharedArray<float>(4);
@@ -27,7 +29,9 @@ public class TestSharedArray
     }
 
     // Complement: writing through NativeArray is visible in managed view
+    // TestRecord: Documentation~/Testing/Unit/Utility/UT_UTIL_014.md
     [Test]
+    [Category("UT_UTIL_014")]
     public void NativeWrite_ManagedRead()
     {
         using var sa = new SharedArray<int>(3);

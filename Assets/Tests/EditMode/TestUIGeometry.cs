@@ -2,7 +2,9 @@ using NUnit.Framework;
 
 public class TestUIGeometry
 {
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_017.md
     [Test]
+    [Category("UT_GEO_017")]
     public void TestUIGeometryctor()
     {
         var uiGeometry = new UIGeometry();
@@ -14,7 +16,9 @@ public class TestUIGeometry
         Assert.AreEqual(uiGeometry.indices.Length, uiGeometry.openIndicesList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_015.md
     [Test]
+    [Category("UT_GEO_015")]
     public void TestUIGeometryAlloc46()
     {
         var uiGeometry = new UIGeometry();
@@ -23,7 +27,9 @@ public class TestUIGeometry
         Assert.AreEqual(6, meshSlice.IndicesCount);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_016.md
     [Test]
+    [Category("UT_GEO_016")]
     public void TestUIGeometryAllocRelease()
     {
         var uiGeometry = new UIGeometry();
@@ -36,7 +42,9 @@ public class TestUIGeometry
         AssertFull(uiGeometry);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_013.md
     [Test]
+    [Category("UT_GEO_013")]
     public void TestUIGeometryAlloc2T46()
     {
         var uiGeometry = new UIGeometry();
@@ -56,7 +64,9 @@ public class TestUIGeometry
         Assert.AreEqual(uiGeometry.indices.Length - 12, uiGeometry.openIndicesList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_014.md
     [Test]
+    [Category("UT_GEO_014")]
     public void TestUIGeometryAlloc2T46_release()
     {
         var uiGeometry = new UIGeometry();
@@ -77,7 +87,9 @@ public class TestUIGeometry
         AssertFull(uiGeometry);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_009.md
     [Test]
+    [Category("UT_GEO_009")]
     public void TestUIGeometry_release_case2()
     {
         var uiGeometry = new UIGeometry();
@@ -99,7 +111,9 @@ public class TestUIGeometry
         Assert.AreEqual(12, uiGeometry.openIndicesList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_008.md
     [Test]
+    [Category("UT_GEO_008")]
     public void TestUIGeometry_release_case1()
     {
         var uiGeometry = new UIGeometry();
@@ -121,7 +135,9 @@ public class TestUIGeometry
         Assert.AreEqual(6, uiGeometry.openIndicesList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_010.md
     [Test]
+    [Category("UT_GEO_010")]
     public void TestUIGeometry_release_case3()
     {
         var uiGeometry = new UIGeometry();
@@ -139,7 +155,9 @@ public class TestUIGeometry
         AssertFull(uiGeometry);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_011.md
     [Test]
+    [Category("UT_GEO_011")]
     public void TestUIGeometry_release_case4()
     {
         var uiGeometry = new UIGeometry();
@@ -163,7 +181,9 @@ public class TestUIGeometry
         Assert.AreEqual(12, uiGeometry.openIndicesList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_012.md
     [Test]
+    [Category("UT_GEO_012")]
     public void TestUIGeometry_release_case5()
     {
         var uiGeometry = new UIGeometry();
@@ -187,7 +207,9 @@ public class TestUIGeometry
         Assert.AreEqual(6, uiGeometry.openIndicesList.First.Value.count);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_005.md
     [Test]
+    [Category("UT_GEO_005")]
     public void Alloc_Triggers_Grow()
     {
         var uiGeometry = new UIGeometry();
@@ -206,7 +228,9 @@ public class TestUIGeometry
         AssertFull(uiGeometry);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_006.md
     [Test]
+    [Category("UT_GEO_006")]
     public void ReAlloc_FreesOldSlice()
     {
         var uiGeometry = new UIGeometry();
@@ -220,7 +244,9 @@ public class TestUIGeometry
         Assert.AreEqual(0, reused.IndicesOffset);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_007.md
     [Test]
+    [Category("UT_GEO_007")]
     public void Release_Case0_Middle_Standalone()
     {
         var uiGeometry = new UIGeometry();

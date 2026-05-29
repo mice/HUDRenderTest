@@ -11,7 +11,9 @@ public class TestUIMeshDataX
         UIMeshDataX.geometry.Reset();
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_010.md
     [Test]
+    [Category("UT_MESH_010")]
     public void FillToTriangleData_UsesIndicesOffset()
     {
         var first = new UIMeshDataX();
@@ -38,7 +40,9 @@ public class TestUIMeshDataX
         Assert.AreEqual(new Vector3(25, 6, 0), UIMeshDataX.geometry.drawVertex[second.mesh.VertexOffset + 3]);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_009.md
     [Test]
+    [Category("UT_MESH_009")]
     public void FillToDrawData_VertsEqual()
     {
         var output = CreateEquivalentOutputs();
@@ -46,7 +50,9 @@ public class TestUIMeshDataX
         CollectionAssert.AreEqual(output.MeshDataVerts, output.MeshDataXVerts);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_008.md
     [Test]
+    [Category("UT_MESH_008")]
     public void FillToDrawData_UVsColorsEqual()
     {
         var output = CreateEquivalentOutputs();
@@ -55,7 +61,9 @@ public class TestUIMeshDataX
         CollectionAssert.AreEqual(output.MeshDataColors, output.MeshDataXColors);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_007.md
     [Test]
+    [Category("UT_MESH_007")]
     public void FillToDrawData_IndicesEqual()
     {
         var output = CreateEquivalentOutputs();
@@ -63,7 +71,9 @@ public class TestUIMeshDataX
         CollectionAssert.AreEqual(output.MeshDataTriangles, output.MeshDataXTriangles);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_011.md
     [Test]
+    [Category("UT_MESH_011")]
     public void FillWithMatrix_IdentityEqualsFill()
     {
         var meshDataX = CreateMeshDataX();
@@ -83,7 +93,9 @@ public class TestUIMeshDataX
         CollectionAssert.AreEqual(fillOutput.Triangles, matrixOutput.Triangles);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_012.md
     [Test]
+    [Category("UT_MESH_012")]
     public void FillWithMatrix_TRSEqual()
     {
         var output = CreateMatrixOutputs(Matrix4x4.TRS(new Vector3(1, 2, 0), Quaternion.Euler(0, 0, 90), new Vector3(2, 3, 1)));

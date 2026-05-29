@@ -30,7 +30,9 @@ public class TestDynamicSwapRunner
         }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_006.md
     [UnityTest]
+    [Category("UT_PERF_006")]
     public IEnumerator Runner_Cycles_Target_And_Flushes_Csv()
     {
         var go = new GameObject("DynamicSwapRunner");
@@ -63,7 +65,9 @@ public class TestDynamicSwapRunner
         Object.DestroyImmediate(go);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_001.md
     [UnityTest]
+    [Category("UT_PERF_001")]
     public IEnumerator BatchMergeBatcherRender_Button_Starts_DynamicSwapSequence()
     {
         var go = new GameObject("DynamicSwapRunnerButton");
@@ -94,7 +98,9 @@ public class TestDynamicSwapRunner
         Object.DestroyImmediate(go);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_005.md
     [Test]
+    [Category("UT_PERF_005")]
     public void CycleSelection_UsesPrefabAndInstance_WhenConfigured()
     {
         var go = new GameObject("CycleSelection");
@@ -128,7 +134,9 @@ public class TestDynamicSwapRunner
         }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_004.md
     [Test]
+    [Category("UT_PERF_004")]
     public void CycleSelection_ReportsHelpfulError_WhenInstanceOutOfRange()
     {
         var go = new GameObject("CycleSelectionError");
@@ -161,7 +169,9 @@ public class TestDynamicSwapRunner
         }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_003.md
     [Test]
+    [Category("UT_PERF_003")]
     public void CycleDrawSelection_UsesTargetName_WhenConfigured()
     {
         var go = new GameObject("CycleDrawSelection");
@@ -198,7 +208,9 @@ public class TestDynamicSwapRunner
         }
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_002.md
     [Test]
+    [Category("UT_PERF_002")]
     public void CycleDrawSelection_ReportsAvailableTargets_WhenNameMissing()
     {
         var go = new GameObject("CycleDrawSelectionMissing");

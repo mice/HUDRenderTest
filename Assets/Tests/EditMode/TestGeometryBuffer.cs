@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class TestGeometryBuffer
 {
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_002.md
     [Test]
+    [Category("UT_GEO_002")]
     public void EnsureVertex_KeepsArraysParallel()
     {
         var buffer = new GeometryBuffer(4, 8, 4);
@@ -16,7 +18,9 @@ public class TestGeometryBuffer
         Assert.AreEqual(buffer.vertex.Length, buffer.colors.Length);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_001.md
     [Test]
+    [Category("UT_GEO_001")]
     public void EnsureIndex_Grows()
     {
         var buffer = new GeometryBuffer(4, 8, 4);
@@ -26,7 +30,9 @@ public class TestGeometryBuffer
         Assert.GreaterOrEqual(buffer.indices.Length, 9);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_003.md
     [Test]
+    [Category("UT_GEO_003")]
     public void Grow_PreservesContent()
     {
         var buffer = new GeometryBuffer(4, 8, 4);
@@ -46,7 +52,9 @@ public class TestGeometryBuffer
         Assert.AreEqual(15, buffer.indices[0]);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Geometry/UT_GEO_004.md
     [Test]
+    [Category("UT_GEO_004")]
     public void Grow_UsesGrowthStep()
     {
         var buffer = new GeometryBuffer(4, 8, 4);

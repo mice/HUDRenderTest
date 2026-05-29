@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class TestThreeSlotScene
 {
+    // TestRecord: Documentation~/Testing/Unit/Scenes/UT_SCENE_002.md
     [UnityTest]
+    [Category("UT_SCENE_002")]
     public IEnumerator BatchMergeBatcherRender_Recreate_StaysSingleBatch_AndReportsNoOverCapacity()
     {
         var root = new GameObject("ThreeSlotRoot");

@@ -7,7 +7,9 @@ using UnityEngine.UI;
 
 public class TestPerfProbeCsvScene
 {
+    // TestRecord: Documentation~/Testing/Unit/Diagnostics/UT_DIAG_008.md
     [UnityTest]
+    [Category("UT_DIAG_008")]
     public IEnumerator BatchMergeBatcherRender_FlushProbe_WritesCsv_AndUpdatesStatus()
     {
         var root = new GameObject("PerfProbeCsvRoot");
