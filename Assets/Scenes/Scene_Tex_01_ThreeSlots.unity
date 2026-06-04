@@ -769,10 +769,10 @@ MonoBehaviour:
   rebuildEveryFrame: 0
   displayMode: 0
   instantiateOwnersAtRuntime: 1
-  runtimeInstancesPerPrefab: 1
+  runtimeInstancesPerPrefab: 100
   runtimeSourceRoot: {fileID: 216944786}
   runtimeStartPosition: {x: -200, y: 200, z: 0}
-  runtimeStep: {x: 0, y: -60, z: 0}
+  runtimeStep: {x: 60, y: -60, z: 0}
   csvTag: three_slot_scene
   comparisonRunner: {fileID: 0}
   dynamicSwapRunner: {fileID: 0}
@@ -786,7 +786,7 @@ MonoBehaviour:
   cycleOwnerInstanceIndex: 0
   cycleDrawSelectionMode: 1
   cycleDrawIndex: 2
-  cycleDrawTargetName: ''
+  cycleDrawTargetName:
   spriteCycle: []
   _recreate: 
   _applyText: 
