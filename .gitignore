@@ -11,6 +11,10 @@
 /.vs
 /.vscode
 /Packages
+!/Packages/
+Packages/*
+!/Packages/manifest.json
+!/Packages/packages-lock.json
 /ProjectSettings
 /UserSettings/EditorUserSettings.asset
 /UserSettings
