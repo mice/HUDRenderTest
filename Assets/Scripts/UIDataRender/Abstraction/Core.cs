@@ -9,3 +9,10 @@ public interface IUIDrawTarget
 {
     void DoGenerate(IUIData meshData, Transform root = null);//UIMeshData
 }
+
+public interface IUITextDrawTarget : IUIDrawTarget
+{
+    string Text { get; set; }
+    Texture TextTexture { get; }
+    Material TextMaterial { get; }
+}

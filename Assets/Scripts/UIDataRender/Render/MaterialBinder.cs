@@ -8,6 +8,12 @@ using UnityEngine;
 /// </summary>
 public static class MaterialBinder
 {
+    private static readonly int TextShaderProperty = Shader.PropertyToID("_MainTex0");
+    private static readonly int TmpShaderProperty = Shader.PropertyToID("_MainTex");
+    private static readonly int FaceColorProperty = Shader.PropertyToID("_FaceColor");
+    private static readonly int OutlineColorProperty = Shader.PropertyToID("_OutlineColor");
+    private static readonly int OutlineWidthProperty = Shader.PropertyToID("_OutlineWidth");
+
     private static readonly int[] ShaderProperties =
     {
         Shader.PropertyToID("_MainTex1"),
@@ -28,5 +34,25 @@ public static class MaterialBinder
         var count = Mathf.Min(textures.Count, ShaderProperties.Length);
         for (int i = 0; i < count; i++)
             material.SetTexture(ShaderProperties[i], textures[i]);
+    }
+
+    public static void BindText(Material material, Texture texture)
+    {
+        if (material == null) return;
+        material.SetTexture(TextShaderProperty, texture);
+    }
+
+    public static void BindTmpSdf(Material material, Texture texture, Material sourceMaterial = null)
+    {
+        if (material == null) return;
+        material.SetTexture(TmpShaderProperty, texture);
+        if (sourceMaterial == null) return;
+
+        if (sourceMaterial.HasProperty(FaceColorProperty))
+            material.SetColor(FaceColorProperty, sourceMaterial.GetColor(FaceColorProperty));
+        if (sourceMaterial.HasProperty(OutlineColorProperty))
+            material.SetColor(OutlineColorProperty, sourceMaterial.GetColor(OutlineColorProperty));
+        if (sourceMaterial.HasProperty(OutlineWidthProperty))
+            material.SetFloat(OutlineWidthProperty, sourceMaterial.GetFloat(OutlineWidthProperty));
     }
 }
