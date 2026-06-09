@@ -32,11 +32,11 @@ public class TestUIPrefabHolder : MonoBehaviour, IPerfProbeSource
     public int BatchCount => batchRenderer != null ? batchRenderer.BatchCount : 0;
     public string LastCsvPath { get; private set; }
 
-    [Button("ReCreate")]
+    [Button(nameof(ReCreate))]
     public string _X;
-    [Button("ModifyText")]
+    [Button(nameof(ModifyText))]
     public string _Y;
-    [Button("NullIcon")]
+    [Button(nameof(NullIcon))]
     public string _Z;
     [Button(nameof(FlushProbe))]
     public string _Probe;
