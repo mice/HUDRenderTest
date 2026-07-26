@@ -19,7 +19,7 @@ public class UITMPText : TextMeshProUGUI, IUITextDrawTarget
         }
     }
 
-    public Material TextMaterial => fontMaterial;
+    public Material TextMaterial => fontSharedMaterial != null ? fontSharedMaterial : fontMaterial;
 
     public void DoGenerate(IUIData meshData, Transform root = null)
     {
