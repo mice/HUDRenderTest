@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "UIDataRender",
         "UGui.Extends",
-        "managedTask"
+        "managedTask",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [
         "Editor"

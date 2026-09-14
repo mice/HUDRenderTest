@@ -16,6 +16,7 @@ public class UIPrefabHolder : MonoBehaviour, IUIPrefabDataOwner
 
     private IUIPrefabHolder dataHolder;
     public IUIPrefabHolder DataHolder => dataHolder;
+    public UIPrefabOwner TargetOwner => _target;
 
     public void UseSlim(bool useSlim)
     {

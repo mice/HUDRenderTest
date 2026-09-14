@@ -8,11 +8,11 @@ using UnityEngine;
 
 public partial class UIPrefabRegistration
 {
-    public UIText SetText(int index, string text)
+    public IUITextDrawTarget SetText(int index, string text)
     {
-        if (index < draws.Length && draws[index] is UIText uiText)
+        if (index < draws.Length && draws[index] is IUITextDrawTarget uiText)
         {
-            uiText.text = text;
+            uiText.Text = text;
             return uiText;
         }
         return null;

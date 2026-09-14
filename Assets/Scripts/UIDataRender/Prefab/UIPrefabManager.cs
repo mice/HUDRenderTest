@@ -91,6 +91,34 @@ public partial class UIPrefabRegistration
         }
     }
 
+    public Texture GetPrimaryTextTexture()
+    {
+        if (draws == null)
+            return null;
+
+        foreach (var draw in draws)
+        {
+            if (draw is IUITextDrawTarget text && text.TextTexture != null)
+                return text.TextTexture;
+        }
+
+        return null;
+    }
+
+    public IUITextDrawTarget GetPrimaryTextTarget()
+    {
+        if (draws == null)
+            return null;
+
+        foreach (var draw in draws)
+        {
+            if (draw is IUITextDrawTarget text && text.TextTexture != null)
+                return text;
+        }
+
+        return null;
+    }
+
     internal void Generate(IUIPrefabHolder holder)
     {
         holder.BuildMesh(draws);
@@ -209,6 +237,15 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     /// </summary>
     public void UpdateTexture(Material material, RenderBatch batch) =>
         MaterialBinder.Bind(material, batch.GetBatchTextures(textureSlots.Textures));
+
+    public void UpdateTextTexture(Material material, UIPrefabRegistration registration) =>
+        MaterialBinder.BindText(material, registration?.GetPrimaryTextTexture());
+
+    public void UpdateTmpSdfTexture(Material material, UIPrefabRegistration registration)
+    {
+        var text = registration?.GetPrimaryTextTarget();
+        MaterialBinder.BindTmpSdf(material, text?.TextTexture, text?.TextMaterial);
+    }
 
     private const string Keyword8Tex = "HUD_8_TEX_SLOTS";
     private const int DefaultMaxImageSlots = 3;

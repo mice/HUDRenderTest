@@ -6,7 +6,8 @@
         "HOT",
         "UIDataRender",
         "UGui.Extends",
-        "managedTask"
+        "managedTask",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

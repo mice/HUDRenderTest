@@ -4,13 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Mesh;
 
-public class UIText : Text, IUIDrawTarget
+public class UIText : Text, IUITextDrawTarget
 {
     private bool _isGenerating = false;
     private IUIData tmp_meshData;
     private Transform tmp_root;
     public bool HasModifier = false;
     private UIOutline outline = null;
+
+    public string Text
+    {
+        get => text;
+        set => text = value;
+    }
+
+    public Texture TextTexture => font != null && font.material != null ? font.material.mainTexture : null;
+
+    public Material TextMaterial => font != null ? font.material : null;
 
     public void DoGenerate(IUIData meshData,Transform root = null)
     {
