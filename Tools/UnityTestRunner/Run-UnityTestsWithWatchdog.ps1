@@ -1,6 +1,7 @@
 param(
     [string]$ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path,
-    [string]$UnityPath = "C:\Program Files\Unity\Hub\Editor\2022.3.53f1c1\Editor\Unity.exe",
+    [string]$SampleProjectRelativePath = "HUDRenderTestSample",
+    [string]$UnityPath = "C:\Program Files\Unity\Hub\Editor\2022.3.53f1\Editor\Unity.exe",
     [ValidateSet("EditMode", "PlayMode", "Both")]
     [string]$TestPlatform = "EditMode",
     [string]$EditModeAssemblies = "Tests",
@@ -35,7 +36,7 @@ function Invoke-CheckedProcess([string]$FilePath, [string[]]$Arguments, [string]
     }
 }
 
-function Invoke-UnityTests([string]$Platform, [string]$AssemblyNames, [string]$CloneRoot, [string]$OutputRoot) {
+function Invoke-UnityTests([string]$Platform, [string]$AssemblyNames, [string]$ProjectPath, [string]$OutputRoot) {
     $logPath = Join-Path $OutputRoot "unity-$($Platform.ToLowerInvariant()).log"
     $resultsPath = Join-Path $OutputRoot "$($Platform.ToLowerInvariant())-results.xml"
     $coveragePath = Join-Path $OutputRoot "Coverage\$Platform"
@@ -46,7 +47,7 @@ function Invoke-UnityTests([string]$Platform, [string]$AssemblyNames, [string]$C
         "-batchmode",
         "-nographics",
         "-quit",
-        "-projectPath", $CloneRoot,
+        "-projectPath", $ProjectPath,
         "-runTests",
         "-testPlatform", $Platform,
         "-assemblyNames", $AssemblyNames,
@@ -81,11 +82,16 @@ if (Test-Path $cloneRoot) {
 }
 
 Invoke-CheckedProcess -FilePath "git" -Arguments @("clone", "--no-local", $projectRootFull, $cloneRoot) -WorkingDirectory $projectRootFull
+$cloneProjectPath = Resolve-FullPath (Join-Path $cloneRoot $SampleProjectRelativePath)
+
+if (-not (Test-Path -LiteralPath $cloneProjectPath)) {
+    throw "Sample project not found in clone: $cloneProjectPath"
+}
 
 $platforms = if ($TestPlatform -eq "Both") { @("EditMode", "PlayMode") } else { @($TestPlatform) }
 foreach ($platform in $platforms) {
     $assemblies = if ($platform -eq "EditMode") { $EditModeAssemblies } else { $PlayModeAssemblies }
-    Invoke-UnityTests -Platform $platform -AssemblyNames $assemblies -CloneRoot $cloneRoot -OutputRoot $outputRoot
+    Invoke-UnityTests -Platform $platform -AssemblyNames $assemblies -ProjectPath $cloneProjectPath -OutputRoot $outputRoot
 }
 
 Write-Host "Unity test results written to $outputRoot"

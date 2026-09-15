@@ -8,21 +8,18 @@ on:
 
 jobs:
   test:
-    name: EditMode Tests
+    name: Clean Package And Sample Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           lfs: true
 
-      - name: Cache Library
-        uses: actions/cache@v4
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
+      - name: Validate Package Layout
+        shell: pwsh
+        run: ./Tools/Test-PackageLayout.ps1 -OutputPath "TestResults/Validation/package-layout.json"
 
       - name: Run EditMode Tests
         uses: game-ci/unity-test-runner@v4
@@ -32,11 +29,11 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath: .
-          unityVersion: 2022.3.53f1c1
+          projectPath: HUDRenderTestSample
+          unityVersion: 2022.3.53f1
           testMode: editmode
           customParameters: -assemblyNames Tests
-          artifactsPath: TestResults
+          artifactsPath: HUDRenderTestSample/TestResults/EditMode
           coverageOptions: >
             generateAdditionalMetrics;
             generateHtmlReport;
@@ -44,18 +41,37 @@ jobs:
 
       - name: Enforce UIDataRender coverage gate
         shell: pwsh
-        run: .\Tools\Test-CoverageGate.ps1 -SummaryPath "CodeCoverage/Report/Summary.xml" -AssemblyName "UIDataRender" -MinimumLineCoverage 70
+        run: ./Tools/Test-CoverageGate.ps1 -SummaryPath "HUDRenderTestSample/CodeCoverage/Report/Summary.xml" -AssemblyName "UIDataRender" -MinimumLineCoverage 70
 
-      - name: Upload Test Results
+      - name: Run PlayMode Tests
+        uses: game-ci/unity-test-runner@v4
+        id: playmode-tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: HUDRenderTestSample
+          unityVersion: 2022.3.53f1
+          testMode: playmode
+          customParameters: -assemblyNames Tests.PlayMode
+          artifactsPath: HUDRenderTestSample/TestResults/PlayMode
+
+      - name: Upload Validation And Test Results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results
-          path: TestResults
+          name: validation-and-test-results
+          if-no-files-found: warn
+          path: |
+            TestResults/Validation
+            HUDRenderTestSample/TestResults
+            HUDRenderTestSample/Logs
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: coverage-report
-          path: CodeCoverage
+          if-no-files-found: warn
+          path: HUDRenderTestSample/CodeCoverage

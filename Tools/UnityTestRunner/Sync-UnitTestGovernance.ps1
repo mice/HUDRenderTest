@@ -1,12 +1,36 @@
 param(
-    [string]$ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+    [string]$ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path,
+    [ValidateSet("All", "Package", "Sample")]
+    [string]$Scope = "All",
+    [switch]$SkipRepositoryValidation
 )
 
 $ErrorActionPreference = "Stop"
 
+$packageRoot = Join-Path $ProjectRoot "com.uidatarender"
+$sampleRoot = Join-Path $ProjectRoot "HUDRenderTestSample"
+
+if ($Scope -eq "All") {
+    & $PSCommandPath -ProjectRoot $ProjectRoot -Scope Package -SkipRepositoryValidation
+    & $PSCommandPath -ProjectRoot $ProjectRoot -Scope Sample -SkipRepositoryValidation
+    & (Join-Path $PSScriptRoot "Test-UnitTestGovernance.ps1") -ProjectRoot $ProjectRoot
+    return
+}
+
+if ($Scope -eq "Package") {
+    $contentRoot = $packageRoot
+    $testRoot = Join-Path $packageRoot "Tests"
+    $docRoot = Join-Path $packageRoot "Documentation~\Testing\Unit"
+}
+else {
+    $contentRoot = $sampleRoot
+    $testRoot = Join-Path $sampleRoot "Assets\Tests\PlayMode"
+    $docRoot = Join-Path $sampleRoot "Documentation~\Testing\Unit"
+}
+
 $moduleRules = @(
     @{ Pattern = "TestCalcMatrix"; Module = "Matrix"; Prefix = "UT_MTX"; Target = "Matrix transform math" },
-    @{ Pattern = "TestVertexHelperUtils"; Module = "Mesh"; Prefix = "UT_MESH"; Target = "VertexHelperUtils" },
+    @{ Pattern = "TestVertexHelperUtils|TestMeshVertexBufferLayout"; Module = "Mesh"; Prefix = "UT_MESH"; Target = "VertexHelperUtils" },
     @{ Pattern = "TestUIMeshData|TestUIMeshDataX|TestMeshSlim"; Module = "Mesh"; Prefix = "UT_MESH"; Target = "UIMeshData" },
     @{ Pattern = "TestGeometryBuffer|TestUIGeometry"; Module = "Geometry"; Prefix = "UT_GEO"; Target = "UIGeometry" },
     @{ Pattern = "TestFreeListAllocator|TestSharedArray|TestUnsafeFastCopy|TestManagedTaskCoverage"; Module = "Utility"; Prefix = "UT_UTIL"; Target = "Low-level utility" },
@@ -15,15 +39,15 @@ $moduleRules = @(
     @{ Pattern = "TestMergeBatcher|TestHolderBatchRenderer"; Module = "Batching"; Prefix = "UT_BATCH"; Target = "MergeBatcher" },
     @{ Pattern = "TestHolderLifecycle|TestHolderNotifier|TestUIPrefabRegistration|TestOwnerRegistry|TestUIPrefabHolderCoverage|TestPrefabHolderExtCoverage"; Module = "Prefab"; Prefix = "UT_PREF"; Target = "UIPrefab lifecycle" },
     @{ Pattern = "TestMaterialBinder"; Module = "Material"; Prefix = "UT_MAT"; Target = "MaterialBinder" },
-    @{ Pattern = "TestUIText|TestUIImage|TestUIOutline"; Module = "UI"; Prefix = "UT_UI"; Target = "UI draw target" },
-    @{ Pattern = "TestPerfProbe|TestLogHygiene"; Module = "Diagnostics"; Prefix = "UT_DIAG"; Target = "PerfProbe diagnostics" },
+    @{ Pattern = "TestUITMPText|TestUIText|TestUIImage|TestUIOutline"; Module = "UI"; Prefix = "UT_UI"; Target = "UI draw target" },
+    @{ Pattern = "TestPerfProbeCsvScene|TestPerfProbeRuntime|TestPerfProbe|TestLogHygiene"; Module = "Diagnostics"; Prefix = "UT_DIAG"; Target = "PerfProbe diagnostics" },
     @{ Pattern = "TestManagedCodeInJob|TestMergeJobs|TestBurstMergeJobs|TestMeshJobsCoverage"; Module = "Jobs"; Prefix = "UT_JOB"; Target = "Merge jobs" },
     @{ Pattern = "TestPerfBaselineRunner|TestEightSlotPerfRunner|TestDynamicSwapRunner"; Module = "Performance"; Prefix = "UT_PERF"; Target = "Scene perf runners" },
-    @{ Pattern = "TestOverCapacityScene|TestPerfProbeCsvScene|TestThreeSlotScene|TestUseSlimLifecycle"; Module = "Scenes"; Prefix = "UT_SCENE"; Target = "Scene integration" }
+    @{ Pattern = "TestOverCapacityScene|TestThreeSlotScene|TestUseSlimLifecycle|TestTMPBatchRendering"; Module = "Scenes"; Prefix = "UT_SCENE"; Target = "Scene integration" }
 )
 
 function Get-RelativePath([string]$Path) {
-    $root = (Resolve-Path $ProjectRoot).Path.TrimEnd('\')
+    $root = (Resolve-Path $contentRoot).Path.TrimEnd('\')
     $full = (Resolve-Path $Path).Path
     return $full.Substring($root.Length + 1).Replace('\', '/')
 }
@@ -45,6 +69,15 @@ function Get-ModuleInfo([string]$FileName) {
 
 function Convert-Summary([string]$MethodName) {
     return ($MethodName -replace "_", " ").Trim()
+}
+
+function Write-TextIfChanged([string]$Path, [string]$Content) {
+    $normalized = $Content.TrimEnd("`r", "`n") + [Environment]::NewLine
+    if ((Test-Path -LiteralPath $Path) -and (Get-Content -LiteralPath $Path -Raw) -ceq $normalized) {
+        return
+    }
+
+    [System.IO.File]::WriteAllText($Path, $normalized, [System.Text.UTF8Encoding]::new($false))
 }
 
 function New-TestRecordText($test) {
@@ -96,7 +129,7 @@ function New-TestRecordFrontmatter($test) {
 
 function Update-TestRecordText([string]$Path, $test) {
     if (-not (Test-Path -LiteralPath $Path)) {
-        Set-Content -LiteralPath $Path -Value (New-TestRecordText $test) -Encoding UTF8
+        Write-TextIfChanged -Path $Path -Content (New-TestRecordText $test)
         return
     }
 
@@ -104,11 +137,13 @@ function Update-TestRecordText([string]$Path, $test) {
     $frontmatter = (New-TestRecordFrontmatter $test) -join [Environment]::NewLine
     if ($existing -match '(?s)^---\r?\n.*?\r?\n---') {
         $updated = [regex]::Replace($existing, '(?s)^---\r?\n.*?\r?\n---', $frontmatter, 1)
-        Set-Content -LiteralPath $Path -Value $updated -Encoding UTF8
+        $assertion = "See ``$($test.File)`` / ``$($test.Method)``."
+        $updated = [regex]::Replace($updated, '(?m)^See `[^`]+` / `[^`]+`\.$', $assertion, 1)
+        Write-TextIfChanged -Path $Path -Content $updated
         return
     }
 
-    Set-Content -LiteralPath $Path -Value (($frontmatter + [Environment]::NewLine + [Environment]::NewLine + $existing)) -Encoding UTF8
+    Write-TextIfChanged -Path $Path -Content ($frontmatter + [Environment]::NewLine + [Environment]::NewLine + $existing)
 }
 
 function Read-TextLines([string]$Path) {
@@ -118,16 +153,15 @@ function Read-TextLines([string]$Path) {
 }
 
 function Write-TextLines([string]$Path, [System.Collections.IEnumerable]$Lines) {
-    Set-Content -LiteralPath $Path -Value $Lines -Encoding UTF8
+    Write-TextIfChanged -Path $Path -Content (@($Lines) -join [Environment]::NewLine)
 }
 
-$testRoot = Join-Path $ProjectRoot "Assets\Tests"
 if (-not (Test-Path $testRoot)) {
     throw "Test root not found: $testRoot"
 }
 
 $tests = New-Object System.Collections.Generic.List[object]
-$testFiles = & rg --files (Join-Path $ProjectRoot "Assets\Tests") -g "*.cs"
+$testFiles = & rg --files $testRoot -g "*.cs"
 if ($LASTEXITCODE -ne 0) {
     throw "Failed to enumerate test files with rg."
 }
@@ -234,10 +268,10 @@ foreach ($group in ($tests | Group-Object FullPath)) {
         }
 
         $recordPath = "Documentation~/Testing/Unit/$($test.Module)/$($test.Id).md"
-        $hasRecord = $false
+        $recordIndex = -1
         for ($i = [Math]::Max(0, $attrIndex - 4); $i -lt $attrIndex; $i++) {
             if ($lines[$i] -match 'TestRecord:') {
-                $hasRecord = $true
+                $recordIndex = $i
                 break
             }
         }
@@ -253,7 +287,10 @@ foreach ($group in ($tests | Group-Object FullPath)) {
         if (-not $hasCategory) {
             $lines.Insert($attrIndex + 1, "$indent[Category(`"$($test.Id)`")]")
         }
-        if (-not $hasRecord) {
+        if ($recordIndex -ge 0) {
+            $lines[$recordIndex] = "$indent// TestRecord: $recordPath"
+        }
+        else {
             $lines.Insert($attrIndex, "$indent// TestRecord: $recordPath")
         }
     }
@@ -261,15 +298,26 @@ foreach ($group in ($tests | Group-Object FullPath)) {
     Write-TextLines $path $lines
 }
 
-$docRoot = Join-Path $ProjectRoot "Documentation~\Testing\Unit"
 New-Item -ItemType Directory -Force -Path $docRoot | Out-Null
 
+$expectedRecordPaths = New-Object System.Collections.Generic.HashSet[string] ([System.StringComparer]::OrdinalIgnoreCase)
 foreach ($test in $tests) {
     $moduleDir = Join-Path $docRoot $test.Module
     New-Item -ItemType Directory -Force -Path $moduleDir | Out-Null
     $recordPath = Join-Path $moduleDir "$($test.Id).md"
+    [void]$expectedRecordPaths.Add([System.IO.Path]::GetFullPath($recordPath))
     Update-TestRecordText -Path $recordPath -test $test
 }
+
+Get-ChildItem -LiteralPath $docRoot -Recurse -File -Filter "UT_*.md" | ForEach-Object {
+    if (-not $expectedRecordPaths.Contains($_.FullName)) {
+        Remove-Item -LiteralPath $_.FullName -Force
+    }
+}
+Get-ChildItem -LiteralPath $docRoot -Recurse -Directory |
+    Sort-Object FullName -Descending |
+    Where-Object { @(Get-ChildItem -LiteralPath $_.FullName -Force).Count -eq 0 } |
+    Remove-Item -Force
 
 $readme = New-Object System.Collections.Generic.List[string]
 $readme.Add("# Unity Unit Test Governance")
@@ -300,6 +348,10 @@ $readme.Add("")
 $readme.Add("## Tombstoned ids")
 $readme.Add("")
 $readme.Add("None.")
-Set-Content -LiteralPath (Join-Path $docRoot "README.md") -Value $readme -Encoding UTF8
+Write-TextIfChanged -Path (Join-Path $docRoot "README.md") -Content ($readme -join [Environment]::NewLine)
 
 Write-Host "Synchronized $($tests.Count) Unity test records."
+
+if (-not $SkipRepositoryValidation) {
+    & (Join-Path $PSScriptRoot "Test-UnitTestGovernance.ps1") -ProjectRoot $ProjectRoot
+}

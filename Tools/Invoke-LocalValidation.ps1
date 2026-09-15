@@ -1,9 +1,10 @@
 [CmdletBinding()]
 param(
-    [string]$UnityExe = "C:\Program Files\Unity\Hub\Editor\2022.3.53f1c1\Editor\Unity.exe",
-    [string]$ProjectPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
+    [string]$UnityExe = "C:\Program Files\Unity\Hub\Editor\2022.3.53f1\Editor\Unity.exe",
+    [string]$ProjectPath = (Resolve-Path (Join-Path $PSScriptRoot "..\HUDRenderTestSample")).Path,
     [switch]$SkipEditMode,
     [switch]$SkipPlayMode,
+    [switch]$SkipStructure,
     [switch]$WithCoverage,
     [double]$CoverageThreshold = -1
 )
@@ -47,8 +48,8 @@ function Invoke-UnityTestRun {
     Remove-PathIfExists -Path $LogPath
 
     Write-Host "==> $Name"
-    & $script:UnityExe @Arguments
-    $exitCode = $LASTEXITCODE
+    $process = Start-Process -FilePath $script:UnityExe -ArgumentList $Arguments -PassThru -Wait -NoNewWindow
+    $exitCode = $process.ExitCode
 
     $lockMessage = Get-UnityLockMessage -LogPath $LogPath
     if ($null -ne $lockMessage) {
@@ -115,6 +116,13 @@ $logsPath = Join-Path $ProjectPath "Logs"
 $coveragePath = Join-Path $ProjectPath "CodeCoverage\Local"
 
 New-Item -ItemType Directory -Force -Path $logsPath | Out-Null
+
+if (-not $SkipStructure) {
+    Write-Host "==> Package/layout validation"
+    & (Join-Path $PSScriptRoot "Test-PackageLayout.ps1") `
+        -RepositoryRoot (Resolve-Path (Join-Path $PSScriptRoot "..")).Path `
+        -OutputPath (Join-Path $logsPath "PackageLayout.json")
+}
 
 $summaries = @()
 
