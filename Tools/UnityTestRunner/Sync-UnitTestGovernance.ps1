@@ -25,7 +25,7 @@ if ($Scope -eq "Package") {
 else {
     $contentRoot = $sampleRoot
     $testRoot = Join-Path $sampleRoot "Assets\Tests\PlayMode"
-    $docRoot = Join-Path $sampleRoot "Documentation~\Testing\Unit"
+    $docRoot = Join-Path $ProjectRoot "Documentation~\Testing\Unit"
 }
 
 $moduleRules = @(

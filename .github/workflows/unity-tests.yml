@@ -39,9 +39,24 @@ jobs:
             generateHtmlReport;
             assemblyFilters:+UIDataRender
 
+      - name: Move Coverage Outside Sample
+        if: always()
+        shell: pwsh
+        run: |
+          $source = "HUDRenderTestSample/CodeCoverage"
+          $target = "CodeCoverage"
+          if (Test-Path -LiteralPath $source) {
+            if (Test-Path -LiteralPath $target) {
+              Remove-Item -LiteralPath $target -Recurse -Force
+            }
+            Move-Item -LiteralPath $source -Destination $target
+          } else {
+            Write-Warning "Coverage output not found: $source"
+          }
+
       - name: Enforce UIDataRender coverage gate
         shell: pwsh
-        run: ./Tools/Test-CoverageGate.ps1 -SummaryPath "HUDRenderTestSample/CodeCoverage/Report/Summary.xml" -AssemblyName "UIDataRender" -MinimumLineCoverage 70
+        run: ./Tools/Test-CoverageGate.ps1 -SummaryPath "CodeCoverage/Report/Summary.xml" -AssemblyName "UIDataRender" -MinimumLineCoverage 70
 
       - name: Run PlayMode Tests
         uses: game-ci/unity-test-runner@v4
@@ -74,4 +89,4 @@ jobs:
         with:
           name: coverage-report
           if-no-files-found: warn
-          path: HUDRenderTestSample/CodeCoverage
+          path: CodeCoverage

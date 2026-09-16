@@ -112,15 +112,16 @@ if (-not (Test-Path -LiteralPath $UnityExe)) {
     throw "Unity executable not found: $UnityExe"
 }
 
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $logsPath = Join-Path $ProjectPath "Logs"
-$coveragePath = Join-Path $ProjectPath "CodeCoverage\Local"
+$coveragePath = Join-Path $repositoryRoot "CodeCoverage\Local"
 
 New-Item -ItemType Directory -Force -Path $logsPath | Out-Null
 
 if (-not $SkipStructure) {
     Write-Host "==> Package/layout validation"
     & (Join-Path $PSScriptRoot "Test-PackageLayout.ps1") `
-        -RepositoryRoot (Resolve-Path (Join-Path $PSScriptRoot "..")).Path `
+        -RepositoryRoot $repositoryRoot `
         -OutputPath (Join-Path $logsPath "PackageLayout.json")
 }
 

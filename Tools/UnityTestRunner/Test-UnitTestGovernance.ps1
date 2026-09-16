@@ -18,12 +18,14 @@ $scopes = @(
         ContentRoot = Join-Path $ProjectRoot "com.uidatarender"
         TestRoot = Join-Path $ProjectRoot "com.uidatarender/Tests"
         RecordRoot = Join-Path $ProjectRoot "com.uidatarender/Documentation~/Testing/Unit"
+        RecordReferenceRoot = Join-Path $ProjectRoot "com.uidatarender"
     },
     [pscustomobject]@{
         Name = "Sample"
         ContentRoot = Join-Path $ProjectRoot "HUDRenderTestSample"
         TestRoot = Join-Path $ProjectRoot "HUDRenderTestSample/Assets/Tests/PlayMode"
-        RecordRoot = Join-Path $ProjectRoot "HUDRenderTestSample/Documentation~/Testing/Unit"
+        RecordRoot = Join-Path $ProjectRoot "Documentation~/Testing/Unit"
+        RecordReferenceRoot = $ProjectRoot
     }
 )
 
@@ -84,7 +86,7 @@ foreach ($scope in $scopes) {
                 continue
             }
 
-            $resolvedRecord = [System.IO.Path]::GetFullPath((Join-Path $scope.ContentRoot $recordReference))
+            $resolvedRecord = [System.IO.Path]::GetFullPath((Join-Path $scope.RecordReferenceRoot $recordReference))
             $recordRootPrefix = [System.IO.Path]::GetFullPath($scope.RecordRoot).TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
             if (-not $resolvedRecord.StartsWith($recordRootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
                 $errors.Add("$categoryId record escapes $($scope.Name) governance root: $recordReference")

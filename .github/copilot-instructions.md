@@ -30,7 +30,7 @@ Run the local validation bundle (current working tree, no GitHub Actions license
 .\Tools\Invoke-LocalValidation.ps1
 .\Tools\Invoke-LocalValidation.ps1 -WithCoverage
 .\Tools\Invoke-LocalValidation.ps1 -WithCoverage -CoverageThreshold 70
-.\Tools\Test-CoverageGate.ps1 -SummaryPath ".\HUDRenderTestSample\CodeCoverage\Local\Report\Summary.xml" -AssemblyName "UIDataRender" -MinimumLineCoverage 70
+.\Tools\Test-CoverageGate.ps1 -SummaryPath ".\CodeCoverage\Local\Report\Summary.xml" -AssemblyName "UIDataRender" -MinimumLineCoverage 70
 ```
 
 Run a single test:

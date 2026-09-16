@@ -99,10 +99,22 @@ $requiredFiles = @(
     (Join-Path $packageRoot "Runtime/TextMesh Pro/Shaders/TMP_Sprite.shader"),
     (Join-Path $sampleRoot "Assets/Art/Material/LiberationSans SDF - Outline.mat"),
     (Join-Path $sampleRoot "Assets/Art/Material/LiberationSans SDF - Outline2.mat"),
+    (Join-Path $RepositoryRoot "Documentation~/README.md"),
+    (Join-Path $RepositoryRoot "Documentation~/Testing/Unit/README.md"),
     (Join-Path $RepositoryRoot "Tools/UnityTestRunner/Test-UnitTestGovernance.ps1")
 )
 $missingFiles = @($requiredFiles | Where-Object { -not (Test-Path -LiteralPath $_ -PathType Leaf) })
 Add-Check "required-files" ($missingFiles.Count -eq 0) ($missingFiles -join ", ")
+
+$sampleExternalizedPaths = @(
+    (Join-Path $sampleRoot "CodeCoverage"),
+    (Join-Path $sampleRoot "Documentation~"),
+    (Join-Path $sampleRoot "Assets/Doc")
+)
+$samplePathsStillPresent = @($sampleExternalizedPaths | Where-Object { Test-Path -LiteralPath $_ })
+Add-Check "sample-output-and-documentation-externalized" `
+    ($samplePathsStillPresent.Count -eq 0) `
+    ($samplePathsStillPresent -join ", ")
 
 if ($missingFiles.Count -eq 0) {
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
