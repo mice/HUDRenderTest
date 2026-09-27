@@ -12,9 +12,7 @@ public class UIImage :Image,IUIDrawTarget
     private static readonly ProfilerMarker GenerateMarker = new ProfilerMarker("UIData.UIImage.DoGenerate");
     private static readonly ProfilerMarker TextureLookupMarker = new ProfilerMarker("UIData.UIImage.TextureLookup");
     private static readonly ProfilerMarker UpdateGeometryMarker = new ProfilerMarker("UIData.UIImage.UpdateGeometry");
-    private static readonly ProfilerMarker TransformMarker = new ProfilerMarker("UIData.UIImage.TransformVertex");
     private static readonly ProfilerMarker TransformCheckMarker = new ProfilerMarker("UIData.UIImage.Transform.Check");
-    private static readonly ProfilerMarker CalcMatrixMarker = new ProfilerMarker("UIData.UIImage.Transform.CalcMatrix");
     private static readonly ProfilerMarker BasePopulateMarker = new ProfilerMarker("UIData.UIImage.BasePopulateMesh");
     private static readonly ProfilerMarker CustomPopulateMarker = new ProfilerMarker("UIData.UIImage.CustomPopulateMesh");
     private bool _isGenerating = false;
@@ -76,12 +74,8 @@ public class UIImage :Image,IUIDrawTarget
                     isChild = _transform.IsChildOf(tmp_root);
                 if (isChild)
                 {
-                    using (CalcMatrixMarker.Auto())
-                    {
-                        var mtx = Utility.CalcMatrix(tmp_root, _transform);
-                        using (TransformMarker.Auto())
-                            tmp_meshData.TransformVertex(mtx);
-                    }
+                    var mtx = Utility.CalcMatrix(tmp_root, _transform);
+                    tmp_meshData.TransformVertex(mtx);
                 }
             }
         }
@@ -98,11 +92,8 @@ public class UIImage :Image,IUIDrawTarget
             if (!isChild)
                 return;
 
-            Matrix4x4 matrix;
-            using (CalcMatrixMarker.Auto())
-                matrix = Utility.CalcMatrix(tmp_root, current);
-            using (TransformMarker.Auto())
-                meshData.TransformVertex(matrix);
+            var matrix = Utility.CalcMatrix(tmp_root, current);
+            meshData.TransformVertex(matrix);
         }
     }
 }

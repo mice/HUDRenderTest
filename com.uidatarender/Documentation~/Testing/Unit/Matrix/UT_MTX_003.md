@@ -6,8 +6,8 @@ target: Matrix transform math
 testFile: Tests/EditMode/TestCalcMatrix.cs
 testMethod: CalcMatrix_OptimizedMatchesLegacy_AndReportsCost
 status: active
-lastRun: "2026-09-27"
-lastResult: passed
+lastRun: ""
+lastResult: unknown
 ---
 
 # UT_MTX_003

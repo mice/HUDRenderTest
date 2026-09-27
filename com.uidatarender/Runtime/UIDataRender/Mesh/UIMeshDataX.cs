@@ -30,9 +30,10 @@ public class UIMeshDataX : IUIData
     public void TransformVertex(Matrix4x4 mtx)
     {
         var vertexCount = mesh.VertexCount;
-        for (int i = mesh.VertexOffset; i < mesh.VertexOffset + vertexCount; i++)
+        var end = mesh.VertexOffset + vertexCount;
+        for (int i = mesh.VertexOffset; i < end; i++)
         {
-            geometry.vertex[i] = mtx.MultiplyPoint(geometry.vertex[i]);
+            geometry.vertex[i] = mtx.MultiplyPoint3x4(geometry.vertex[i]);
         }
     }
 

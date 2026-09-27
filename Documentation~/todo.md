@@ -22,6 +22,7 @@
   - **计时器分配修复（2026-09-27）**：`HolderBatchRenderer.Rebuild` 已将 `Stopwatch.StartNew()` 替换为 `Stopwatch.GetTimestamp()`，消除每次重建的 Stopwatch 对象分配。
   - **优化前基线（2026-09-27）**：基于提交 `9a6603a` 的 Xiaomi 10 IL2CPP/ARM64/Release/Vulkan APK 已完成基线采样。Partial regeneration median `1.4641 ms`，Burst 全量刷新 median `10.9372 ms`，均超过 1 ms 预算。后续优化必须复用同一配置和设备对比；详见 [hud-scene-results.md](../openspec/changes/validate-hud-rc-performance/evidence/hud-scene-results.md)。
   - **CopyIndices 复测（2026-09-27）**：新增 `VertexHelper.CopyIndices` 后，Xiaomi 10 相同配置 Partial regeneration median `0.6395 ms`，Burst `2.7551 ms`；相对基线下降约 56.3%/74.8%。Partial 已低于 1 ms，Burst 剩余瓶颈在 `buildMesh`（median 1.9018 ms），继续定位 UIImage/UGUI 生成路径。
+  - **延迟顶点变换（deferred）**：将 `TransformVertex` 从 mesh 缓存写回阶段延迟到最终 `FillToDrawData`/合并输出阶段，避免重复修改缓存顶点；当前仅记录方案，待确认多次生成、Slim/Managed 两条路径和批处理语义后再评估。
   - **Graphics.DoMeshGeneration CPU 分解（2026-09-27）**：已确认 `UIImage.OnPopulateMesh` 存在基础 Image 生成、逐顶点复制和 `VertexHelper.FillMesh` 往返三段工作；新增四个 Profiler marker，下一步按编辑器采样结果决定绕过基础生成或优化索引复制。
   - **FillMesh 快速路径（2026-09-27）**：`VertexHelper.FillMesh` 内部不可继续拆分；4 顶点/6 索引标准四边形现在直接写固定索引，复杂几何保留原回退路径。需复测 CPU 基线和拓扑测试。
   - **Runner 阶段基线（2026-09-27）**：`HudRcPerformanceRunner.AdvanceFrame` 已拆分 `runnerBookkeepingMs`、`holderSelectionMs`、`buildMeshMs`，用于识别 Runner 自身调度是否污染 generation 数据。

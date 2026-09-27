@@ -1,10 +1,57 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TestUIMeshData
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_024.md
+    [Test]
+    [Category("UT_MESH_024")]
+    public void TransformVertex_MultiplyPoint3x4MatchesLegacy_AndReportsCost()
+    {
+        const int vertexCount = 768;
+        const int iterations = 1000;
+        var matrix = Matrix4x4.TRS(new Vector3(3, -2, 1), Quaternion.Euler(12, 27, -8), new Vector3(1.2f, 0.8f, 1.1f));
+        var vertices = new Vector3[vertexCount];
+        var legacy = new Vector3[vertexCount];
+        var optimized = new Vector3[vertexCount];
+        for (int i = 0; i < vertexCount; i++)
+            vertices[i] = new Vector3(i % 32, i / 32, (i % 7) * 0.1f);
+
+        for (int i = 0; i < vertexCount; i++)
+        {
+            legacy[i] = matrix.MultiplyPoint(vertices[i]);
+            optimized[i] = matrix.MultiplyPoint3x4(vertices[i]);
+            Assert.That(optimized[i].x, Is.EqualTo(legacy[i].x).Within(1e-5f));
+            Assert.That(optimized[i].y, Is.EqualTo(legacy[i].y).Within(1e-5f));
+            Assert.That(optimized[i].z, Is.EqualTo(legacy[i].z).Within(1e-5f));
+        }
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        for (int iteration = 0; iteration < iterations; iteration++)
+            for (int i = 0; i < vertexCount; i++)
+                legacy[i] = matrix.MultiplyPoint(vertices[i]);
+        stopwatch.Stop();
+        var legacyTicks = stopwatch.ElapsedTicks;
+
+        stopwatch.Restart();
+        for (int iteration = 0; iteration < iterations; iteration++)
+            for (int i = 0; i < vertexCount; i++)
+                optimized[i] = matrix.MultiplyPoint3x4(vertices[i]);
+        stopwatch.Stop();
+        var optimizedTicks = stopwatch.ElapsedTicks;
+
+        TestContext.Out.WriteLine(
+            $"TransformVertex comparison: vertices={vertexCount}, iterations={iterations}, " +
+            $"frequency={Stopwatch.Frequency}, legacyTicks={legacyTicks}, optimizedTicks={optimizedTicks}, " +
+            $"legacyMs={legacyTicks * 1000d / Stopwatch.Frequency:F3}, " +
+            $"optimizedMs={optimizedTicks * 1000d / Stopwatch.Frequency:F3}, " +
+            $"speedup={(double)legacyTicks / System.Math.Max(1, optimizedTicks):F2}x");
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_021.md
     [Test]
     [Category("UT_MESH_021")]

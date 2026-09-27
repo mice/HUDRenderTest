@@ -57,7 +57,7 @@ public class UIMeshData : IUIData
         var vertexCount = mesh.VertexCount;
         for (int i = 0; i < vertexCount; i++)
         {
-            vertList[i] = mtx.MultiplyPoint(vertList[i]);
+            vertList[i] = mtx.MultiplyPoint3x4(vertList[i]);
         }
     }
 
