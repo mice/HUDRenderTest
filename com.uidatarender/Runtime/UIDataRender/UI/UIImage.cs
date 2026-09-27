@@ -12,6 +12,9 @@ public class UIImage :Image,IUIDrawTarget
     private static readonly ProfilerMarker GenerateMarker = new ProfilerMarker("UIData.UIImage.DoGenerate");
     private static readonly ProfilerMarker TextureLookupMarker = new ProfilerMarker("UIData.UIImage.TextureLookup");
     private static readonly ProfilerMarker UpdateGeometryMarker = new ProfilerMarker("UIData.UIImage.UpdateGeometry");
+    private static readonly ProfilerMarker GenerateBasePopulateMarker = new ProfilerMarker("UIData.UIImage.Generate.BasePopulateMesh");
+    private static readonly ProfilerMarker GenerateFillVertexMarker = new ProfilerMarker("UIData.UIImage.Generate.FillVertex");
+    private static readonly ProfilerMarker GenerateTransformMarker = new ProfilerMarker("UIData.UIImage.Generate.TransformVertex");
     private static readonly ProfilerMarker TransformCheckMarker = new ProfilerMarker("UIData.UIImage.Transform.Check");
     private static readonly ProfilerMarker BasePopulateMarker = new ProfilerMarker("UIData.UIImage.BasePopulateMesh");
     private static readonly ProfilerMarker CustomPopulateMarker = new ProfilerMarker("UIData.UIImage.CustomPopulateMesh");
@@ -44,10 +47,12 @@ public class UIImage :Image,IUIDrawTarget
             tmp_root = root;
             extractionHelper.Clear();
             using (UpdateGeometryMarker.Auto())
+            using (GenerateBasePopulateMarker.Auto())
                 base.OnPopulateMesh(extractionHelper);
-            using (CustomPopulateMarker.Auto())
+            using (GenerateFillVertexMarker.Auto())
                 meshData.FillVertex(extractionHelper, 0);
-            TransformExtractedMesh(meshData);
+            using (GenerateTransformMarker.Auto())
+                TransformExtractedMesh(meshData);
             tmp_meshData = null;
             tmp_root = null;
             _isGenerating = false;
