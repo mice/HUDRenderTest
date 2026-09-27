@@ -1,9 +1,13 @@
 ---
 testId: UT_BATCH_006
-category: Batching
+module: Batching
+testType: EditMode
+target: MergeBatcher
 testFile: Tests/EditMode/TestMergeBatcher.cs
 testMethod: GetBatchTextures_ReusesBufferAndPreservesSlotOrder
-testType: EditMode
+status: active
+lastRun: ""
+lastResult: unknown
 ---
 
 # UT_BATCH_006
