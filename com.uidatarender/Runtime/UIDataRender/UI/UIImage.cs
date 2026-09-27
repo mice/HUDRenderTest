@@ -14,7 +14,6 @@ public class UIImage :Image,IUIDrawTarget
     private static readonly ProfilerMarker UpdateGeometryMarker = new ProfilerMarker("UIData.UIImage.UpdateGeometry");
     private static readonly ProfilerMarker TransformMarker = new ProfilerMarker("UIData.UIImage.TransformVertex");
     private static readonly ProfilerMarker TransformCheckMarker = new ProfilerMarker("UIData.UIImage.Transform.Check");
-    private static readonly ProfilerMarker IsChildOfMarker = new ProfilerMarker("UIData.UIImage.Transform.IsChildOf");
     private static readonly ProfilerMarker CalcMatrixMarker = new ProfilerMarker("UIData.UIImage.Transform.CalcMatrix");
     private static readonly ProfilerMarker BasePopulateMarker = new ProfilerMarker("UIData.UIImage.BasePopulateMesh");
     private static readonly ProfilerMarker CustomPopulateMarker = new ProfilerMarker("UIData.UIImage.CustomPopulateMesh");
@@ -74,10 +73,7 @@ public class UIImage :Image,IUIDrawTarget
                 var _transform = transform;
                 bool isChild = false;
                 if (tmp_root != null && tmp_root != _transform)
-                {
-                    using (IsChildOfMarker.Auto())
-                        isChild = _transform.IsChildOf(tmp_root);
-                }
+                    isChild = _transform.IsChildOf(tmp_root);
                 if (isChild)
                 {
                     Matrix4x4 mtx;
@@ -97,10 +93,7 @@ public class UIImage :Image,IUIDrawTarget
             var current = transform;
             bool isChild = false;
             if (tmp_root != null && tmp_root != current)
-            {
-                using (IsChildOfMarker.Auto())
-                    isChild = current.IsChildOf(tmp_root);
-            }
+                isChild = current.IsChildOf(tmp_root);
             if (!isChild)
                 return;
 
