@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "com.uidatarender": "file:../../com.uidatarender",
+    "com.unitymcp.plugin-abstractions": "git+https://github.com/mice/unitymcp-plugin-abstractions.git?path=/com.unitymcp.plugin-abstractions#v0.1.3",
+    "com.unitymcp.agent-bridge": "git+https://github.com/mice/unity-agent-bridge.git?path=/com.unitymcp.agent-bridge#v1.3.1",
     "com.unity.burst": "1.8.28",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.ugui": "file:../../com.unity.ugui",

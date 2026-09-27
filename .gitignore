@@ -36,3 +36,6 @@ Packages/*
 /HUDRenderTestSample/Packages/*
 !/HUDRenderTestSample/Packages/manifest.json
 !/HUDRenderTestSample/Packages/packages-lock.json
+/Builds
+/HUDRenderTestSample/Packages/packages-lock.json
+/.codex

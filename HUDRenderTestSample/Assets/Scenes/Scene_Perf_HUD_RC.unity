@@ -122,7 +122,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &151996424
+--- !u!1 &1218382437
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,8 +130,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 151996426}
-  - component: {fileID: 151996425}
+  - component: {fileID: 1218382439}
+  - component: {fileID: 1218382438}
   m_Layer: 0
   m_Name: HUD RC Performance Suite
   m_TagString: Untagged
@@ -139,13 +139,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &151996425
+--- !u!114 &1218382438
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 151996424}
+  m_GameObject: {fileID: 1218382437}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9110f242584d4afcb9ec6f1fa03bdf72, type: 3}
@@ -160,21 +160,22 @@ MonoBehaviour:
     sampleFrames: 180
     seed: 12345
     useSlim: 0
-    targetFrameRate: 60
-  outputCamera: {fileID: 1384337188}
+    targetFrameRate: -1
+  outputCamera: {fileID: 2029913237}
   batchShader: {fileID: 4800000, guid: ea401ce1f51d3d141b63673443f4d9a4, type: 3}
   autoRun: 1
   autoExport: 1
-  sourceCommit: unknown
-  sourceStatus: unknown
+  sourceCommit: eeed0160176be175181ab48f8c41490c1f48ea87
+  sourceStatus: dirty working tree; see source fingerprint
+  sourceFingerprint: C9BA4BB19B4212F7AFF46632468B23AC6FA7D2EC489EC2125262D4D3E10615A0
   packageVersion: 0.1.2
---- !u!4 &151996426
+--- !u!4 &1218382439
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 151996424}
+  m_GameObject: {fileID: 1218382437}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -183,7 +184,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1384337187
+--- !u!1 &2029913236
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,8 +192,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1384337189}
-  - component: {fileID: 1384337188}
+  - component: {fileID: 2029913238}
+  - component: {fileID: 2029913237}
   m_Layer: 0
   m_Name: HUD RC Camera
   m_TagString: Untagged
@@ -200,13 +201,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!20 &1384337188
+--- !u!20 &2029913237
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1384337187}
+  m_GameObject: {fileID: 2029913236}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
@@ -251,13 +252,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1384337189
+--- !u!4 &2029913238
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1384337187}
+  m_GameObject: {fileID: 2029913236}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
@@ -270,5 +271,5 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1384337189}
-  - {fileID: 151996426}
+  - {fileID: 2029913238}
+  - {fileID: 1218382439}
