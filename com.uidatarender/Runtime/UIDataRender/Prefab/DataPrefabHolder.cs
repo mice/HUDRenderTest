@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using UIData;
 using UnityEngine;
+using Unity.Profiling;
 
 
 /// <summary>
@@ -13,6 +14,8 @@ using UnityEngine;
 public class DataPrefabHolder<T> : IUIPrefabHolder 
     where T: class, IUIData, new()
 {
+    private static readonly ProfilerMarker HolderSetupMarker = new ProfilerMarker("UIData.Holder.BuildMesh.Setup");
+    private static readonly ProfilerMarker DrawGenerateMarker = new ProfilerMarker("UIData.Holder.BuildMesh.DoGenerate");
     [SerializeField]
     protected UIPrefabOwner _target;
     public UIPrefabOwner Target => _target;
@@ -48,18 +51,18 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
     /// <param name="draws"></param>
     public void BuildMesh(IUIDrawTarget[] draws)
     {
-        if (uIMeshDatas == Array.Empty<T>())
+        using (HolderSetupMarker.Auto())
         {
-            uIMeshDatas = new T[draws.Length];
-        }
-        else if (uIMeshDatas.Length < draws.Length)
-        {
-            Array.Resize(ref uIMeshDatas, draws.Length);
+            if (uIMeshDatas == Array.Empty<T>())
+                uIMeshDatas = new T[draws.Length];
+            else if (uIMeshDatas.Length < draws.Length)
+                Array.Resize(ref uIMeshDatas, draws.Length);
         }
         for (int i = 0; i < draws.Length; i++)
         {
             uIMeshDatas[i] = uIMeshDatas[i] ?? new T();
-            draws[i].DoGenerate(uIMeshDatas[i], Target.transform);
+            using (DrawGenerateMarker.Auto())
+                draws[i].DoGenerate(uIMeshDatas[i], Target.transform);
         }
     }
 

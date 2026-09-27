@@ -164,6 +164,22 @@ namespace UnityEngine.UI
         }
 
         /// <summary>
+        /// Copies the current index stream directly into a caller-owned array.
+        /// This is an additive application-facing API; FillMesh and the original
+        /// VertexHelper behavior remain unchanged.
+        /// </summary>
+        public void CopyIndices(int[] destination, int destinationOffset = 0, int vertexOffset = 0)
+        {
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
+            if (destinationOffset < 0 || destinationOffset + currentIndexCount > destination.Length)
+                throw new ArgumentOutOfRangeException(nameof(destinationOffset));
+
+            for (int i = 0; i < m_Indices.Count; i++)
+                destination[destinationOffset + i] = m_Indices[i] + vertexOffset;
+        }
+
+        /// <summary>
         /// Fill a UIVertex with data from index i of the stream.
         /// </summary>
         /// <param name="vertex">Vertex to populate</param>

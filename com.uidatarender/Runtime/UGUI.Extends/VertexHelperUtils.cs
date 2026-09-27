@@ -8,9 +8,7 @@ namespace UnityEngine.UI
     public static class VertexHelperUtils
     {
         private static readonly ProfilerMarker CopyVerticesMarker = new ProfilerMarker("UIData.VertexHelper.CopyVertices");
-        private static readonly ProfilerMarker FillMeshMarker = new ProfilerMarker("UIData.VertexHelper.FillMesh");
-        private static readonly List<int> ScratchIndices = new List<int>(128);
-        private static Mesh _scratchMesh;
+        private static readonly ProfilerMarker CopyIndicesMarker = new ProfilerMarker("UIData.VertexHelper.CopyIndices");
 
         public static (int, int) FillData2(this VertexHelper vertexHelper, ref Vector3[] vertList, ref Color32[] colors, ref Vector4[] uvs, ref int[] triangles, int textureIndex, int flags)
         {
@@ -66,61 +64,10 @@ namespace UnityEngine.UI
 
         private static void CopyIndices(VertexHelper vertexHelper, int[] triangles, int indicesOffset, int vertexOffset = 0)
         {
-            var indexCount = vertexHelper.currentIndexCount;
-            var scratchMesh = GetScratchMesh();
-            using (FillMeshMarker.Auto())
+            using (CopyIndicesMarker.Auto())
             {
-                vertexHelper.FillMesh(scratchMesh);
+                vertexHelper.CopyIndices(triangles, indicesOffset, vertexOffset);
             }
-            ScratchIndices.Clear();
-            scratchMesh.GetTriangles(ScratchIndices, 0);
-
-            if (ScratchIndices.Count != indexCount)
-            {
-                throw new InvalidOperationException(
-                    $"VertexHelper reported {indexCount} indices but produced {ScratchIndices.Count}.");
-            }
-
-            for (int i = 0; i < indexCount; i++)
-            {
-                triangles[indicesOffset + i] = ScratchIndices[i] + vertexOffset;
-            }
-        }
-
-        private static Mesh GetScratchMesh()
-        {
-            if (_scratchMesh == null)
-            {
-                _scratchMesh = new Mesh
-                {
-                    name = "UIDataRender VertexHelper Scratch",
-                    hideFlags = HideFlags.HideAndDontSave,
-                };
-                _scratchMesh.MarkDynamic();
-            }
-
-            return _scratchMesh;
-        }
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetScratchState()
-        {
-            ScratchIndices.Clear();
-            if (_scratchMesh == null)
-            {
-                return;
-            }
-
-            if (Application.isPlaying)
-            {
-                UnityEngine.Object.Destroy(_scratchMesh);
-            }
-            else
-            {
-                UnityEngine.Object.DestroyImmediate(_scratchMesh);
-            }
-
-            _scratchMesh = null;
         }
 
         private static void ResizeExact<T>(ref T[] array, int length)

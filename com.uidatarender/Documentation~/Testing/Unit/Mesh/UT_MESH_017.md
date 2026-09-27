@@ -6,8 +6,8 @@ target: VertexHelperUtils
 testFile: Tests/EditMode/TestVertexHelperUtils.cs
 testMethod: FillData2And3_AfterWarmup_DoNotAllocateManagedMemory
 status: active
-lastRun: "2026-09-27"
-lastResult: passed
+lastRun: ""
+lastResult: unknown
 ---
 
 # UT_MESH_017

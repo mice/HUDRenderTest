@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Mesh;
+using Unity.Profiling;
 
 public class UIText : Text, IUITextDrawTarget
 {
+    private static readonly ProfilerMarker GenerateMarker = new ProfilerMarker("UIData.UIText.DoGenerate");
+    private static readonly ProfilerMarker UpdateGeometryMarker = new ProfilerMarker("UIData.UIText.UpdateGeometry");
     private bool _isGenerating = false;
     private IUIData tmp_meshData;
     private Transform tmp_root;
@@ -24,6 +27,8 @@ public class UIText : Text, IUITextDrawTarget
 
     public void DoGenerate(IUIData meshData,Transform root = null)
     {
+        using (GenerateMarker.Auto())
+        {
         _isGenerating = true;
         tmp_meshData = meshData;
         tmp_root = root;
@@ -36,7 +41,8 @@ public class UIText : Text, IUITextDrawTarget
             outline.tmp_root = tmp_root;
         }
 
-        UpdateGeometry();
+        using (UpdateGeometryMarker.Auto())
+            UpdateGeometry();
         tmp_meshData = null;
         tmp_root = null;
         if (outline != null)
@@ -46,6 +52,7 @@ public class UIText : Text, IUITextDrawTarget
         }
         outline = null;
         _isGenerating = false;
+        }
     }
 
     protected override void OnPopulateMesh(VertexHelper toFill)

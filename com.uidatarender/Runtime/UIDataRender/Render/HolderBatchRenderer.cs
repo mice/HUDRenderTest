@@ -21,6 +21,9 @@ public sealed class HolderBatchRenderer : IDisposable
     private readonly List<Color32> colors = new List<Color32>();
     private readonly List<int> triangles = new List<int>();
     private int batchCount;
+    public double LastPlanMs { get; private set; }
+    public double LastFillMs { get; private set; }
+    public double LastMeshUploadMs { get; private set; }
 
     public HolderBatchRenderer(int maxSlots, PerfProbe probe = null)
     {
@@ -43,14 +46,17 @@ public sealed class HolderBatchRenderer : IDisposable
         if (bindTextures == null) throw new ArgumentNullException(nameof(bindTextures));
 
         List<RenderBatch> batches;
+        long planStart = Stopwatch.GetTimestamp();
         using (PerfProbe.MergeJobMarker.Auto())
         {
             batches = batcher.Plan(holders);
         }
+        LastPlanMs = (Stopwatch.GetTimestamp() - planStart) * 1000.0 / Stopwatch.Frequency;
         batchCount = batches.Count;
         EnsureBatchArrays(batchCount, createMaterial);
 
         float fillMs = 0f;
+        double meshUploadMs = 0.0;
         for (int b = 0; b < batches.Count; b++)
         {
             var batch = batches[b];
@@ -86,17 +92,21 @@ public sealed class HolderBatchRenderer : IDisposable
 
             ApplySlotRemap(uvs, localSlotMap);
 
+            long meshStart = Stopwatch.GetTimestamp();
             meshes[b].Clear();
             meshes[b].SetVertices(vertices);
             meshes[b].SetUVs(0, uvs);
             meshes[b].SetColors(colors);
             meshes[b].SetTriangles(triangles, 0);
             meshes[b].RecalculateBounds();
+            meshUploadMs += (Stopwatch.GetTimestamp() - meshStart) * 1000.0 / Stopwatch.Frequency;
 
             bindTextures(materials[b], batch);
         }
 
         probe.Record(fillMs, batchCount);
+        LastFillMs = fillMs;
+        LastMeshUploadMs = meshUploadMs;
     }
 
     public int Draw(Matrix4x4 matrix, int layer, Camera camera)

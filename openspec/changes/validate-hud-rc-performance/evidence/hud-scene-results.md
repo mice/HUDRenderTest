@@ -30,6 +30,29 @@ r4 将 `targetFrameRate` 显式设为 60，其他配置保持 256 holders、3 qu
 
 结论：以整体 regeneration 预算 **1 ms** 计算，Partial 中位数约 2.30 ms，Burst 全量刷新约 11.11 ms，均超预算。Partial 的 generation 与 merge 都是主要贡献；Burst 主要由 generation 贡献。r4 的目标帧率为 60，但 Burst 仍可能占用大部分 16.67 ms 帧预算。该结论仍受 `commit/sourceFingerprint=unknown` 和 IL2CPP 分配计数器不可用限制，不能作为发布候选最终验收。
 
+### Xiaomi 10 优化前基线（2026-09-27，提交 `9a6603a`）
+
+基线 APK：`HUDRenderTest-IL2CPP-Release-baseline.apk`，SHA256 `6A72102DBBEED5D59D67CA8A9F52B23F15F3ED2BEB657E2DC8A6BE67844DB28F`。报告：[JSON](xiaomi10/baseline-report/hud_rc_20260927_120325_567_ee7a774c.json) / [CSV](xiaomi10/baseline-report/hud_rc_20260927_120325_567_ee7a774c.csv)，JSON SHA256 `06102E681580A2AB36848D9ECCA4604C9E68C663D9732DE5FD41C0CD3AA46019`。配置为 256 holders、3 quads、10% Partial、30 帧 Burst、60 warmup/180 sample、targetFrameRate=60、Vulkan/IL2CPP/ARM64/Release。
+
+| 模式 | generation median/p95 | merge median/p95 | regeneration median | 帧间隔 median/p95 |
+|---|---:|---:|---:|---:|
+| Static | 0.0002/0.0004 ms | 0.0002/0.0002 ms | 0.0004 ms | 16.6929/17.0402 ms |
+| Partial（26/256） | 1.0998/1.1615 ms | 0.3643/0.3970 ms | **1.4641 ms** | 16.7096/16.9348 ms |
+| Burst（256，全量刷新帧） | 10.5761/10.6583 ms | 0.3611/0.3931 ms | **10.9372 ms** | 16.6944/16.7074 ms |
+
+该基线仍超过整体 1 ms 预算：Partial 约 1.46 ms，Burst 约 10.94 ms。后续优化必须使用相同设备、配置、构建模式和报告字段进行前后对比；该版本只作为诊断基线，不代表验收通过。
+
+### Xiaomi 10 CopyIndices 复测（2026-09-27）
+
+当前版本 APK 使用本地 UGUI `VertexHelper.CopyIndices`，绕过 `VertexHelper.FillMesh` 的 scratch Mesh 往返；UGUI 原有 `Image`/`Graphic` 逻辑未修改。相同 Xiaomi 10、256 holders、3 quads、10% Partial、30 帧 Burst、targetFrameRate=60 配置下，结果为：
+
+| 模式 | generation median | merge median | regeneration median | buildMesh median | mergeFill median |
+|---|---:|---:|---:|---:|---:|
+| Partial（26/256） | 0.2709 ms | 0.3686 ms | **0.6395 ms** | 0.2173 ms | 0.2198 ms |
+| Burst（256，全量刷新帧） | 2.3537 ms | 0.4014 ms | **2.7551 ms** | 1.9018 ms | 0.2251 ms |
+
+相对优化前基线（Partial `1.4641 ms`、Burst `10.9372 ms`），regeneration 中位数约下降 **56.3% / 74.8%**。当前 Partial 已低于 1 ms 瞬时预算；Burst 仍约 2.76 ms，尚未达到 1 ms。当前 Burst 的主要剩余成本是 `buildMesh`（约 1.90 ms），而不是 mergeFill（约 0.23 ms）。报告：[JSON](xiaomi10/copyindices-report/hud_rc_20260927_133926_498_ef23d132.json) / [CSV](xiaomi10/copyindices-report/hud_rc_20260927_133926_498_ef23d132.csv)。
+
 ### GC 热点定位（代码审查，2026-09-27）
 
 当前 `UIData.Fill` 与 `UIData.MergeJob` 的托管分配来源已拆开：
@@ -54,6 +77,14 @@ r4 将 `targetFrameRate` 显式设为 60，其他配置保持 256 holders、3 qu
 ### Graphics.DoMeshGeneration CPU 分解（2026-09-27）
 
 `Graphics.DoMeshGeneration` 的高 CPU 已定位到 UGUI 几何重复转换链：`UIImage.OnPopulateMesh` 先调用 `Image.OnPopulateMesh`，随后 `UIMeshData.FillVertex` 再逐顶点读取 `VertexHelper`；`VertexHelperUtils.CopyIndices` 还会调用 `VertexHelper.FillMesh` 写入 scratch Mesh，再通过 `GetTriangles` 读回索引。已加入四个细粒度 marker：`UIData.UIImage.BasePopulateMesh`、`UIData.UIImage.CustomPopulateMesh`、`UIData.VertexHelper.CopyVertices`、`UIData.VertexHelper.FillMesh`。下一轮编辑器采样据此决定是绕过基础 Image 生成，还是直接从 VertexHelper 索引路径读取，避免在没有证据前改动 UGUI 行为。
+
+`VertexHelper.FillMesh` 内部无法继续拆分；对当前固定四边形（4 vertices / 6 indices）路径已加入 `QuadIndicesFastPath`，直接写入标准 `[0,1,2,2,3,0]` 索引并绕过 scratch Mesh。非四边形或非六索引几何仍使用原 `FillMesh` 回退路径，因此复杂 UI 行为保持不变。需用 Xiaomi 10/Editor 基线复测确认 5.x ms 是否显著下降。
+
+### HudRcPerformanceRunner.Update 分解（2026-09-27）
+
+`AdvanceFrame` 已增加逐帧阶段字段：`runnerBookkeepingMs`（pending sample、模式切换和状态维护）、`holderSelectionMs`（索引选择、宽度计算、RectTransform 尺寸写入）、`buildMeshMs`（所有 `holders[index].BuildMesh(draws)` 累计）。原 `generationMs` 现在从 selection 阶段开始单独记录，`mergeMs`、`mergePlanMs`、`mergeFillMs`、`meshUploadMs` 和 `drawSubmitMs` 保持不变。后续基线报告可区分 Runner 自身开销与 UIImage/VertexHelper/合并路径开销。
+
+同时加入 Unity ProfilerMarker：`HUDRC.Runner.Bookkeeping`、`HUDRC.Runner.HolderSelection`、`HUDRC.Runner.BuildMesh`、`HUDRC.Runner.Rebuild`、`HUDRC.Runner.Draw`。`BuildMesh` 包在每个 holder 调用周围，可展开查看单次和累计成本；JSON 字段用于跨设备汇总，Profiler marker 用于编辑器现场定位。
 
 ### Xiaomi 10 真机接线结果（2026-09-27，Development APK）
 

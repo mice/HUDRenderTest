@@ -5,6 +5,50 @@ using UnityEngine.UI;
 
 public class TestUIMeshData
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_021.md
+    [Test]
+    [Category("UT_MESH_021")]
+    public void FillVertex_CapturesCompleteMeshContract()
+    {
+        var meshData = new UIMeshData { TextureIndex = 4 };
+        using (var helper = CreateDetailedQuad())
+        {
+            meshData.FillVertex(helper, 7);
+        }
+
+        Assert.AreEqual(4, meshData.mesh.VertexCount);
+        Assert.AreEqual(6, meshData.mesh.IndicesCount);
+        CollectionAssert.AreEqual(new[] { 0, 1, 2, 2, 3, 0 }, meshData.triangles);
+        CollectionAssert.AreEqual(new[]
+        {
+            new Color32(10, 20, 30, 40),
+            new Color32(50, 60, 70, 80),
+            new Color32(90, 100, 110, 120),
+            new Color32(130, 140, 150, 160),
+        }, meshData.colors);
+        Assert.AreEqual(new Vector4(0.1f, 0.2f, 4, 7), meshData.uvs[0]);
+        Assert.AreEqual(new Vector4(0.7f, 0.8f, 4, 7), meshData.uvs[3]);
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_022.md
+    [Test]
+    [Category("UT_MESH_022")]
+    public void TransformVertex_ChangesPositionsWithoutChangingTopology()
+    {
+        var meshData = new UIMeshData();
+        using (var helper = CreateQuad())
+        {
+            meshData.FillVertex(helper, 0);
+        }
+
+        var originalIndices = (int[])meshData.triangles.Clone();
+        meshData.TransformVertex(Matrix4x4.Translate(new Vector3(3, 4, 0)));
+
+        Assert.AreEqual(new Vector3(13, 4, 0), meshData.vertList[0]);
+        Assert.AreEqual(new Vector3(23, 14, 0), meshData.vertList[2]);
+        CollectionAssert.AreEqual(originalIndices, meshData.triangles);
+    }
+
     // TC-UM-01
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_003.md
     [Test]
@@ -121,6 +165,27 @@ public class TestUIMeshData
         helper.AddTriangle(0, 1, 2);
         helper.AddTriangle(2, 3, 0);
         return helper;
+    }
+
+    private static VertexHelper CreateDetailedQuad()
+    {
+        var helper = new VertexHelper();
+        AddVertex(helper, new Vector3(1, 2, 0), new Color32(10, 20, 30, 40), new Vector4(0.1f, 0.2f, 0, 0));
+        AddVertex(helper, new Vector3(3, 5, 0), new Color32(50, 60, 70, 80), new Vector4(0.3f, 0.4f, 0, 0));
+        AddVertex(helper, new Vector3(8, 13, 0), new Color32(90, 100, 110, 120), new Vector4(0.5f, 0.6f, 0, 0));
+        AddVertex(helper, new Vector3(21, 34, 0), new Color32(130, 140, 150, 160), new Vector4(0.7f, 0.8f, 0, 0));
+        helper.AddTriangle(0, 1, 2);
+        helper.AddTriangle(2, 3, 0);
+        return helper;
+    }
+
+    private static void AddVertex(VertexHelper helper, Vector3 position, Color32 color, Vector4 uv)
+    {
+        var vertex = UIVertex.simpleVert;
+        vertex.position = position;
+        vertex.color = color;
+        vertex.uv0 = uv;
+        helper.AddVert(vertex);
     }
 
     private static void AssertVectorEqual(Vector3 expected, Vector3 actual)

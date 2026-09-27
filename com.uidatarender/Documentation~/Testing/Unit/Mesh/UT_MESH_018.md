@@ -6,8 +6,8 @@ target: VertexHelperUtils
 testFile: Tests/EditMode/TestVertexHelperUtils.cs
 testMethod: PublicExtraction_Benchmark_ReportsMedianAndTailCosts
 status: active
-lastRun: "2026-09-27"
-lastResult: passed
+lastRun: ""
+lastResult: unknown
 ---
 
 # UT_MESH_018

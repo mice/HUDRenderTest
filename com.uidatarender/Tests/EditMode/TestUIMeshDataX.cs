@@ -11,6 +11,37 @@ public class TestUIMeshDataX
         UIMeshDataX.geometry.Reset();
     }
 
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_023.md
+    [Test]
+    [Category("UT_MESH_023")]
+    public void FillVertex_WritesSharedGeometryWithTextureAndFlags()
+    {
+        var meshData = new UIMeshDataX { TextureIndex = 6 };
+        using (var helper = CreateQuad())
+        {
+            meshData.FillVertex(helper, 9);
+        }
+
+        Assert.AreEqual(4, meshData.mesh.VertexCount);
+        Assert.AreEqual(6, meshData.mesh.IndicesCount);
+        for (int i = meshData.mesh.VertexOffset; i < meshData.mesh.VertexOffset + 4; i++)
+        {
+            Assert.AreEqual(6, UIMeshDataX.geometry.uvs[i].z);
+            Assert.AreEqual(9, UIMeshDataX.geometry.uvs[i].w);
+        }
+
+        CollectionAssert.AreEqual(new[] { 0, 1, 2, 2, 3, 0 },
+            new[]
+            {
+                UIMeshDataX.geometry.indices[meshData.mesh.IndicesOffset + 0],
+                UIMeshDataX.geometry.indices[meshData.mesh.IndicesOffset + 1],
+                UIMeshDataX.geometry.indices[meshData.mesh.IndicesOffset + 2],
+                UIMeshDataX.geometry.indices[meshData.mesh.IndicesOffset + 3],
+                UIMeshDataX.geometry.indices[meshData.mesh.IndicesOffset + 4],
+                UIMeshDataX.geometry.indices[meshData.mesh.IndicesOffset + 5],
+            });
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_010.md
     [Test]
     [Category("UT_MESH_010")]

@@ -191,8 +191,9 @@ if ($missingFiles.Count -eq 0) {
     $uguiLock = $lock.dependencies.'com.unity.ugui'
     $uguiSource = [string]$uguiLock.source
     $uguiVersion = [string]$uguiLock.version
-    Add-Check "stock-ugui-resolution" `
-        ($uguiVersion -eq "1.0.0" -and $uguiSource -ne "embedded" -and $uguiSource -ne "local") `
+    $uguiIsLocalFile = $uguiVersion -like "file:*" -and $uguiVersion -eq "file:../../com.unity.ugui"
+    Add-Check "ugui-resolution" `
+        (($uguiVersion -eq "1.0.0" -and $uguiSource -ne "embedded" -and $uguiSource -ne "local") -or $uguiIsLocalFile) `
         "version=$uguiVersion; source=$uguiSource"
 
     $versionLine = Select-String -LiteralPath $projectVersionPath -Pattern '^m_EditorVersion:\s*(?<version>\S+)' | Select-Object -First 1

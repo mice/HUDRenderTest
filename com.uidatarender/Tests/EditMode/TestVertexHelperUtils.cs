@@ -8,6 +8,37 @@ using UnityEngine.UI;
 
 public class TestVertexHelperUtils
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_019.md
+    [Test]
+    [Category("UT_MESH_019")]
+    public void CopyIndices_WritesTopologyWithDestinationAndVertexOffsets()
+    {
+        var destination = new int[10];
+        for (int i = 0; i < destination.Length; i++)
+            destination[i] = -1;
+
+        using (var helper = CreateQuad())
+        {
+            helper.CopyIndices(destination, 2, 5);
+        }
+
+        CollectionAssert.AreEqual(new[] { -1, -1, 5, 6, 7, 7, 8, 5, -1, -1 }, destination);
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_020.md
+    [Test]
+    [Category("UT_MESH_020")]
+    public void CopyIndices_RejectsNullAndInsufficientDestination()
+    {
+        using (var helper = CreateQuad())
+        {
+            Assert.Throws<ArgumentNullException>(() => helper.CopyIndices(null));
+            Assert.Throws<ArgumentOutOfRangeException>(() => helper.CopyIndices(new int[5]));
+            Assert.Throws<ArgumentOutOfRangeException>(() => helper.CopyIndices(new int[6], -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => helper.CopyIndices(new int[6], 1));
+        }
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_013.md
     [Test]
     [Category("UT_MESH_013")]

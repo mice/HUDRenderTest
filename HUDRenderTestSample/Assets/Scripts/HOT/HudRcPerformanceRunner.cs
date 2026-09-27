@@ -13,6 +13,11 @@ using Debug = UnityEngine.Debug;
 /// <summary>Sample-only, bounded HUD workload through the production holder/mesh/batch path.</summary>
 public sealed class HudRcPerformanceRunner : MonoBehaviour
 {
+    private static readonly ProfilerMarker RunnerBookkeepingMarker = new ProfilerMarker("HUDRC.Runner.Bookkeeping");
+    private static readonly ProfilerMarker HolderSelectionMarker = new ProfilerMarker("HUDRC.Runner.HolderSelection");
+    private static readonly ProfilerMarker BuildMeshMarker = new ProfilerMarker("HUDRC.Runner.BuildMesh");
+    private static readonly ProfilerMarker RebuildMarker = new ProfilerMarker("HUDRC.Runner.Rebuild");
+    private static readonly ProfilerMarker DrawMarker = new ProfilerMarker("HUDRC.Runner.Draw");
     public enum Workload { Static, Partial, Burst }
     public enum RunState { Idle, Preparing, Warming, Sampling, Completed, Failed }
 
@@ -44,6 +49,8 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
     {
         public int unityFrame, sampleFrame, mode, updatedHolders, vertices, indices, batches;
         public double generationMs, mergeMs, drawSubmitMs, frameIntervalMs, mainThreadMs;
+        public double runnerBookkeepingMs, holderSelectionMs, buildMeshMs;
+        public double mergePlanMs, mergeFillMs, meshUploadMs;
         public long generationBytes, mergeBytes, measuredThreadBytes, frameGcBytes;
         public bool mainThreadAvailable, frameGcAvailable, scopedAllocationAvailable;
         public int selectionChecksum;
@@ -231,31 +238,36 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
 
     private void AdvanceFrame()
     {
+        long advanceStart = Stopwatch.GetTimestamp();
         long now = Stopwatch.GetTimestamp();
         // Recorder.LastValue describes the completed previous Unity frame; align with its pending workload.
-        if (hasPending)
+        using (RunnerBookkeepingMarker.Auto())
         {
-            pending.frameIntervalMs = Milliseconds(now - previousUpdate);
-            pending.mainThreadAvailable = mainThread.Valid && mainThread.Count > 0 && mainThread.LastValue > 0;
-            pending.mainThreadMs = pending.mainThreadAvailable ? mainThread.LastValue / 1000000.0 : -1;
-            pending.frameGcAvailable = frameGc.Valid && frameGc.Count > 0;
-            pending.frameGcBytes = pending.frameGcAvailable ? frameGc.LastValue : -1;
-            samples[sampleCount++] = pending;
-            hasPending = false;
-        }
-        previousUpdate = now;
-        if (modeFrame == active.warmupFrames + active.sampleFrames)
-        {
-            mode++;
-            modeFrame = 0;
-            if (mode == 3)
+            if (hasPending)
             {
-                State = RunState.Completed;
-                ReleaseResources();
-                if (autoExport) ExportReport();
-                return;
+                pending.frameIntervalMs = Milliseconds(now - previousUpdate);
+                pending.mainThreadAvailable = mainThread.Valid && mainThread.Count > 0 && mainThread.LastValue > 0;
+                pending.mainThreadMs = pending.mainThreadAvailable ? mainThread.LastValue / 1000000.0 : -1;
+                pending.frameGcAvailable = frameGc.Valid && frameGc.Count > 0;
+                pending.frameGcBytes = pending.frameGcAvailable ? frameGc.LastValue : -1;
+                samples[sampleCount++] = pending;
+                hasPending = false;
+            }
+            previousUpdate = now;
+            if (modeFrame == active.warmupFrames + active.sampleFrames)
+            {
+                mode++;
+                modeFrame = 0;
+                if (mode == 3)
+                {
+                    State = RunState.Completed;
+                    ReleaseResources();
+                    if (autoExport) ExportReport();
+                    return;
+                }
             }
         }
+        long bookkeepingEnd = Stopwatch.GetTimestamp();
 
         bool sampling = modeFrame >= active.warmupFrames;
         State = sampling ? RunState.Sampling : RunState.Warming;
@@ -264,25 +276,41 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         int count = sampling ? PlannedUpdates((Workload)mode, frame, active) : active.holderCount;
         int start = (int)(((long)frame * Math.Max(1, count) + (uint)active.seed) % active.holderCount);
         long bytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() : 0;
-        long begin = Stopwatch.GetTimestamp();
+        long selectionStart = Stopwatch.GetTimestamp();
         int checksum = 0;
-        for (int j = 0; j < count; j++)
+        long selectionTicks = 0;
+        long buildTicks = 0;
+        using (HolderSelectionMarker.Auto())
         {
-            int index = (start + j) % active.holderCount;
-            float width = 12 + ((index + frame + (uint)active.seed) % 11);
-            for (int k = 0; k < images.Length; k++)
-                images[k].rectTransform.sizeDelta = new Vector2(width, 3);
-            holders[index].BuildMesh(draws);
-            checksum = unchecked(checksum * 31 + index + 1);
+            for (int j = 0; j < count; j++)
+            {
+                long selectionItemStart = Stopwatch.GetTimestamp();
+                int index = (start + j) % active.holderCount;
+                float width = 12 + ((index + frame + (uint)active.seed) % 11);
+                for (int k = 0; k < images.Length; k++)
+                    images[k].rectTransform.sizeDelta = new Vector2(width, 3);
+                selectionTicks += Stopwatch.GetTimestamp() - selectionItemStart;
+                long buildStart = Stopwatch.GetTimestamp();
+                using (BuildMeshMarker.Auto())
+                    holders[index].BuildMesh(draws);
+                buildTicks += Stopwatch.GetTimestamp() - buildStart;
+                checksum = unchecked(checksum * 31 + index + 1);
+            }
         }
+        long selectionEnd = Stopwatch.GetTimestamp();
         long afterGeneration = Stopwatch.GetTimestamp();
         long generationBytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() - bytes : -1;
         long mergeStartBytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() : 0;
-        if (count > 0) Rebuild();
+        if (count > 0)
+        {
+            using (RebuildMarker.Auto())
+                Rebuild();
+        }
         long afterMerge = Stopwatch.GetTimestamp();
         long mergeBytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() - mergeStartBytes : -1;
         long drawStart = Stopwatch.GetTimestamp();
-        renderer.Draw(Matrix4x4.identity, gameObject.layer, outputCamera);
+        using (DrawMarker.Auto())
+            renderer.Draw(Matrix4x4.identity, gameObject.layer, outputCamera);
         long afterDraw = Stopwatch.GetTimestamp();
         long measuredBytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() - bytes : -1;
         if (sampling)
@@ -291,7 +319,11 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
             {
                 unityFrame = Time.frameCount, sampleFrame = frame, mode = mode, updatedHolders = count,
                 vertices = VertexCount, indices = IndexCount, batches = renderer.BatchCount,
-                generationMs = Milliseconds(afterGeneration - begin), mergeMs = Milliseconds(afterMerge - afterGeneration),
+                generationMs = Milliseconds(afterGeneration - selectionStart), mergeMs = Milliseconds(afterMerge - afterGeneration),
+                runnerBookkeepingMs = Milliseconds(bookkeepingEnd - advanceStart),
+                holderSelectionMs = Milliseconds(selectionTicks),
+                buildMeshMs = Milliseconds(buildTicks),
+                mergePlanMs = renderer.LastPlanMs, mergeFillMs = renderer.LastFillMs, meshUploadMs = renderer.LastMeshUploadMs,
                 drawSubmitMs = Milliseconds(afterDraw - drawStart), generationBytes = scopedAllocationAvailable ? generationBytes : -1,
                 mergeBytes = scopedAllocationAvailable ? mergeBytes : -1, measuredThreadBytes = scopedAllocationAvailable ? measuredBytes : -1,
                 scopedAllocationAvailable = scopedAllocationAvailable, selectionChecksum = checksum
