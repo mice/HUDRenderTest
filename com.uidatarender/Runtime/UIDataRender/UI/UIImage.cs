@@ -76,11 +76,12 @@ public class UIImage :Image,IUIDrawTarget
                     isChild = _transform.IsChildOf(tmp_root);
                 if (isChild)
                 {
-                    Matrix4x4 mtx;
                     using (CalcMatrixMarker.Auto())
-                        mtx = Utility.CalcMatrix(tmp_root, _transform);
-                    using (TransformMarker.Auto())
-                        tmp_meshData.TransformVertex(mtx);
+                    {
+                        var mtx = Utility.CalcMatrix(tmp_root, _transform);
+                        using (TransformMarker.Auto())
+                            tmp_meshData.TransformVertex(mtx);
+                    }
                 }
             }
         }

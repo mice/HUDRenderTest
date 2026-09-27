@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using System;
+using System.Diagnostics;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +9,61 @@ using UnityEngine;
 /// </summary>
 public class TestCalcMatrix
 {
+    // TestRecord: Documentation~/Testing/Unit/Matrix/UT_MTX_003.md
+    [Test]
+    [Category("UT_MTX_003")]
+    public void CalcMatrix_OptimizedMatchesLegacy_AndReportsCost()
+    {
+        var rootGO = new GameObject("root");
+        var midGO = new GameObject("mid");
+        var subGO = new GameObject("sub");
+        midGO.transform.SetParent(rootGO.transform);
+        subGO.transform.SetParent(midGO.transform);
+        rootGO.transform.localPosition = new Vector3(3, -2, 1);
+        rootGO.transform.localRotation = Quaternion.Euler(10, 20, 30);
+        rootGO.transform.localScale = new Vector3(1.2f, 0.9f, 1.1f);
+        midGO.transform.localPosition = new Vector3(4, 5, 0);
+        midGO.transform.localRotation = Quaternion.Euler(0, 0, 25);
+        midGO.transform.localScale = new Vector3(0.8f, 1.3f, 1);
+        subGO.transform.localPosition = new Vector3(-2, 7, 0);
+        subGO.transform.localRotation = Quaternion.Euler(0, 0, -15);
+        subGO.transform.localScale = new Vector3(1.4f, 0.7f, 1);
+
+        try
+        {
+            var expected = LegacyCalcMatrix(rootGO.transform, subGO.transform);
+            var actual = Utility.CalcMatrix(rootGO.transform, subGO.transform);
+            AssertMatrixApproximatelyEqual(expected, actual);
+
+            const int iterations = 10000;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            for (int i = 0; i < iterations; i++)
+                LegacyCalcMatrix(rootGO.transform, subGO.transform);
+            stopwatch.Stop();
+            var legacyTicks = stopwatch.ElapsedTicks;
+
+            stopwatch.Restart();
+            for (int i = 0; i < iterations; i++)
+                Utility.CalcMatrix(rootGO.transform, subGO.transform);
+            stopwatch.Stop();
+            var optimizedTicks = stopwatch.ElapsedTicks;
+
+            TestContext.Out.WriteLine(
+                $"CalcMatrix comparison: iterations={iterations}, " +
+                $"frequency={Stopwatch.Frequency}, legacyTicks={legacyTicks}, optimizedTicks={optimizedTicks}, " +
+                $"legacyUs={legacyTicks * 1_000_000d / Stopwatch.Frequency:F3}, " +
+                $"optimizedUs={optimizedTicks * 1_000_000d / Stopwatch.Frequency:F3}, " +
+                $"speedup={(double)legacyTicks / Math.Max(1, optimizedTicks):F2}x");
+        }
+        finally
+        {
+            UnityEngine.Object.DestroyImmediate(subGO);
+            UnityEngine.Object.DestroyImmediate(midGO);
+            UnityEngine.Object.DestroyImmediate(rootGO);
+        }
+    }
+
     // TC-MTX-01
     // Note: CalcMatrix walks up from subNode until parent==root.
     // When subNode is a direct child of root with identity local transform,
@@ -32,8 +89,8 @@ public class TestCalcMatrix
         }
         finally
         {
-            Object.DestroyImmediate(childGO);
-            Object.DestroyImmediate(rootGO);
+            UnityEngine.Object.DestroyImmediate(childGO);
+            UnityEngine.Object.DestroyImmediate(rootGO);
         }
     }
 
@@ -70,10 +127,30 @@ public class TestCalcMatrix
         }
         finally
         {
-            Object.DestroyImmediate(subGO);
-            Object.DestroyImmediate(midGO);
-            Object.DestroyImmediate(rootGO);
+            UnityEngine.Object.DestroyImmediate(subGO);
+            UnityEngine.Object.DestroyImmediate(midGO);
+            UnityEngine.Object.DestroyImmediate(rootGO);
         }
+    }
+
+    private static Matrix4x4 LegacyCalcMatrix(Transform root, Transform subNode)
+    {
+        var tmpNode = subNode;
+        var matrix = Matrix4x4.TRS(tmpNode.localPosition, tmpNode.localRotation, tmpNode.localScale);
+        while (tmpNode.parent != root)
+        {
+            tmpNode = tmpNode.parent;
+            matrix = Matrix4x4.TRS(tmpNode.localPosition, tmpNode.localRotation, tmpNode.localScale) * matrix;
+        }
+        return matrix;
+    }
+
+    private static void AssertMatrixApproximatelyEqual(Matrix4x4 expected, Matrix4x4 actual)
+    {
+        for (int row = 0; row < 4; row++)
+            for (int column = 0; column < 4; column++)
+                Assert.That(actual[row, column], Is.EqualTo(expected[row, column]).Within(1e-4f),
+                    $"matrix[{row},{column}] mismatch");
     }
 
     // Helper: approximate Matrix4x4 equality comparer
