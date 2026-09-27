@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Profiling;
 
 /// <summary>
 /// 把Image
 /// </summary>
 public class UIImage :Image,IUIDrawTarget
 {
+    private static readonly ProfilerMarker BasePopulateMarker = new ProfilerMarker("UIData.UIImage.BasePopulateMesh");
+    private static readonly ProfilerMarker CustomPopulateMarker = new ProfilerMarker("UIData.UIImage.CustomPopulateMesh");
     private bool _isGenerating = false;
     private IUIData tmp_meshData;
     private Transform tmp_root;
@@ -41,10 +44,12 @@ public class UIImage :Image,IUIDrawTarget
 
     protected override void OnPopulateMesh(VertexHelper toFill)
     {
-        base.OnPopulateMesh(toFill);
+        using (BasePopulateMarker.Auto())
+            base.OnPopulateMesh(toFill);
         if (_isGenerating && tmp_meshData != null)
         {
-            tmp_meshData.FillVertex(toFill, 0);
+            using (CustomPopulateMarker.Auto())
+                tmp_meshData.FillVertex(toFill, 0);
             var _transform = transform;
             if(tmp_root != null && tmp_root!= _transform && _transform.IsChildOf(tmp_root))
             {

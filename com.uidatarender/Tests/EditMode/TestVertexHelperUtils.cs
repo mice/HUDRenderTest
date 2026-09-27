@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
+using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -130,38 +132,183 @@ public class TestVertexHelperUtils
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            long fill2Before = GC.GetAllocatedBytesForCurrentThread();
+
             stopwatch.Restart();
             for (int i = 0; i < measuredIterations; i++)
             {
                 helper.FillData2(ref exactVerts, ref exactColors, ref exactUvs, ref exactTriangles, 2, 9);
             }
             stopwatch.Stop();
-            long fill2Allocated = GC.GetAllocatedBytesForCurrentThread() - fill2Before;
+
             long fill2Ticks = stopwatch.ElapsedTicks;
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            long fill3Before = GC.GetAllocatedBytesForCurrentThread();
+
             stopwatch.Restart();
             for (int i = 0; i < measuredIterations; i++)
             {
                 helper.FillData3(ref appendVerts, ref appendColors, ref appendUvs, ref appendTriangles, 2, 3, 3, 11);
             }
             stopwatch.Stop();
-            long fill3Allocated = GC.GetAllocatedBytesForCurrentThread() - fill3Before;
+
             long fill3Ticks = stopwatch.ElapsedTicks;
+            long fill2Allocated = MeasureAllocation(() => {
+                for (int i = 0; i < measuredIterations; i++)
+                    helper.FillData2(ref exactVerts, ref exactColors, ref exactUvs, ref exactTriangles, 2, 9);
+            });
+            long fill3Allocated = MeasureAllocation(() => {
+                for (int i = 0; i < measuredIterations; i++)
+                    helper.FillData3(ref appendVerts, ref appendColors, ref appendUvs, ref appendTriangles, 2, 3, 3, 11);
+            });
 
             TestContext.Out.WriteLine(
                 $"VertexHelper extraction: iterations={measuredIterations}, " +
-                $"FillData2Ticks={fill2Ticks}, FillData2Allocated={fill2Allocated}, " +
-                $"FillData3Ticks={fill3Ticks}, FillData3Allocated={fill3Allocated}");
+                $"FillData2Ticks={fill2Ticks}, FillData2AllocationEvents={fill2Allocated}, " +
+                $"FillData3Ticks={fill3Ticks}, FillData3AllocationEvents={fill3Allocated}");
 
             Assert.AreEqual(0, fill2Allocated, "FillData2 allocated managed memory after warm-up.");
             Assert.AreEqual(0, fill3Allocated, "FillData3 allocated managed memory after warm-up.");
         }
+    }
+
+    // PERF-01 benchmark evidence: keep the fixture and sample configuration stable when comparing runs.
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_018.md
+    [Test]
+    [Category("UT_MESH_018")]
+    public void PublicExtraction_Benchmark_ReportsMedianAndTailCosts()
+    {
+        const int warmupIterations = 32;
+        const int sampleCount = 21;
+        const int iterationsPerSample = 500;
+        var exactVerts = new Vector3[4];
+        var exactColors = new Color32[4];
+        var exactUvs = new Vector4[4];
+        var exactTriangles = new int[6];
+        var appendVerts = new Vector3[8];
+        var appendColors = new Color32[8];
+        var appendUvs = new Vector4[8];
+        var appendTriangles = new int[12];
+        var mesh = new Mesh { name = "UIDataRender benchmark scratch" };
+        var scratchIndices = new List<int>(6);
+
+        using (var helper = CreateDetailedQuad())
+        {
+            for (int i = 0; i < warmupIterations; i++)
+            {
+                helper.FillData2(ref exactVerts, ref exactColors, ref exactUvs, ref exactTriangles, 2, 9);
+                helper.FillData3(ref appendVerts, ref appendColors, ref appendUvs, ref appendTriangles, 3, 4, 3, 11);
+                MeasureVertexChannelRead(helper, exactVerts, exactColors, exactUvs);
+                MeasureIndexRead(helper, mesh, scratchIndices);
+            }
+
+            var fill2 = MeasureSamples(sampleCount, iterationsPerSample, () =>
+                helper.FillData2(ref exactVerts, ref exactColors, ref exactUvs, ref exactTriangles, 2, 9));
+            var fill3 = MeasureSamples(sampleCount, iterationsPerSample, () =>
+                helper.FillData3(ref appendVerts, ref appendColors, ref appendUvs, ref appendTriangles, 3, 4, 3, 11));
+            var vertexChannels = MeasureSamples(sampleCount, iterationsPerSample, () =>
+                MeasureVertexChannelRead(helper, exactVerts, exactColors, exactUvs));
+            var indices = MeasureSamples(sampleCount, iterationsPerSample, () =>
+                MeasureIndexRead(helper, mesh, scratchIndices));
+
+            long fill2Allocated = MeasureAllocation(() =>
+                helper.FillData2(ref exactVerts, ref exactColors, ref exactUvs, ref exactTriangles, 2, 9));
+            long fill3Allocated = MeasureAllocation(() =>
+                helper.FillData3(ref appendVerts, ref appendColors, ref appendUvs, ref appendTriangles, 3, 4, 3, 11));
+
+            TestContext.Out.WriteLine(
+                $"PERF-01 environment=Unity {Application.unityVersion}, " +
+                $"fixture=4 vertices/6 indices, warmup={warmupIterations}, " +
+                $"samples={sampleCount}, iterationsPerSample={iterationsPerSample}, " +
+                $"frequency={Stopwatch.Frequency}");
+            WriteBenchmark("FillData2", fill2);
+            WriteBenchmark("FillData3", fill3);
+            WriteBenchmark("VertexChannels", vertexChannels);
+            WriteBenchmark("Indices", indices);
+            TestContext.Out.WriteLine($"PERF-04 calibratedAllocationEvents FillData2={fill2Allocated}, FillData3={fill3Allocated}");
+
+            Assert.AreEqual(0, fill2Allocated, "FillData2 allocated managed memory after warm-up.");
+            Assert.AreEqual(0, fill3Allocated, "FillData3 allocated managed memory after warm-up.");
+        }
+
+        UnityEngine.Object.DestroyImmediate(mesh);
+    }
+
+    private static long[] MeasureSamples(int sampleCount, int iterationsPerSample, Action operation)
+    {
+        var samples = new long[sampleCount];
+        var stopwatch = new Stopwatch();
+        for (int sample = 0; sample < sampleCount; sample++)
+        {
+            stopwatch.Restart();
+            for (int i = 0; i < iterationsPerSample; i++)
+            {
+                operation();
+            }
+            stopwatch.Stop();
+            samples[sample] = stopwatch.ElapsedTicks;
+        }
+        return samples;
+    }
+
+    private static long MeasureAllocation(Action operation)
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+        // Unity's thread-byte API can return constant zero. Count real GC.Alloc events,
+        // using an explicit positive control before permitting a zero-allocation assertion.
+        // No SumAllSamplesInFrame: each allocation is an individual sample in this scope.
+        using (var recorder = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "GC.Alloc", 65536,
+            ProfilerRecorderOptions.CollectOnlyOnCurrentThread))
+        {
+            var positiveControl = new byte[4096];
+            GC.KeepAlive(positiveControl);
+            recorder.Stop();
+            Assert.IsTrue(recorder.Valid, "GC.Alloc recorder unavailable.");
+            Assert.Greater(recorder.Count, 0, "GC.Alloc positive allocation control was not observed.");
+            recorder.Reset();
+            recorder.Start();
+            operation();
+            recorder.Stop();
+            int count = recorder.Count;
+            Assert.Less(count, recorder.Capacity, "Allocation recorder saturated; result is incomplete.");
+            return count;
+        }
+    }
+
+    private static void MeasureVertexChannelRead(VertexHelper helper, Vector3[] verts, Color32[] colors, Vector4[] uvs)
+    {
+        var vertex = default(UIVertex);
+        for (int i = 0; i < helper.currentVertCount; i++)
+        {
+            helper.PopulateUIVertex(ref vertex, i);
+            verts[i] = vertex.position;
+            colors[i] = vertex.color;
+            uvs[i] = vertex.uv0;
+        }
+    }
+
+    private static void MeasureIndexRead(VertexHelper helper, Mesh mesh, List<int> indices)
+    {
+        helper.FillMesh(mesh);
+        indices.Clear();
+        mesh.GetTriangles(indices, 0);
+    }
+
+    private static void WriteBenchmark(string name, long[] samples)
+    {
+        var ordered = (long[])samples.Clone();
+        Array.Sort(ordered);
+        double scale = 1_000_000d / Stopwatch.Frequency / 500d;
+        double median = ordered[ordered.Length / 2] * scale;
+        double p95 = ordered[Math.Min(ordered.Length - 1, (int)Math.Ceiling(ordered.Length * 0.95d) - 1)] * scale;
+        double minimum = ordered[0] * scale;
+        double maximum = ordered[ordered.Length - 1] * scale;
+        TestContext.Out.WriteLine(
+            $"PERF-01 {name} us/call min={minimum:F3}, median={median:F3}, p95={p95:F3}, max={maximum:F3}");
     }
 
     private static VertexHelper CreateQuad()

@@ -42,7 +42,7 @@ $moduleRules = @(
     @{ Pattern = "TestUITMPText|TestUIText|TestUIImage|TestUIOutline"; Module = "UI"; Prefix = "UT_UI"; Target = "UI draw target" },
     @{ Pattern = "TestPerfProbeCsvScene|TestPerfProbeRuntime|TestPerfProbe|TestLogHygiene"; Module = "Diagnostics"; Prefix = "UT_DIAG"; Target = "PerfProbe diagnostics" },
     @{ Pattern = "TestManagedCodeInJob|TestMergeJobs|TestBurstMergeJobs|TestMeshJobsCoverage"; Module = "Jobs"; Prefix = "UT_JOB"; Target = "Merge jobs" },
-    @{ Pattern = "TestPerfBaselineRunner|TestEightSlotPerfRunner|TestDynamicSwapRunner"; Module = "Performance"; Prefix = "UT_PERF"; Target = "Scene perf runners" },
+    @{ Pattern = "TestPerfBaselineRunner|TestEightSlotPerfRunner|TestDynamicSwapRunner|TestHudRcPerformanceRunner"; Module = "Performance"; Prefix = "UT_PERF"; Target = "Scene perf runners" },
     @{ Pattern = "TestOverCapacityScene|TestThreeSlotScene|TestUseSlimLifecycle|TestTMPBatchRendering"; Module = "Scenes"; Prefix = "UT_SCENE"; Target = "Scene integration" }
 )
 

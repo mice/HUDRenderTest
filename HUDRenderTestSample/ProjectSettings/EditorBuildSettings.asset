@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestUIGuiMetric.unity
     guid: 8bd02edd6f0b16f4794d9c5175fe1a1e
+  - enabled: 1
+    path: Assets/Scenes/Scene_Perf_HUD_RC.unity
+    guid: 47f6e1c6c321b5d43a1f1ab89edc7bbd
   m_configObjects: {}

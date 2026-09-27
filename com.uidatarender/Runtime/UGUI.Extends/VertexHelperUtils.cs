@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Profiling;
 
 namespace UnityEngine.UI
 {
     public static class VertexHelperUtils
     {
+        private static readonly ProfilerMarker CopyVerticesMarker = new ProfilerMarker("UIData.VertexHelper.CopyVertices");
+        private static readonly ProfilerMarker FillMeshMarker = new ProfilerMarker("UIData.VertexHelper.FillMesh");
         private static readonly List<int> ScratchIndices = new List<int>(128);
         private static Mesh _scratchMesh;
 
@@ -41,6 +44,8 @@ namespace UnityEngine.UI
 
         private static void CopyVertices(VertexHelper vertexHelper, Vector3[] vertList, Color32[] colors, Vector4[] uvs, int vertexOffset, int textureIndex, int flags)
         {
+            using (CopyVerticesMarker.Auto())
+            {
             var vertexCount = vertexHelper.currentVertCount;
             var vertex = default(UIVertex);
 
@@ -56,13 +61,17 @@ namespace UnityEngine.UI
                 uv.w = flags;
                 uvs[targetIndex] = uv;
             }
+            }
         }
 
         private static void CopyIndices(VertexHelper vertexHelper, int[] triangles, int indicesOffset, int vertexOffset = 0)
         {
             var indexCount = vertexHelper.currentIndexCount;
             var scratchMesh = GetScratchMesh();
-            vertexHelper.FillMesh(scratchMesh);
+            using (FillMeshMarker.Auto())
+            {
+                vertexHelper.FillMesh(scratchMesh);
+            }
             ScratchIndices.Clear();
             scratchMesh.GetTriangles(ScratchIndices, 0);
 

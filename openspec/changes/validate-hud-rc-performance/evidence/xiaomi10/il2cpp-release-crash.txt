@@ -1,0 +1,29 @@
+Xiaomi 10 IL2CPP Release runtime evidence (2026-09-27)
+
+Device: Mi 10 / umi / Android 11 / ARM64 / Vulkan
+Build: HUDRenderTest-IL2CPP-Release.apk, non-Development
+Package: com.DefaultCompany.HUDRenderTest
+
+Result: application started, then crashed before HUD RC report export.
+Signal: SIGSEGV (signal 11), null pointer dereference, fault address 0x60.
+Backtrace: libil2cpp.so #00-#03, then libunity.so.
+No new JSON/CSV report was generated.
+
+This is a runtime stability blocker. It is not a performance result and must be resolved before PERF-04 can enter the performance decision gate.
+
+Retry r2 (2026-09-27): `HUDRenderTest-IL2CPP-Release-r2.apk` was rebuilt after the user's Player settings change and installed successfully. The app again exited before report export with SIGSEGV in `libil2cpp.so` (BuildId `81144bd5931742eb2c8cb6ad2d6d18a90e997c6e`), fault address `0x60`. No new JSON/CSV report was generated. This confirms the Release/IL2CPP runtime blocker is reproducible on the selected device; it is not a performance measurement.
+
+Symbolication of the r2 `libil2cpp.so` addresses using the matching Unity IL2CPP debug binary maps the first frame to:
+
+```text
+Baselib_ReentrantLock_Acquire(Baselib_ReentrantLock*)
+  -> il2cpp::...::worker_request(Il2CppDomain*)
+  -> System.Threading.ThreadPool_RequestWorkerThread()
+  -> HudRcPerformanceRunner_BeginRun (.../HOT.cpp:12896)
+```
+
+The generated line is in `HudRcPerformanceRunner.BeginRun`, at the initial `GC.GetAllocatedBytesForCurrentThread()` calibration call (source line 134), before holders, meshes, `ProfilerRecorder`, or the measurement loop are created. The first Development/Mono run did not crash, which makes the Android IL2CPP implementation of this per-thread allocation API the leading trigger. This is a runtime compatibility finding, not evidence that the package workload itself is slow.
+
+Remediation: the Sample runner now compiles out all `GC.GetAllocatedBytesForCurrentThread()` calls for `ENABLE_IL2CPP` builds. IL2CPP reports scoped allocation fields as `unavailable` and continues with CPU/frame measurements; Mono/Editor keeps the calibrated diagnostic path.
+
+Follow-up r3 (2026-09-27): `HUDRenderTest-IL2CPP-Release-r3.apk` was rebuilt after the remediation, installed on ADB serial `791d02af`, and remained running after launch. It exported 540 frames (Static, Partial, Burst) to `r3-report/hud_rc_20260927_094916_659_bdbf6896.json/.csv`. This resolves the runtime-crash gate. The report is still not a release acceptance result because `commit/sourceStatus/sourceFingerprint` are `unknown` and IL2CPP scoped allocation is unavailable; see the device matrix and scene report.

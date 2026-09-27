@@ -14,6 +14,12 @@ public sealed class HolderBatchRenderer : IDisposable
     private readonly PerfProbe probe;
     private Mesh[] meshes = Array.Empty<Mesh>();
     private Material[] materials = Array.Empty<Material>();
+    // Reused merge scratch buffers. Rebuilding a batch every frame must not
+    // allocate four new backing arrays through List growth.
+    private readonly List<Vector3> vertices = new List<Vector3>();
+    private readonly List<Vector4> uvs = new List<Vector4>();
+    private readonly List<Color32> colors = new List<Color32>();
+    private readonly List<int> triangles = new List<int>();
     private int batchCount;
 
     public HolderBatchRenderer(int maxSlots, PerfProbe probe = null)
@@ -50,12 +56,21 @@ public sealed class HolderBatchRenderer : IDisposable
             var batch = batches[b];
             var localSlotMap = batch.BuildLocalSlotMap();
 
-            var vertices = new List<Vector3>();
-            var uvs = new List<Vector4>();
-            var colors = new List<Color32>();
-            var triangles = new List<int>();
+            vertices.Clear();
+            uvs.Clear();
+            colors.Clear();
+            triangles.Clear();
 
-            var sw = Stopwatch.StartNew();
+            // Reserve the common quad workload up front. Lists retain any
+            // larger capacity observed in later rebuilds, so subsequent
+            // Fill/Add calls do not create replacement arrays.
+            int holderCount = batch.Holders.Count;
+            EnsureCapacity(vertices, holderCount * 12);
+            EnsureCapacity(uvs, holderCount * 12);
+            EnsureCapacity(colors, holderCount * 12);
+            EnsureCapacity(triangles, holderCount * 18);
+
+            long fillStartTimestamp = Stopwatch.GetTimestamp();
             using (PerfProbe.FillMarker.Auto())
             {
                 foreach (var holder in batch.Holders)
@@ -66,8 +81,8 @@ public sealed class HolderBatchRenderer : IDisposable
                     holder.Fill(vertices, uvs, colors, triangles, position);
                 }
             }
-            sw.Stop();
-            fillMs += (float)sw.Elapsed.TotalMilliseconds;
+            long fillElapsedTicks = Stopwatch.GetTimestamp() - fillStartTimestamp;
+            fillMs += (float)(fillElapsedTicks * 1000.0 / Stopwatch.Frequency);
 
             ApplySlotRemap(uvs, localSlotMap);
 
@@ -101,6 +116,10 @@ public sealed class HolderBatchRenderer : IDisposable
         meshes = Array.Empty<Mesh>();
         materials = Array.Empty<Material>();
         batchCount = 0;
+        vertices.Clear();
+        uvs.Clear();
+        colors.Clear();
+        triangles.Clear();
     }
 
     private void EnsureBatchArrays(int needed, Func<Material> createMaterial)
@@ -127,6 +146,12 @@ public sealed class HolderBatchRenderer : IDisposable
             if (globalSlot > 0 && localSlotMap.TryGetValue(globalSlot, out int localSlot))
                 uvs[i] = new Vector4(uv.x, uv.y, localSlot, uv.w);
         }
+    }
+
+    private static void EnsureCapacity<T>(List<T> list, int required)
+    {
+        if (required > list.Capacity)
+            list.Capacity = required;
     }
 
     private static void DestroyObjects<T>(IEnumerable<T> objects) where T : UnityEngine.Object

@@ -8,6 +8,9 @@ using UnityEngine;
 public class MergeBatcher
 {
     private readonly int _maxSlots;
+    private readonly List<RenderBatch> batches = new List<RenderBatch>();
+    private readonly List<RenderBatch> batchPool = new List<RenderBatch>();
+    private readonly HashSet<int> slotScratch = new HashSet<int>();
 
     public MergeBatcher(int maxSlots)
     {
@@ -21,16 +24,19 @@ public class MergeBatcher
     /// </summary>
     public List<RenderBatch> Plan(IReadOnlyList<IUIPrefabHolder> holders)
     {
-        var batches = new List<RenderBatch>();
+        batches.Clear();
 
-        foreach (var holder in holders)
+        for (int h = 0; h < holders.Count; h++)
         {
-            var needed = CollectSlots(holder);
+            var holder = holders[h];
+            slotScratch.Clear();
+            CollectSlots(holder, slotScratch);
             bool placed = false;
 
-            foreach (var batch in batches)
+            for (int b = 0; b < batches.Count; b++)
             {
-                if (batch.TryAdd(holder, needed, _maxSlots))
+                var batch = batches[b];
+                if (batch.TryAdd(holder, slotScratch, _maxSlots))
                 {
                     placed = true;
                     break;
@@ -38,7 +44,20 @@ public class MergeBatcher
             }
 
             if (!placed)
-                batches.Add(new RenderBatch(holder, needed));
+            {
+                RenderBatch batch;
+                if (batches.Count < batchPool.Count)
+                {
+                    batch = batchPool[batches.Count];
+                    batch.Reset(holder, slotScratch, holders.Count);
+                }
+                else
+                {
+                    batch = new RenderBatch(holder, slotScratch, holders.Count, _maxSlots);
+                    batchPool.Add(batch);
+                }
+                batches.Add(batch);
+            }
         }
 
         if (batches.Count > 1)
@@ -47,14 +66,14 @@ public class MergeBatcher
         return batches;
     }
 
-    private static HashSet<int> CollectSlots(IUIPrefabHolder holder)
+    private static void CollectSlots(IUIPrefabHolder holder, HashSet<int> slots)
     {
-        var slots = new HashSet<int>();
-        foreach (var mesh in holder.UIMeshDatas)
+        var meshes = holder.UIMeshDatas;
+        for (int i = 0; i < meshes.Count; i++)
         {
+            var mesh = meshes[i];
             if (mesh != null && mesh.TextureIndex > 0)
                 slots.Add(mesh.TextureIndex);
         }
-        return slots;
     }
 }

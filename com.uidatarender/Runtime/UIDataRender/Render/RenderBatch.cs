@@ -9,12 +9,26 @@ public class RenderBatch
     public List<IUIPrefabHolder> Holders { get; } = new List<IUIPrefabHolder>();
 
     /// <summary>Global image slot indices (1-based) required by all holders in this batch.</summary>
-    public HashSet<int> UsedSlots { get; } = new HashSet<int>();
+    private HashSet<int> usedSlots = new HashSet<int>();
+    public HashSet<int> UsedSlots { get { return usedSlots; } }
+    private readonly List<int> sortedSlots = new List<int>();
+    private readonly Dictionary<int, int> localSlotMap = new Dictionary<int, int>();
 
-    internal RenderBatch(IUIPrefabHolder firstHolder, HashSet<int> slots)
+    internal RenderBatch(IUIPrefabHolder firstHolder, HashSet<int> slots, int holderCapacity, int slotCapacity)
     {
+        if (slotCapacity > 0)
+            usedSlots = new HashSet<int>(slotCapacity);
+        Reset(firstHolder, slots, holderCapacity);
+    }
+
+    internal void Reset(IUIPrefabHolder firstHolder, HashSet<int> slots, int holderCapacity)
+    {
+        if (holderCapacity > Holders.Capacity)
+            Holders.Capacity = holderCapacity;
+        Holders.Clear();
+        UsedSlots.Clear();
         Holders.Add(firstHolder);
-        UsedSlots.UnionWith(slots);
+        AddSlots(slots);
     }
 
     /// <summary>
@@ -31,8 +45,14 @@ public class RenderBatch
         }
         if (combined > maxSlots) return false;
         Holders.Add(holder);
-        UsedSlots.UnionWith(needed);
+        AddSlots(needed);
         return true;
+    }
+
+    private void AddSlots(HashSet<int> slots)
+    {
+        foreach (var slot in slots)
+            UsedSlots.Add(slot);
     }
 
     /// <summary>
@@ -41,12 +61,14 @@ public class RenderBatch
     /// </summary>
     public IReadOnlyDictionary<int, int> BuildLocalSlotMap()
     {
-        var sorted = new List<int>(UsedSlots);
-        sorted.Sort();
-        var map = new Dictionary<int, int>(sorted.Count);
-        for (int i = 0; i < sorted.Count; i++)
-            map[sorted[i]] = i + 1;
-        return map;
+        sortedSlots.Clear();
+        foreach (var slot in UsedSlots)
+            sortedSlots.Add(slot);
+        sortedSlots.Sort();
+        localSlotMap.Clear();
+        for (int i = 0; i < sortedSlots.Count; i++)
+            localSlotMap[sortedSlots[i]] = i + 1;
+        return localSlotMap;
     }
 
     /// <summary>
