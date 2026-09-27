@@ -48,6 +48,10 @@ public static class HudRcSceneBuilder
         {
             var output = ReadString("-hudRcAndroidOutput", "Builds/HudRc/Xiaomi10/HUDRenderTest.apk");
             var absolute = Path.GetFullPath(output);
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var runner = UnityEngine.Object.FindObjectOfType<HudRcPerformanceRunner>();
+            if (runner == null) throw new InvalidOperationException("Committed scene has no HUD RC runner.");
+            SetSourceMetadata(runner);
             Directory.CreateDirectory(Path.GetDirectoryName(absolute));
             var buildOptions = ReadBool("-hudRcDevelopment", false)
                 ? BuildOptions.Development | BuildOptions.ConnectWithProfiler

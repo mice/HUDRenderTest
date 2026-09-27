@@ -17,6 +17,19 @@ $logDir = Join-Path $projectPath 'Logs/HudRcAndroid'
 New-Item -ItemType Directory -Path $logDir -Force | Out-Null
 
 if ($Action -eq 'Build') {
+    $head = (& git -C $repoRoot rev-parse HEAD).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot identify source commit.' }
+    $dirty = @(& git -C $repoRoot status --porcelain).Count -gt 0
+    $sourcePaths = @(& git -C $repoRoot ls-files --cached --others --exclude-standard -- com.uidatarender HUDRenderTestSample/Assets Tools)
+    $manifestPath = Join-Path $logDir ('Build-' + (Get-Date -Format 'yyyyMMdd_HHmmss') + '-sources.sha256')
+    $manifest = foreach ($relative in ($sourcePaths | Sort-Object -Unique)) {
+        $absoluteSource = Join-Path $repoRoot $relative
+        if (Test-Path -LiteralPath $absoluteSource -PathType Leaf) { "$((Get-FileHash -LiteralPath $absoluteSource -Algorithm SHA256).Hash)  $relative" }
+    }
+    $manifest | Set-Content -LiteralPath $manifestPath -Encoding utf8
+    $env:HUD_RC_SOURCE_COMMIT = $head
+    $env:HUD_RC_SOURCE_STATUS = if ($dirty) { 'dirty working tree; see source fingerprint' } else { 'clean' }
+    $env:HUD_RC_SOURCE_FINGERPRINT = (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash
     $logPath = Join-Path $logDir ('Build-' + (Get-Date -Format 'yyyyMMdd_HHmmss') + '.log')
     $args = @('-batchmode','-quit','-projectPath',$projectPath,'-executeMethod','HudRcSceneBuilder.BuildAndroidBatch','-hudRcAndroidOutput',$apkAbsolute,'-logFile',$logPath)
     if ($Development) { $args += '-hudRcDevelopment' }
