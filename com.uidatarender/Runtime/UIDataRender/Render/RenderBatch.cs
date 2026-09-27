@@ -13,6 +13,7 @@ public class RenderBatch
     public HashSet<int> UsedSlots { get { return usedSlots; } }
     private readonly List<int> sortedSlots = new List<int>();
     private readonly Dictionary<int, int> localSlotMap = new Dictionary<int, int>();
+    private readonly List<UnityEngine.Texture> batchTextures = new List<UnityEngine.Texture>();
 
     internal RenderBatch(IUIPrefabHolder firstHolder, HashSet<int> slots, int holderCapacity, int slotCapacity)
     {
@@ -77,14 +78,19 @@ public class RenderBatch
     /// </summary>
     public List<UnityEngine.Texture> GetBatchTextures(IReadOnlyList<UnityEngine.Texture> globalTextures)
     {
-        var sorted = new List<int>(UsedSlots);
-        sorted.Sort();
-        var list = new List<UnityEngine.Texture>(sorted.Count);
-        foreach (var globalSlot in sorted)
+        sortedSlots.Clear();
+        foreach (var slot in UsedSlots)
+            sortedSlots.Add(slot);
+        sortedSlots.Sort();
+
+        batchTextures.Clear();
+        if (batchTextures.Capacity < sortedSlots.Count)
+            batchTextures.Capacity = sortedSlots.Count;
+        foreach (var globalSlot in sortedSlots)
         {
             int idx = globalSlot - 1;
-            list.Add(idx >= 0 && idx < globalTextures.Count ? globalTextures[idx] : null);
+            batchTextures.Add(idx >= 0 && idx < globalTextures.Count ? globalTextures[idx] : null);
         }
-        return list;
+        return batchTextures;
     }
 }

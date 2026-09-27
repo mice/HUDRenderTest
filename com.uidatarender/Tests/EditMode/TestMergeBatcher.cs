@@ -98,4 +98,23 @@ public class TestMergeBatcher
         Assert.AreEqual(1, batches.Count, "greedy first-fit fits all three in one batch");
         Assert.AreEqual(3, batches[0].Holders.Count);
     }
+
+    // Repeated texture extraction reuses the batch-owned result buffer.
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_006.md
+    [Test]
+    [Category("UT_BATCH_006")]
+    public void GetBatchTextures_ReusesBufferAndPreservesSlotOrder()
+    {
+        var batcher = new MergeBatcher(maxSlots: 3);
+        var batch = batcher.Plan(new[] { new StubHolder(3, 1) })[0];
+        var textures = new Texture[] { Texture2D.blackTexture, Texture2D.whiteTexture, Texture2D.normalTexture };
+
+        var first = batch.GetBatchTextures(textures);
+        var second = batch.GetBatchTextures(textures);
+
+        Assert.AreSame(first, second);
+        Assert.AreEqual(2, first.Count);
+        Assert.AreSame(Texture2D.blackTexture, first[0]);
+        Assert.AreSame(Texture2D.normalTexture, first[1]);
+    }
 }
