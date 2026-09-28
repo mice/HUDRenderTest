@@ -18,6 +18,7 @@
   - **GC 定位（2026-09-27）**：`FillToDrawData` 的主要分配来自调用方四个 List 的扩容；`Rebuild` 每次从零创建这些 List，并且 `MergeBatcher.Plan`/`BuildLocalSlotMap` 每次创建 HashSet、List、Dictionary。`MergeJob.Execute` 本身未发现托管容器分配。优先复用/预分配 Rebuild 容器，再做直接数组或 NativeArray 写入优化。
   - **GC 修复进展（2026-09-27）**：编辑器复测确认合并输出 List 复用已消除该路径 GC；随后已加入 `MergeBatcher`/`RenderBatch` 的 slot scratch、批次、排序和 local map 复用。待项目锁释放后执行完整 Unity 回归与 Xiaomi 10 r5 量化，继续定位 Mesh.Set*、材质绑定和其他引擎侧分配。
   - **材质槽列表复用（2026-09-28）**：`RenderBatch.GetBatchTextures` 已复用排序槽位和纹理结果缓冲，移除每次重建创建的两个托管 List；提交 `485dd7b`，由 `UT_BATCH_006` 覆盖返回缓冲复用及槽位顺序。待 Unity EditMode 回归和 Xiaomi 10 r5 复测确认实际收益。
+  - **Xiaomi 10 r5（2026-09-28）**：基于提交 `51dc410` 的 Release/IL2CPP/ARM64/Vulkan APK，报告 sourceStatus=`clean` 且 commit/fingerprint 可追溯。Partial regeneration median/p95 `1.9395/2.4483 ms`；Burst refresh median/p95 `7.3825/12.0941 ms`，其中 generation p95 `10.1858 ms`、merge p95 `1.9083 ms`。结果确认当前仍超过整体 `1 ms` 预算，材质槽列表复用未带来可确认的端到端下降；继续优先拆分并优化 Burst 的 `BuildMesh`/UIImage generation。原始报告：`Builds/HudRc/Xiaomi10/hud_rc_20260928_135202_377_7c851c32.json`。
   - **18 KiB 热点修复（2026-09-27）**：`CollectSlots`/`Plan` 改为索引循环，避免接口 `foreach` 枚举器 boxing；`RenderBatch` holder 容器按输入规模预留，避免 `TryAdd` 扩容。需在编辑器 Profiler 中复测该 marker；若仍有固定 18 KiB，应拆分 `Debug.LogWarning` 与 Mesh.Set* 引擎分配。
   - **UnionWith 修复（2026-09-27）**：`RenderBatch.Reset`/`TryAdd` 改为预分配 HashSet 后逐项 `Add`，移除 `HashSet.UnionWith`；需用编辑器 Profiler 确认 18 KiB 热点是否消失。
   - **计时器分配修复（2026-09-27）**：`HolderBatchRenderer.Rebuild` 已将 `Stopwatch.StartNew()` 替换为 `Stopwatch.GetTimestamp()`，消除每次重建的 Stopwatch 对象分配。
