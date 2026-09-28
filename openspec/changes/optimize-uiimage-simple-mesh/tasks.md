@@ -16,5 +16,5 @@
 ## 4. Validation and evidence
 
 - [x] 4.1 Run package/layout and EditMode validation, including test governance synchronization.
-- [ ] 4.2 Build Release IL2CPP ARM64 APK, run the fixed Xiaomi 10 workload, and record fast-path hit markers and Partial/Burst median/p95 results.
-- [ ] 4.3 Update `Documentation~/todo.md` and the OpenSpec evidence with the result, including rollback or fallback decision if the 1 ms budget remains unmet.
+- [x] 4.2 Build Release IL2CPP ARM64 APK, run the fixed Xiaomi 10 workload, and record fast-path hit markers and Partial/Burst median/p95 results.
+- [x] 4.3 Update `Documentation~/todo.md` and the OpenSpec evidence with the result, including rollback or fallback decision if the 1 ms budget remains unmet.
