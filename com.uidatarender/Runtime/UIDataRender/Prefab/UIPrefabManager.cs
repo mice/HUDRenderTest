@@ -144,6 +144,7 @@ public class UIPrefabManager : ITextureRecorder, ITextureNotify
     /// compatibility; prefer <see cref="Register"/> and <see cref="Generate"/> for mutations.
     /// </summary>
     public IReadOnlyDictionary<UIPrefabOwner, UIPrefabRegistration> owners => ownerRegistry.Owners;
+    public int TextureVersion => textureSlots.Version;
 
     private UIPrefabManager()
     {

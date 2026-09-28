@@ -12,6 +12,7 @@ public sealed class TextureSlotTable
     private readonly Dictionary<int, HashSet<int>> slotToOwners = new Dictionary<int, HashSet<int>>();
 
     public int MaxImageSlots { get; private set; }
+    public int Version { get; private set; }
     public IReadOnlyList<Texture> Textures => textures;
 
     public event Action<int, int> SlotReplaced;
@@ -109,6 +110,7 @@ public sealed class TextureSlotTable
         }
 
         textures.Add(texture);
+        Version++;
         slot = textures.Count;
         ownerToTexture[ownerKey] = texture;
         AddOwnerToSlot(slot, ownerKey);
@@ -153,12 +155,14 @@ public sealed class TextureSlotTable
         if (removedIndex == lastIndex)
         {
             textures.RemoveAt(lastIndex);
+            Version++;
             SlotRemoved?.Invoke(slot);
             return;
         }
 
         textures[removedIndex] = textures[lastIndex];
         textures.RemoveAt(lastIndex);
+        Version++;
 
         var lastSlot = lastIndex + 1;
         if (slotToOwners.TryGetValue(lastSlot, out var movedOwners))

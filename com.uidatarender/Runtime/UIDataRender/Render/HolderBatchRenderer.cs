@@ -149,6 +149,8 @@ public sealed class HolderBatchRenderer : IDisposable
 
     private static void ApplySlotRemap(List<Vector4> uvs, IReadOnlyDictionary<int, int> localSlotMap)
     {
+        if (localSlotMap == null || localSlotMap.Count == 0 || uvs.Count == 0)
+            return;
         for (int i = 0; i < uvs.Count; i++)
         {
             var uv = uvs[i];

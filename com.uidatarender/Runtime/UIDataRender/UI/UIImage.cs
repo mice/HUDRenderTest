@@ -28,6 +28,14 @@ public class UIImage :Image,IUIDrawTarget
     private IUIData tmp_meshData;
     private Transform tmp_root;
     private readonly VertexHelper extractionHelper = new VertexHelper();
+    private Sprite cachedSprite;
+    private Sprite cachedGeometrySprite;
+    private Texture cachedTexture;
+    private Vector4 cachedOuterUv;
+    private Vector4 cachedPadding;
+    private Vector2 cachedSpriteSize;
+    private int cachedTextureVersion = -1;
+    private int cachedTextureIndex;
     [ContextMenu("ReCreate")]
     private void _UpdateGeom()
     {
@@ -42,13 +50,11 @@ public class UIImage :Image,IUIDrawTarget
         {
             _isGenerating = true;
             LastGenerationUsedSimpleMeshFastPath = false;
+            var manager = UIPrefabManager.Instance;
+            var sourceSprite = sprite;
+            var sourceTexture = sourceSprite != null ? sourceSprite.texture : null;
             using (TextureLookupMarker.Auto())
-            {
-                if (sprite == null)
-                    meshData.TextureIndex = -1;
-                else
-                    meshData.TextureIndex = UIPrefabManager.Instance.GetTextureIndex(sprite.texture);
-            }
+                meshData.TextureIndex = GetTextureIndex(manager, sourceSprite, sourceTexture);
 
             if (EnableSimpleMeshFastPath && IsSimpleMeshFastPathEligible())
             {
@@ -56,7 +62,7 @@ public class UIImage :Image,IUIDrawTarget
                 using (SimpleFastPathMarker.Auto())
                 {
                     tmp_root = root;
-                    meshData.WriteSimpleQuad(GetSimpleDrawingDimensions(sprite), DataUtility.GetOuterUV(sprite), color);
+                    meshData.WriteSimpleQuad(GetSimpleDrawingDimensions(), cachedOuterUv, color);
                     TransformExtractedMesh(meshData);
                     tmp_root = null;
                 }
@@ -92,18 +98,55 @@ public class UIImage :Image,IUIDrawTarget
             && sprite.rect.height > 0f;
     }
 
-    private Vector4 GetSimpleDrawingDimensions(Sprite source)
+    private Vector4 GetSimpleDrawingDimensions()
     {
-        var padding = DataUtility.GetPadding(source);
-        var size = source.rect.size;
+        UpdateSpriteCache();
         var rect = GetPixelAdjustedRect();
-        var spriteWidth = Mathf.RoundToInt(size.x);
-        var spriteHeight = Mathf.RoundToInt(size.y);
+        var spriteWidth = Mathf.RoundToInt(cachedSpriteSize.x);
+        var spriteHeight = Mathf.RoundToInt(cachedSpriteSize.y);
         return new Vector4(
-            rect.x + rect.width * padding.x / spriteWidth,
-            rect.y + rect.height * padding.y / spriteHeight,
-            rect.x + rect.width * (spriteWidth - padding.z) / spriteWidth,
-            rect.y + rect.height * (spriteHeight - padding.w) / spriteHeight);
+            rect.x + rect.width * cachedPadding.x / spriteWidth,
+            rect.y + rect.height * cachedPadding.y / spriteHeight,
+            rect.x + rect.width * (spriteWidth - cachedPadding.z) / spriteWidth,
+            rect.y + rect.height * (spriteHeight - cachedPadding.w) / spriteHeight);
+    }
+
+    private int GetTextureIndex(UIPrefabManager manager, Sprite sourceSprite, Texture sourceTexture)
+    {
+        if (sourceTexture == null)
+        {
+            cachedSprite = sourceSprite;
+            cachedTexture = null;
+            cachedTextureVersion = manager.TextureVersion;
+            cachedTextureIndex = -1;
+            return -1;
+        }
+
+        if (cachedTexture != sourceTexture || cachedTextureVersion != manager.TextureVersion)
+        {
+            cachedTexture = sourceTexture;
+            cachedSprite = sourceSprite;
+            cachedTextureVersion = manager.TextureVersion;
+            cachedTextureIndex = manager.GetTextureIndex(sourceTexture);
+        }
+        return cachedTextureIndex;
+    }
+
+    private void UpdateSpriteCache()
+    {
+        var source = sprite;
+        if (cachedGeometrySprite == source) return;
+        cachedGeometrySprite = source;
+        if (source == null)
+        {
+            cachedOuterUv = Vector4.zero;
+            cachedPadding = Vector4.zero;
+            cachedSpriteSize = Vector2.zero;
+            return;
+        }
+        cachedOuterUv = DataUtility.GetOuterUV(source);
+        cachedPadding = DataUtility.GetPadding(source);
+        cachedSpriteSize = source.rect.size;
     }
 
     protected override void OnPopulateMesh(VertexHelper toFill)
