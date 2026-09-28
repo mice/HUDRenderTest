@@ -52,6 +52,8 @@ public static class HudRcSceneBuilder
             var runner = UnityEngine.Object.FindObjectOfType<HudRcPerformanceRunner>();
             if (runner == null) throw new InvalidOperationException("Committed scene has no HUD RC runner.");
             SetSourceMetadata(runner);
+            if (!EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), ScenePath))
+                throw new IOException("Could not save source metadata into the HUD RC scene.");
             Directory.CreateDirectory(Path.GetDirectoryName(absolute));
             var buildOptions = ReadBool("-hudRcDevelopment", false)
                 ? BuildOptions.Development | BuildOptions.ConnectWithProfiler
