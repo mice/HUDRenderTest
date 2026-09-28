@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Sprites;
 using Unity.Profiling;
 
 /// <summary>
@@ -18,6 +19,11 @@ public class UIImage :Image,IUIDrawTarget
     private static readonly ProfilerMarker TransformCheckMarker = new ProfilerMarker("UIData.UIImage.Transform.Check");
     private static readonly ProfilerMarker BasePopulateMarker = new ProfilerMarker("UIData.UIImage.BasePopulateMesh");
     private static readonly ProfilerMarker CustomPopulateMarker = new ProfilerMarker("UIData.UIImage.CustomPopulateMesh");
+    private static readonly ProfilerMarker SimpleFastPathMarker = new ProfilerMarker("UIData.UIImage.SimpleFastPath");
+    private static readonly ProfilerMarker UguiFallbackMarker = new ProfilerMarker("UIData.UIImage.UGUIFallback");
+    public static bool EnableSimpleMeshFastPath { get; set; } = true;
+    public bool LastGenerationUsedSimpleMeshFastPath { get; private set; }
+    protected virtual bool AllowSimpleMeshFastPath => true;
     private bool _isGenerating = false;
     private IUIData tmp_meshData;
     private Transform tmp_root;
@@ -35,6 +41,7 @@ public class UIImage :Image,IUIDrawTarget
         using (GenerateMarker.Auto())
         {
             _isGenerating = true;
+            LastGenerationUsedSimpleMeshFastPath = false;
             using (TextureLookupMarker.Auto())
             {
                 if (sprite == null)
@@ -42,10 +49,25 @@ public class UIImage :Image,IUIDrawTarget
                 else
                     meshData.TextureIndex = UIPrefabManager.Instance.GetTextureIndex(sprite.texture);
             }
+
+            if (EnableSimpleMeshFastPath && IsSimpleMeshFastPathEligible())
+            {
+                LastGenerationUsedSimpleMeshFastPath = true;
+                using (SimpleFastPathMarker.Auto())
+                {
+                    tmp_root = root;
+                    meshData.WriteSimpleQuad(GetSimpleDrawingDimensions(sprite), DataUtility.GetOuterUV(sprite), color);
+                    TransformExtractedMesh(meshData);
+                    tmp_root = null;
+                }
+                _isGenerating = false;
+                return;
+            }
        
             tmp_meshData = meshData;
             tmp_root = root;
             extractionHelper.Clear();
+            using (UguiFallbackMarker.Auto())
             using (UpdateGeometryMarker.Auto())
             using (GenerateBasePopulateMarker.Auto())
                 base.OnPopulateMesh(extractionHelper);
@@ -57,6 +79,31 @@ public class UIImage :Image,IUIDrawTarget
             tmp_root = null;
             _isGenerating = false;
         }
+    }
+
+    internal bool IsSimpleMeshFastPathEligible()
+    {
+        return AllowSimpleMeshFastPath
+            && sprite != null
+            && type == Type.Simple
+            && !preserveAspect
+            && !useSpriteMesh
+            && sprite.rect.width > 0f
+            && sprite.rect.height > 0f;
+    }
+
+    private Vector4 GetSimpleDrawingDimensions(Sprite source)
+    {
+        var padding = DataUtility.GetPadding(source);
+        var size = source.rect.size;
+        var rect = GetPixelAdjustedRect();
+        var spriteWidth = Mathf.RoundToInt(size.x);
+        var spriteHeight = Mathf.RoundToInt(size.y);
+        return new Vector4(
+            rect.x + rect.width * padding.x / spriteWidth,
+            rect.y + rect.height * padding.y / spriteHeight,
+            rect.x + rect.width * (spriteWidth - padding.z) / spriteWidth,
+            rect.y + rect.height * (spriteHeight - padding.w) / spriteHeight);
     }
 
     protected override void OnPopulateMesh(VertexHelper toFill)

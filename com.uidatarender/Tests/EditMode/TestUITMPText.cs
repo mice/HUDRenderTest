@@ -34,6 +34,7 @@ public class TestUITMPText
         public void FillToTriangleData(List<int> triangles_, Vector3 localPosition) { }
         public void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition) { }
         public void FillWithMatrix(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Matrix4x4 mtx) { }
+        public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color) { }
         public void Dispose() { }
     }
 

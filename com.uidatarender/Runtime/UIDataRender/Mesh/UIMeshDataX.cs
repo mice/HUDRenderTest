@@ -172,6 +172,30 @@ public class UIMeshDataX : IUIData
       
     }
 
+    public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color)
+    {
+        if (mesh.Index == -1)
+            mesh = geometry.Alloc(4, 6);
+        else if (mesh.VertexCount != 4 || mesh.IndicesCount != 6)
+            geometry.ReAlloc(4, 6, ref mesh);
+
+        int v = mesh.VertexOffset;
+        int t = mesh.IndicesOffset;
+        geometry.vertex[v] = new Vector3(drawing.x, drawing.y, 0f);
+        geometry.vertex[v + 1] = new Vector3(drawing.x, drawing.w, 0f);
+        geometry.vertex[v + 2] = new Vector3(drawing.z, drawing.w, 0f);
+        geometry.vertex[v + 3] = new Vector3(drawing.z, drawing.y, 0f);
+        geometry.uvs[v] = new Vector4(outerUv.x, outerUv.y, TextureIndex, 0f);
+        geometry.uvs[v + 1] = new Vector4(outerUv.x, outerUv.w, TextureIndex, 0f);
+        geometry.uvs[v + 2] = new Vector4(outerUv.z, outerUv.w, TextureIndex, 0f);
+        geometry.uvs[v + 3] = new Vector4(outerUv.z, outerUv.y, TextureIndex, 0f);
+        for (int i = 0; i < 4; i++) geometry.colors[v + i] = color;
+        geometry.indices[t] = v; geometry.indices[t + 1] = v + 1; geometry.indices[t + 2] = v + 2;
+        geometry.indices[t + 3] = v + 2; geometry.indices[t + 4] = v + 3; geometry.indices[t + 5] = v;
+        mesh.VertexCount = 4;
+        mesh.IndicesCount = 6;
+    }
+
     private void Clear()
     {
 

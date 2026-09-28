@@ -5,6 +5,22 @@ using UnityEngine.UI;
 
 public class TestUIMeshDataX
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_026.md
+    [Test]
+    [Category("UT_MESH_026")]
+    public void WriteSimpleQuad_WritesCanonicalSlimGeometry()
+    {
+        var data = new UIMeshDataX { TextureIndex = 4 };
+        data.WriteSimpleQuad(new Vector4(-2, -1, 2, 1), new Vector4(.1f, .2f, .8f, .9f), new Color32(10, 20, 30, 40));
+
+        Assert.AreEqual(4, data.mesh.VertexCount);
+        Assert.AreEqual(6, data.mesh.IndicesCount);
+        Assert.AreEqual(new Vector3(-2, -1, 0), UIMeshDataX.geometry.vertex[data.mesh.VertexOffset]);
+        Assert.AreEqual(new Vector3(2, 1, 0), UIMeshDataX.geometry.vertex[data.mesh.VertexOffset + 2]);
+        Assert.AreEqual(new Vector4(.8f, .9f, 4, 0), UIMeshDataX.geometry.uvs[data.mesh.VertexOffset + 2]);
+        Assert.AreEqual(data.mesh.VertexOffset, UIMeshDataX.geometry.indices[data.mesh.IndicesOffset]);
+        data.Dispose();
+    }
     [SetUp]
     public void SetUp()
     {

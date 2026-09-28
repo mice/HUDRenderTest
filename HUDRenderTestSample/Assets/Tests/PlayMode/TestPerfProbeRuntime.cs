@@ -43,6 +43,7 @@ public class TestPerfProbeRuntime
         }
 
         public void FillWithMatrix(List<Vector3> vertices, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Matrix4x4 mtx) { }
+        public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color) { }
         public void Dispose() { }
     }
 

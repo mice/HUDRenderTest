@@ -26,6 +26,7 @@ public interface IUIData : System.IDisposable
     void FillToTriangleData(List<int> triangles_, Vector3 localPosition);
     void FillToDrawData(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Vector3 localPosition);
     void FillWithMatrix(List<Vector3> vertList, List<Vector4> uvs, List<Color32> colors, List<int> triangles, Matrix4x4 mtx);
+    void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color);
 }
 
 
@@ -239,6 +240,28 @@ public class UIMeshData : IUIData
       
        
     } 
+
+    public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color)
+    {
+        if (vertList == null || vertList.Length != 4) vertList = new Vector3[4];
+        if (uvs == null || uvs.Length != 4) uvs = new Vector4[4];
+        if (colors == null || colors.Length != 4) colors = new Color32[4];
+        if (triangles == null || triangles.Length != 6) triangles = new int[6];
+
+        vertList[0] = new Vector3(drawing.x, drawing.y, 0f);
+        vertList[1] = new Vector3(drawing.x, drawing.w, 0f);
+        vertList[2] = new Vector3(drawing.z, drawing.w, 0f);
+        vertList[3] = new Vector3(drawing.z, drawing.y, 0f);
+        uvs[0] = new Vector4(outerUv.x, outerUv.y, TextureIndex, 0f);
+        uvs[1] = new Vector4(outerUv.x, outerUv.w, TextureIndex, 0f);
+        uvs[2] = new Vector4(outerUv.z, outerUv.w, TextureIndex, 0f);
+        uvs[3] = new Vector4(outerUv.z, outerUv.y, TextureIndex, 0f);
+        for (int i = 0; i < colors.Length; i++) colors[i] = color;
+        triangles[0] = 0; triangles[1] = 1; triangles[2] = 2;
+        triangles[3] = 2; triangles[4] = 3; triangles[5] = 0;
+        mesh.VertexCount = 4;
+        mesh.IndicesCount = 6;
+    }
 
     private void Clear()
     {
