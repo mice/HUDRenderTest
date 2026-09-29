@@ -96,3 +96,4 @@
 
 历史完成索引 `HIST-001..004` 已写入 [roadmap.md](roadmap.md) 的 M0–M2 节点记录，并从活动队列清理。
 
+  - **BuildMesh 内部阶段复测（2026-09-29）**：`73d0ebb` Xiaomi 10 Burst 全量刷新中位数为 `10.73 ms`，generation `9.6299 ms`，BuildMesh `8.2695 ms`。其中 `DoGenerate` `6.5659 ms`，UGUI fallback `5.3727 ms`，Transform `1.2709 ms`，setup `0.1346 ms`，mesh data 初始化 `0.3490 ms`，循环 dispatch `0.7864 ms`；Simple fast path 为 0，因为 runner 的 UIImage 没有 Sprite。下一步先验证无 Sprite 标准 Image 的 direct quad 是否与 UGUI 等价，再决定是否绕过 fallback。报告：[BuildMesh stages](../openspec/changes/profile-buildmesh-stages/evidence/hud_rc_20260929_143324_438_a5b1c21f.json)。
