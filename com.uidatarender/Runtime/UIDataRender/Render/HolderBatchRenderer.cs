@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UIData;
 using UnityEngine;
+using Unity.Profiling;
 
 /// <summary>
 /// Builds and draws one or more meshes from prefab holders through MergeBatcher.
@@ -10,6 +11,8 @@ using UnityEngine;
 /// </summary>
 public sealed class HolderBatchRenderer : IDisposable
 {
+    private static readonly ProfilerMarker PlanCacheHitMarker = new ProfilerMarker("UIData.MergePlan.CacheHit");
+    private static readonly ProfilerMarker PlanCacheMissMarker = new ProfilerMarker("UIData.MergePlan.CacheMiss");
     private readonly MergeBatcher batcher;
     private readonly PerfProbe probe;
     private Mesh[] meshes = Array.Empty<Mesh>();
@@ -53,6 +56,14 @@ public sealed class HolderBatchRenderer : IDisposable
         using (PerfProbe.MergeJobMarker.Auto())
         {
             batches = batcher.Plan(holders);
+        }
+        if (batcher.LastPlanCacheHit)
+        {
+            using (PlanCacheHitMarker.Auto()) { }
+        }
+        else
+        {
+            using (PlanCacheMissMarker.Auto()) { }
         }
         LastPlanMs = (Stopwatch.GetTimestamp() - planStart) * 1000.0 / Stopwatch.Frequency;
         batchCount = batches.Count;
