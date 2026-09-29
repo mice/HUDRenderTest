@@ -50,6 +50,9 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         public int unityFrame, sampleFrame, mode, updatedHolders, vertices, indices, batches;
         public double generationMs, mergeMs, drawSubmitMs, frameIntervalMs, mainThreadMs;
         public double runnerBookkeepingMs, holderSelectionMs, buildMeshMs;
+        public double buildMeshSetupMs, buildMeshDataInitMs, buildMeshDispatchMs, buildMeshDoGenerateMs;
+        public double buildMeshSimplePathMs, buildMeshUguiFallbackMs, buildMeshTransformMs;
+        public double buildMeshSpriteDataMs, buildMeshDrawingDimensionsMs, buildMeshMeshWriteMs;
         public double mergePlanMs, mergeFillMs, meshUploadMs;
         public long generationBytes, mergeBytes, measuredThreadBytes, frameGcBytes;
         public bool mainThreadAvailable, frameGcAvailable, scopedAllocationAvailable;
@@ -126,7 +129,8 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         configuration.Validate();
         if (outputCamera == null || batchShader == null)
             throw new InvalidOperationException("Scene camera and batch shader must be bound.");
-        active = configuration.Copy();
+            active = configuration.Copy();
+            BuildMeshDiagnostics.Enabled = true;
         State = RunState.Preparing;
         oldTimeScale = Time.timeScale;
         oldVSync = QualitySettings.vSyncCount;
@@ -280,6 +284,16 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         int checksum = 0;
         long selectionTicks = 0;
         long buildTicks = 0;
+        double buildMeshSetupMs = 0;
+        double buildMeshDataInitMs = 0;
+        double buildMeshDispatchMs = 0;
+        double buildMeshDoGenerateMs = 0;
+        double buildMeshSimplePathMs = 0;
+        double buildMeshUguiFallbackMs = 0;
+        double buildMeshTransformMs = 0;
+        double buildMeshSpriteDataMs = 0;
+        double buildMeshDrawingDimensionsMs = 0;
+        double buildMeshMeshWriteMs = 0;
         using (HolderSelectionMarker.Auto())
         {
             for (int j = 0; j < count; j++)
@@ -293,6 +307,20 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
                 long buildStart = Stopwatch.GetTimestamp();
                 using (BuildMeshMarker.Auto())
                     holders[index].BuildMesh(draws);
+                if (holders[index] is IBuildMeshStageSource stageSource)
+                {
+                    var stage = stageSource.LastBuildMeshTimings;
+                    buildMeshSetupMs += stage.SetupMs;
+                    buildMeshDataInitMs += stage.MeshDataInitMs;
+                    buildMeshDispatchMs += stage.DrawDispatchMs;
+                    buildMeshDoGenerateMs += stage.DoGenerateMs;
+                    buildMeshSimplePathMs += stage.SimplePathMs;
+                    buildMeshUguiFallbackMs += stage.UguiFallbackMs;
+                    buildMeshTransformMs += stage.TransformMs;
+                    buildMeshSpriteDataMs += stage.SimpleSpriteDataMs;
+                    buildMeshDrawingDimensionsMs += stage.SimpleDrawingDimensionsMs;
+                    buildMeshMeshWriteMs += stage.SimpleMeshWriteMs;
+                }
                 buildTicks += Stopwatch.GetTimestamp() - buildStart;
                 checksum = unchecked(checksum * 31 + index + 1);
             }
@@ -323,6 +351,12 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
                 runnerBookkeepingMs = Milliseconds(bookkeepingEnd - advanceStart),
                 holderSelectionMs = Milliseconds(selectionTicks),
                 buildMeshMs = Milliseconds(buildTicks),
+                buildMeshSetupMs = buildMeshSetupMs, buildMeshDataInitMs = buildMeshDataInitMs,
+                buildMeshDispatchMs = buildMeshDispatchMs, buildMeshDoGenerateMs = buildMeshDoGenerateMs,
+                buildMeshSimplePathMs = buildMeshSimplePathMs, buildMeshUguiFallbackMs = buildMeshUguiFallbackMs,
+                buildMeshTransformMs = buildMeshTransformMs,
+                buildMeshSpriteDataMs = buildMeshSpriteDataMs, buildMeshDrawingDimensionsMs = buildMeshDrawingDimensionsMs,
+                buildMeshMeshWriteMs = buildMeshMeshWriteMs,
                 mergePlanMs = renderer.LastPlanMs, mergeFillMs = renderer.LastFillMs, meshUploadMs = renderer.LastMeshUploadMs,
                 drawSubmitMs = Milliseconds(afterDraw - drawStart), generationBytes = scopedAllocationAvailable ? generationBytes : -1,
                 mergeBytes = scopedAllocationAvailable ? mergeBytes : -1, measuredThreadBytes = scopedAllocationAvailable ? measuredBytes : -1,
@@ -426,10 +460,11 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         File.WriteAllText(jsonPath, JsonUtility.ToJson(report, true), new UTF8Encoding(false));
         using (var writer = new StreamWriter(csvPath, false, new UTF8Encoding(false)))
         {
-            writer.WriteLine("unity_frame,sample_frame,mode,updated_holders,vertices,indices,batches,generation_ms,merge_ms,draw_submit_ms,frame_interval_ms,main_thread_ms,generation_bytes,merge_bytes,measured_thread_bytes,frame_gc_bytes,selection_checksum");
+            writer.WriteLine("unity_frame,sample_frame,mode,updated_holders,vertices,indices,batches,generation_ms,merge_ms,draw_submit_ms,frame_interval_ms,main_thread_ms,build_mesh_setup_ms,build_mesh_data_init_ms,build_mesh_dispatch_ms,build_mesh_do_generate_ms,build_mesh_simple_path_ms,build_mesh_sprite_data_ms,build_mesh_drawing_dimensions_ms,build_mesh_mesh_write_ms,build_mesh_ugui_fallback_ms,build_mesh_transform_ms,generation_bytes,merge_bytes,measured_thread_bytes,frame_gc_bytes,selection_checksum");
             foreach (var s in report.frames)
                 writer.WriteLine(string.Join(",", s.unityFrame, s.sampleFrame, (Workload)s.mode, s.updatedHolders, s.vertices, s.indices, s.batches,
                     F(s.generationMs), F(s.mergeMs), F(s.drawSubmitMs), F(s.frameIntervalMs), s.mainThreadAvailable ? F(s.mainThreadMs) : "unavailable",
+                    F(s.buildMeshSetupMs), F(s.buildMeshDataInitMs), F(s.buildMeshDispatchMs), F(s.buildMeshDoGenerateMs), F(s.buildMeshSimplePathMs), F(s.buildMeshSpriteDataMs), F(s.buildMeshDrawingDimensionsMs), F(s.buildMeshMeshWriteMs), F(s.buildMeshUguiFallbackMs), F(s.buildMeshTransformMs),
                     s.scopedAllocationAvailable ? s.generationBytes.ToString() : "unavailable", s.scopedAllocationAvailable ? s.mergeBytes.ToString() : "unavailable", s.scopedAllocationAvailable ? s.measuredThreadBytes.ToString() : "unavailable", s.frameGcAvailable ? s.frameGcBytes.ToString(CultureInfo.InvariantCulture) : "unavailable", s.selectionChecksum));
         }
         LastReportPath = jsonPath;
@@ -440,6 +475,7 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
     [ContextMenu("Reset HUD RC suite")]
     public void ResetRun()
     {
+        BuildMeshDiagnostics.Enabled = false;
         ReleaseResources();
         samples = null;
         active = null;

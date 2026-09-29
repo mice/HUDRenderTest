@@ -23,6 +23,8 @@ public class UIImage :Image,IUIDrawTarget
     private static readonly ProfilerMarker UguiFallbackMarker = new ProfilerMarker("UIData.UIImage.UGUIFallback");
     public static bool EnableSimpleMeshFastPath { get; set; } = true;
     public bool LastGenerationUsedSimpleMeshFastPath { get; private set; }
+    private BuildMeshStageTimings lastGenerationStageTimings;
+    public BuildMeshStageTimings LastGenerationStageTimings => lastGenerationStageTimings;
     protected virtual bool AllowSimpleMeshFastPath => true;
     private bool _isGenerating = false;
     private IUIData tmp_meshData;
@@ -46,6 +48,8 @@ public class UIImage :Image,IUIDrawTarget
 
     public void DoGenerate(IUIData meshData,Transform root = null)
     {
+        if (BuildMeshDiagnostics.Enabled)
+            lastGenerationStageTimings.Clear();
         using (GenerateMarker.Auto())
         {
             _isGenerating = true;
@@ -59,13 +63,23 @@ public class UIImage :Image,IUIDrawTarget
             if (EnableSimpleMeshFastPath && IsSimpleMeshFastPathEligible())
             {
                 LastGenerationUsedSimpleMeshFastPath = true;
+                long simpleStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
                 using (SimpleFastPathMarker.Auto())
                 {
                     tmp_root = root;
-                    meshData.WriteSimpleQuad(GetSimpleDrawingDimensions(), cachedOuterUv, color);
+                    long dimensionsStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+                    var drawing = GetSimpleDrawingDimensions();
+                    if (BuildMeshDiagnostics.Enabled)
+                        lastGenerationStageTimings.SimpleDrawingDimensionsMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - dimensionsStart);
+                    long writeStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+                    meshData.WriteSimpleQuad(drawing, cachedOuterUv, color);
+                    if (BuildMeshDiagnostics.Enabled)
+                        lastGenerationStageTimings.SimpleMeshWriteMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - writeStart);
                     TransformExtractedMesh(meshData);
                     tmp_root = null;
                 }
+                if (BuildMeshDiagnostics.Enabled)
+                    lastGenerationStageTimings.SimplePathMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - simpleStart);
                 _isGenerating = false;
                 return;
             }
@@ -73,6 +87,7 @@ public class UIImage :Image,IUIDrawTarget
             tmp_meshData = meshData;
             tmp_root = root;
             extractionHelper.Clear();
+            long fallbackStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             using (UguiFallbackMarker.Auto())
             using (UpdateGeometryMarker.Auto())
             using (GenerateBasePopulateMarker.Auto())
@@ -81,6 +96,8 @@ public class UIImage :Image,IUIDrawTarget
                 meshData.FillVertex(extractionHelper, 0);
             using (GenerateTransformMarker.Auto())
                 TransformExtractedMesh(meshData);
+            if (BuildMeshDiagnostics.Enabled)
+                lastGenerationStageTimings.UguiFallbackMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - fallbackStart);
             tmp_meshData = null;
             tmp_root = null;
             _isGenerating = false;
@@ -134,19 +151,29 @@ public class UIImage :Image,IUIDrawTarget
 
     private void UpdateSpriteCache()
     {
+        long cacheStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         var source = sprite;
-        if (cachedGeometrySprite == source) return;
+        if (cachedGeometrySprite == source)
+        {
+            if (BuildMeshDiagnostics.Enabled)
+                lastGenerationStageTimings.SimpleSpriteDataMs += BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - cacheStart);
+            return;
+        }
         cachedGeometrySprite = source;
         if (source == null)
         {
             cachedOuterUv = Vector4.zero;
             cachedPadding = Vector4.zero;
             cachedSpriteSize = Vector2.zero;
+            if (BuildMeshDiagnostics.Enabled)
+                lastGenerationStageTimings.SimpleSpriteDataMs += BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - cacheStart);
             return;
         }
         cachedOuterUv = DataUtility.GetOuterUV(source);
         cachedPadding = DataUtility.GetPadding(source);
         cachedSpriteSize = source.rect.size;
+        if (BuildMeshDiagnostics.Enabled)
+            lastGenerationStageTimings.SimpleSpriteDataMs += BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - cacheStart);
     }
 
     protected override void OnPopulateMesh(VertexHelper toFill)
@@ -178,6 +205,7 @@ public class UIImage :Image,IUIDrawTarget
 
     private void TransformExtractedMesh(IUIData meshData)
     {
+        long transformStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         using (TransformCheckMarker.Auto())
         {
             var current = transform;
@@ -190,5 +218,7 @@ public class UIImage :Image,IUIDrawTarget
             var matrix = Utility.CalcMatrix(tmp_root, current);
             meshData.TransformVertex(matrix);
         }
+        if (BuildMeshDiagnostics.Enabled)
+            lastGenerationStageTimings.TransformMs += BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - transformStart);
     }
 }

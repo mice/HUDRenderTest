@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using UIData;
@@ -12,6 +13,7 @@ using Unity.Profiling;
 /// 每个prefab都会生成一个DataPrefabHolder用来记录当前的prefab的UI信息;
 /// </summary>
 public class DataPrefabHolder<T> : IUIPrefabHolder 
+    , IBuildMeshStageSource
     where T: class, IUIData, new()
 {
     private static readonly ProfilerMarker HolderSetupMarker = new ProfilerMarker("UIData.Holder.BuildMesh.Setup");
@@ -29,6 +31,7 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
     /// UI element 对应的Mesh信息
     /// </summary>
     public T[] uIMeshDatas = Array.Empty<T>();
+    public BuildMeshStageTimings LastBuildMeshTimings { get; private set; }
 
     public void SetTarget(UIPrefabOwner target)
     {
@@ -51,6 +54,8 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
     /// <param name="draws"></param>
     public void BuildMesh(IUIDrawTarget[] draws)
     {
+        var timings = new BuildMeshStageTimings();
+        long stageStart = BuildMeshDiagnostics.Enabled ? Stopwatch.GetTimestamp() : 0;
         using (HolderSetupMarker.Auto())
         {
             if (uIMeshDatas == Array.Empty<T>())
@@ -58,11 +63,42 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
             else if (uIMeshDatas.Length < draws.Length)
                 Array.Resize(ref uIMeshDatas, draws.Length);
         }
+        if (BuildMeshDiagnostics.Enabled)
+        {
+            timings.SetupMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
+        }
         for (int i = 0; i < draws.Length; i++)
         {
+            long initStart = BuildMeshDiagnostics.Enabled ? Stopwatch.GetTimestamp() : 0;
             uIMeshDatas[i] = uIMeshDatas[i] ?? new T();
+            if (BuildMeshDiagnostics.Enabled)
+            {
+                timings.MeshDataInitMs += BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - initStart);
+                initStart = Stopwatch.GetTimestamp();
+            }
             using (DrawGenerateMarker.Auto())
                 draws[i].DoGenerate(uIMeshDatas[i], Target.transform);
+            if (BuildMeshDiagnostics.Enabled)
+            {
+                var generateMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - initStart);
+                timings.DoGenerateMs += generateMs;
+                if (draws[i] is UIImage image)
+                {
+                    var imageTimings = image.LastGenerationStageTimings;
+                    timings.SimplePathMs += imageTimings.SimplePathMs;
+                    timings.SimpleSpriteDataMs += imageTimings.SimpleSpriteDataMs;
+                    timings.SimpleDrawingDimensionsMs += imageTimings.SimpleDrawingDimensionsMs;
+                    timings.SimpleMeshWriteMs += imageTimings.SimpleMeshWriteMs;
+                    timings.UguiFallbackMs += imageTimings.UguiFallbackMs;
+                    timings.TransformMs += imageTimings.TransformMs;
+                }
+            }
+        }
+        if (BuildMeshDiagnostics.Enabled)
+        {
+            timings.DrawDispatchMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart) - timings.MeshDataInitMs - timings.DoGenerateMs;
+            LastBuildMeshTimings = timings;
         }
     }
 
