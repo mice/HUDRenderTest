@@ -53,6 +53,7 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         public double buildMeshSetupMs, buildMeshDataInitMs, buildMeshDispatchMs, buildMeshDoGenerateMs;
         public double buildMeshSimplePathMs, buildMeshUguiFallbackMs, buildMeshTransformMs;
         public double buildMeshSpriteDataMs, buildMeshDrawingDimensionsMs, buildMeshMeshWriteMs;
+        public double buildMeshWriteStorageMs, buildMeshWriteVertexMs, buildMeshWriteUvMs, buildMeshWriteColorMs, buildMeshWriteIndexMs;
         public double mergePlanMs, mergeFillMs, meshUploadMs;
         public long generationBytes, mergeBytes, measuredThreadBytes, frameGcBytes;
         public bool mainThreadAvailable, frameGcAvailable, scopedAllocationAvailable;
@@ -294,6 +295,11 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         double buildMeshSpriteDataMs = 0;
         double buildMeshDrawingDimensionsMs = 0;
         double buildMeshMeshWriteMs = 0;
+        double buildMeshWriteStorageMs = 0;
+        double buildMeshWriteVertexMs = 0;
+        double buildMeshWriteUvMs = 0;
+        double buildMeshWriteColorMs = 0;
+        double buildMeshWriteIndexMs = 0;
         using (HolderSelectionMarker.Auto())
         {
             for (int j = 0; j < count; j++)
@@ -320,6 +326,11 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
                     buildMeshSpriteDataMs += stage.SimpleSpriteDataMs;
                     buildMeshDrawingDimensionsMs += stage.SimpleDrawingDimensionsMs;
                     buildMeshMeshWriteMs += stage.SimpleMeshWriteMs;
+                    buildMeshWriteStorageMs += stage.SimpleQuadWrite.StorageMs;
+                    buildMeshWriteVertexMs += stage.SimpleQuadWrite.VertexMs;
+                    buildMeshWriteUvMs += stage.SimpleQuadWrite.UvMs;
+                    buildMeshWriteColorMs += stage.SimpleQuadWrite.ColorMs;
+                    buildMeshWriteIndexMs += stage.SimpleQuadWrite.IndexMs;
                 }
                 buildTicks += Stopwatch.GetTimestamp() - buildStart;
                 checksum = unchecked(checksum * 31 + index + 1);
@@ -357,6 +368,9 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
                 buildMeshTransformMs = buildMeshTransformMs,
                 buildMeshSpriteDataMs = buildMeshSpriteDataMs, buildMeshDrawingDimensionsMs = buildMeshDrawingDimensionsMs,
                 buildMeshMeshWriteMs = buildMeshMeshWriteMs,
+                buildMeshWriteStorageMs = buildMeshWriteStorageMs, buildMeshWriteVertexMs = buildMeshWriteVertexMs,
+                buildMeshWriteUvMs = buildMeshWriteUvMs, buildMeshWriteColorMs = buildMeshWriteColorMs,
+                buildMeshWriteIndexMs = buildMeshWriteIndexMs,
                 mergePlanMs = renderer.LastPlanMs, mergeFillMs = renderer.LastFillMs, meshUploadMs = renderer.LastMeshUploadMs,
                 drawSubmitMs = Milliseconds(afterDraw - drawStart), generationBytes = scopedAllocationAvailable ? generationBytes : -1,
                 mergeBytes = scopedAllocationAvailable ? mergeBytes : -1, measuredThreadBytes = scopedAllocationAvailable ? measuredBytes : -1,
@@ -460,11 +474,11 @@ public sealed class HudRcPerformanceRunner : MonoBehaviour
         File.WriteAllText(jsonPath, JsonUtility.ToJson(report, true), new UTF8Encoding(false));
         using (var writer = new StreamWriter(csvPath, false, new UTF8Encoding(false)))
         {
-            writer.WriteLine("unity_frame,sample_frame,mode,updated_holders,vertices,indices,batches,generation_ms,merge_ms,draw_submit_ms,frame_interval_ms,main_thread_ms,build_mesh_setup_ms,build_mesh_data_init_ms,build_mesh_dispatch_ms,build_mesh_do_generate_ms,build_mesh_simple_path_ms,build_mesh_sprite_data_ms,build_mesh_drawing_dimensions_ms,build_mesh_mesh_write_ms,build_mesh_ugui_fallback_ms,build_mesh_transform_ms,generation_bytes,merge_bytes,measured_thread_bytes,frame_gc_bytes,selection_checksum");
+            writer.WriteLine("unity_frame,sample_frame,mode,updated_holders,vertices,indices,batches,generation_ms,merge_ms,draw_submit_ms,frame_interval_ms,main_thread_ms,build_mesh_setup_ms,build_mesh_data_init_ms,build_mesh_dispatch_ms,build_mesh_do_generate_ms,build_mesh_simple_path_ms,build_mesh_sprite_data_ms,build_mesh_drawing_dimensions_ms,build_mesh_mesh_write_ms,build_mesh_write_storage_ms,build_mesh_write_vertex_ms,build_mesh_write_uv_ms,build_mesh_write_color_ms,build_mesh_write_index_ms,build_mesh_ugui_fallback_ms,build_mesh_transform_ms,generation_bytes,merge_bytes,measured_thread_bytes,frame_gc_bytes,selection_checksum");
             foreach (var s in report.frames)
                 writer.WriteLine(string.Join(",", s.unityFrame, s.sampleFrame, (Workload)s.mode, s.updatedHolders, s.vertices, s.indices, s.batches,
                     F(s.generationMs), F(s.mergeMs), F(s.drawSubmitMs), F(s.frameIntervalMs), s.mainThreadAvailable ? F(s.mainThreadMs) : "unavailable",
-                    F(s.buildMeshSetupMs), F(s.buildMeshDataInitMs), F(s.buildMeshDispatchMs), F(s.buildMeshDoGenerateMs), F(s.buildMeshSimplePathMs), F(s.buildMeshSpriteDataMs), F(s.buildMeshDrawingDimensionsMs), F(s.buildMeshMeshWriteMs), F(s.buildMeshUguiFallbackMs), F(s.buildMeshTransformMs),
+                    F(s.buildMeshSetupMs), F(s.buildMeshDataInitMs), F(s.buildMeshDispatchMs), F(s.buildMeshDoGenerateMs), F(s.buildMeshSimplePathMs), F(s.buildMeshSpriteDataMs), F(s.buildMeshDrawingDimensionsMs), F(s.buildMeshMeshWriteMs), F(s.buildMeshWriteStorageMs), F(s.buildMeshWriteVertexMs), F(s.buildMeshWriteUvMs), F(s.buildMeshWriteColorMs), F(s.buildMeshWriteIndexMs), F(s.buildMeshUguiFallbackMs), F(s.buildMeshTransformMs),
                     s.scopedAllocationAvailable ? s.generationBytes.ToString() : "unavailable", s.scopedAllocationAvailable ? s.mergeBytes.ToString() : "unavailable", s.scopedAllocationAvailable ? s.measuredThreadBytes.ToString() : "unavailable", s.frameGcAvailable ? s.frameGcBytes.ToString(CultureInfo.InvariantCulture) : "unavailable", s.selectionChecksum));
         }
         LastReportPath = jsonPath;

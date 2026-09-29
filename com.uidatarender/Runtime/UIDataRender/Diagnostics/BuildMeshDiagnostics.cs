@@ -17,6 +17,7 @@ public struct BuildMeshStageTimings
     public double SimpleSpriteDataMs;
     public double SimpleDrawingDimensionsMs;
     public double SimpleMeshWriteMs;
+    public SimpleQuadWriteTimings SimpleQuadWrite;
     public double UguiFallbackMs;
     public double TransformMs;
 
@@ -30,6 +31,7 @@ public struct BuildMeshStageTimings
         SimpleSpriteDataMs = 0;
         SimpleDrawingDimensionsMs = 0;
         SimpleMeshWriteMs = 0;
+        SimpleQuadWrite.Clear();
         UguiFallbackMs = 0;
         TransformMs = 0;
     }
@@ -38,4 +40,23 @@ public struct BuildMeshStageTimings
 public interface IBuildMeshStageSource
 {
     BuildMeshStageTimings LastBuildMeshTimings { get; }
+}
+
+public struct SimpleQuadWriteTimings
+{
+    public double StorageMs;
+    public double VertexMs;
+    public double UvMs;
+    public double ColorMs;
+    public double IndexMs;
+
+    public void Clear()
+    {
+        StorageMs = VertexMs = UvMs = ColorMs = IndexMs = 0;
+    }
+}
+
+public interface ISimpleQuadWriteStageSource
+{
+    SimpleQuadWriteTimings LastSimpleQuadWriteTimings { get; }
 }

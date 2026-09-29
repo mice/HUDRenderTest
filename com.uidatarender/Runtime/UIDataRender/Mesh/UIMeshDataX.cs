@@ -8,7 +8,7 @@ using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 ///indirect idea
-public class UIMeshDataX : IUIData
+public class UIMeshDataX : IUIData, ISimpleQuadWriteStageSource
 {
     /// <summary>
     /// uv,xy为UV
@@ -20,6 +20,8 @@ public class UIMeshDataX : IUIData
         Index = -1,
     };
     public int TextureIndex { get; set; }
+    private SimpleQuadWriteTimings lastSimpleQuadWriteTimings;
+    public SimpleQuadWriteTimings LastSimpleQuadWriteTimings => lastSimpleQuadWriteTimings;
     public static UIGeometry geometry { get; } = new UIGeometry();
     private static int NEXT = -1;
     public UIMeshDataX()
@@ -174,10 +176,14 @@ public class UIMeshDataX : IUIData
 
     public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color)
     {
+        bool profile = BuildMeshDiagnostics.Enabled;
+        long start = profile ? Stopwatch.GetTimestamp() : 0;
+        if (profile) lastSimpleQuadWriteTimings.Clear();
         if (mesh.Index == -1)
             mesh = geometry.Alloc(4, 6);
         else if (mesh.VertexCount != 4 || mesh.IndicesCount != 6)
             geometry.ReAlloc(4, 6, ref mesh);
+        if (profile) { lastSimpleQuadWriteTimings.StorageMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
 
         int v = mesh.VertexOffset;
         int t = mesh.IndicesOffset;
@@ -185,13 +191,17 @@ public class UIMeshDataX : IUIData
         geometry.vertex[v + 1] = new Vector3(drawing.x, drawing.w, 0f);
         geometry.vertex[v + 2] = new Vector3(drawing.z, drawing.w, 0f);
         geometry.vertex[v + 3] = new Vector3(drawing.z, drawing.y, 0f);
+        if (profile) { lastSimpleQuadWriteTimings.VertexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
         geometry.uvs[v] = new Vector4(outerUv.x, outerUv.y, TextureIndex, 0f);
         geometry.uvs[v + 1] = new Vector4(outerUv.x, outerUv.w, TextureIndex, 0f);
         geometry.uvs[v + 2] = new Vector4(outerUv.z, outerUv.w, TextureIndex, 0f);
         geometry.uvs[v + 3] = new Vector4(outerUv.z, outerUv.y, TextureIndex, 0f);
+        if (profile) { lastSimpleQuadWriteTimings.UvMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
         for (int i = 0; i < 4; i++) geometry.colors[v + i] = color;
+        if (profile) { lastSimpleQuadWriteTimings.ColorMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
         geometry.indices[t] = v; geometry.indices[t + 1] = v + 1; geometry.indices[t + 2] = v + 2;
         geometry.indices[t + 3] = v + 2; geometry.indices[t + 4] = v + 3; geometry.indices[t + 5] = v;
+        if (profile) lastSimpleQuadWriteTimings.IndexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start);
         mesh.VertexCount = 4;
         mesh.IndicesCount = 6;
     }

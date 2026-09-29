@@ -25,6 +25,7 @@ public class UIImage :Image,IUIDrawTarget
     public bool LastGenerationUsedSimpleMeshFastPath { get; private set; }
     private BuildMeshStageTimings lastGenerationStageTimings;
     public BuildMeshStageTimings LastGenerationStageTimings => lastGenerationStageTimings;
+    public SimpleQuadWriteTimings LastSimpleQuadWriteTimings { get; private set; }
     protected virtual bool AllowSimpleMeshFastPath => true;
     private bool _isGenerating = false;
     private IUIData tmp_meshData;
@@ -49,7 +50,10 @@ public class UIImage :Image,IUIDrawTarget
     public void DoGenerate(IUIData meshData,Transform root = null)
     {
         if (BuildMeshDiagnostics.Enabled)
+        {
             lastGenerationStageTimings.Clear();
+            LastSimpleQuadWriteTimings = new SimpleQuadWriteTimings();
+        }
         using (GenerateMarker.Auto())
         {
             _isGenerating = true;
@@ -73,6 +77,8 @@ public class UIImage :Image,IUIDrawTarget
                         lastGenerationStageTimings.SimpleDrawingDimensionsMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - dimensionsStart);
                     long writeStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
                     meshData.WriteSimpleQuad(drawing, GetSimpleOuterUv(), color);
+                    if (BuildMeshDiagnostics.Enabled && meshData is ISimpleQuadWriteStageSource writeSource)
+                        LastSimpleQuadWriteTimings = writeSource.LastSimpleQuadWriteTimings;
                     if (BuildMeshDiagnostics.Enabled)
                         lastGenerationStageTimings.SimpleMeshWriteMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - writeStart);
                     TransformExtractedMesh(meshData);

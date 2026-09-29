@@ -31,7 +31,7 @@ public interface IUIData : System.IDisposable
 
 
 ///indirect idea
-public class UIMeshData : IUIData
+public class UIMeshData : IUIData, ISimpleQuadWriteStageSource
 {
     /// <summary>
     /// uv,xy为UV
@@ -47,6 +47,8 @@ public class UIMeshData : IUIData
         Index = -1,
     };
     public int TextureIndex { get; set; }
+    private SimpleQuadWriteTimings lastSimpleQuadWriteTimings;
+    public SimpleQuadWriteTimings LastSimpleQuadWriteTimings => lastSimpleQuadWriteTimings;
     private static int NEXT = -1;
     public UIMeshData()
     {
@@ -243,22 +245,30 @@ public class UIMeshData : IUIData
 
     public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color)
     {
+        bool profile = BuildMeshDiagnostics.Enabled;
+        long start = profile ? Stopwatch.GetTimestamp() : 0;
+        if (profile) lastSimpleQuadWriteTimings.Clear();
         if (vertList == null || vertList.Length != 4) vertList = new Vector3[4];
         if (uvs == null || uvs.Length != 4) uvs = new Vector4[4];
         if (colors == null || colors.Length != 4) colors = new Color32[4];
         if (triangles == null || triangles.Length != 6) triangles = new int[6];
+        if (profile) { lastSimpleQuadWriteTimings.StorageMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
 
         vertList[0] = new Vector3(drawing.x, drawing.y, 0f);
         vertList[1] = new Vector3(drawing.x, drawing.w, 0f);
         vertList[2] = new Vector3(drawing.z, drawing.w, 0f);
         vertList[3] = new Vector3(drawing.z, drawing.y, 0f);
+        if (profile) { lastSimpleQuadWriteTimings.VertexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
         uvs[0] = new Vector4(outerUv.x, outerUv.y, TextureIndex, 0f);
         uvs[1] = new Vector4(outerUv.x, outerUv.w, TextureIndex, 0f);
         uvs[2] = new Vector4(outerUv.z, outerUv.w, TextureIndex, 0f);
         uvs[3] = new Vector4(outerUv.z, outerUv.y, TextureIndex, 0f);
+        if (profile) { lastSimpleQuadWriteTimings.UvMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
         for (int i = 0; i < colors.Length; i++) colors[i] = color;
+        if (profile) { lastSimpleQuadWriteTimings.ColorMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start); start = Stopwatch.GetTimestamp(); }
         triangles[0] = 0; triangles[1] = 1; triangles[2] = 2;
         triangles[3] = 2; triangles[4] = 3; triangles[5] = 0;
+        if (profile) lastSimpleQuadWriteTimings.IndexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - start);
         mesh.VertexCount = 4;
         mesh.IndicesCount = 6;
     }
