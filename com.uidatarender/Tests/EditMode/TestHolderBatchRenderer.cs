@@ -76,6 +76,11 @@ public class TestHolderBatchRenderer
         }
 
         public void Fill(List<int> triangles, Vector3 localPosition) { }
+
+        public void SetTextureIndex(int index, int textureIndex)
+        {
+            ((StubMesh)meshes[index]).TextureIndex = textureIndex;
+        }
     }
 
     // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_002.md
@@ -117,6 +122,53 @@ public class TestHolderBatchRenderer
             Assert.AreEqual(1, (int)uv.z, "global slot 4 must be remapped to local slot 1 inside the batch");
 
         renderer.Dispose();
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_007.md
+    [Test]
+    [Category("UT_BATCH_007")]
+    public void Plan_ReusesStableStructure_AndInvalidatesTextureChanges()
+    {
+        var first = new StubHolder(1, 2);
+        var second = new StubHolder(3);
+        var holders = new IUIPrefabHolder[] { first, second };
+        var batcher = new MergeBatcher(3);
+
+        var initial = batcher.Plan(holders);
+        Assert.IsFalse(batcher.LastPlanCacheHit);
+        var cached = batcher.Plan(holders);
+        Assert.IsTrue(batcher.LastPlanCacheHit);
+        Assert.AreSame(initial, cached);
+
+        first.SetTextureIndex(1, 4);
+        var changed = batcher.Plan(holders);
+        Assert.IsFalse(batcher.LastPlanCacheHit);
+        Assert.AreSame(initial, changed);
+        Assert.AreEqual(4, changed[0].Holders[0].UIMeshDatas[1].TextureIndex);
+        Assert.GreaterOrEqual(batcher.PlanCacheHits, 1);
+        Assert.GreaterOrEqual(batcher.PlanCacheMisses, 2);
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Batching/UT_BATCH_008.md
+    [Test]
+    [Category("UT_BATCH_008")]
+    public void Plan_InvalidatesHolderOrder_AndPreservesLocalSlotMap()
+    {
+        var first = new StubHolder(4);
+        var second = new StubHolder(2);
+        var batcher = new MergeBatcher(3);
+        var holders = new IUIPrefabHolder[] { first, second };
+
+        var batches = batcher.Plan(holders);
+        var map = batches[0].BuildLocalSlotMap();
+        Assert.AreEqual(2, map[4]);
+
+        holders[0] = second;
+        holders[1] = first;
+        batcher.Plan(holders);
+        Assert.IsFalse(batcher.LastPlanCacheHit);
+        Assert.AreSame(second, batcher.Plan(holders)[0].Holders[0]);
+        Assert.IsTrue(batcher.LastPlanCacheHit);
     }
 
     private static Material CreateMaterial()

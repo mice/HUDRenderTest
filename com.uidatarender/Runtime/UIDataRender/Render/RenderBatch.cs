@@ -14,6 +14,7 @@ public class RenderBatch
     private readonly List<int> sortedSlots = new List<int>();
     private readonly Dictionary<int, int> localSlotMap = new Dictionary<int, int>();
     private readonly List<UnityEngine.Texture> batchTextures = new List<UnityEngine.Texture>();
+    private bool localSlotMapDirty = true;
 
     internal RenderBatch(IUIPrefabHolder firstHolder, HashSet<int> slots, int holderCapacity, int slotCapacity)
     {
@@ -28,6 +29,7 @@ public class RenderBatch
             Holders.Capacity = holderCapacity;
         Holders.Clear();
         UsedSlots.Clear();
+        localSlotMapDirty = true;
         Holders.Add(firstHolder);
         AddSlots(slots);
     }
@@ -53,7 +55,10 @@ public class RenderBatch
     private void AddSlots(HashSet<int> slots)
     {
         foreach (var slot in slots)
-            UsedSlots.Add(slot);
+        {
+            if (UsedSlots.Add(slot))
+                localSlotMapDirty = true;
+        }
     }
 
     /// <summary>
@@ -62,6 +67,9 @@ public class RenderBatch
     /// </summary>
     public IReadOnlyDictionary<int, int> BuildLocalSlotMap()
     {
+        if (!localSlotMapDirty)
+            return localSlotMap;
+
         sortedSlots.Clear();
         foreach (var slot in UsedSlots)
             sortedSlots.Add(slot);
@@ -69,6 +77,7 @@ public class RenderBatch
         localSlotMap.Clear();
         for (int i = 0; i < sortedSlots.Count; i++)
             localSlotMap[sortedSlots[i]] = i + 1;
+        localSlotMapDirty = false;
         return localSlotMap;
     }
 

@@ -24,6 +24,9 @@ public sealed class HolderBatchRenderer : IDisposable
     public double LastPlanMs { get; private set; }
     public double LastFillMs { get; private set; }
     public double LastMeshUploadMs { get; private set; }
+    public bool LastPlanCacheHit => batcher.LastPlanCacheHit;
+    public int PlanCacheHits => batcher.PlanCacheHits;
+    public int PlanCacheMisses => batcher.PlanCacheMisses;
 
     public HolderBatchRenderer(int maxSlots, PerfProbe probe = null)
     {

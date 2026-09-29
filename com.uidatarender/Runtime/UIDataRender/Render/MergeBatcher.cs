@@ -11,6 +11,14 @@ public class MergeBatcher
     private readonly List<RenderBatch> batches = new List<RenderBatch>();
     private readonly List<RenderBatch> batchPool = new List<RenderBatch>();
     private readonly HashSet<int> slotScratch = new HashSet<int>();
+    private readonly List<IUIPrefabHolder> cachedHolders = new List<IUIPrefabHolder>();
+    private readonly List<int> cachedMeshCounts = new List<int>();
+    private readonly List<int> cachedTextureIndices = new List<int>();
+    private bool hasPlanCache;
+
+    public bool LastPlanCacheHit { get; private set; }
+    public int PlanCacheHits { get; private set; }
+    public int PlanCacheMisses { get; private set; }
 
     public MergeBatcher(int maxSlots)
     {
@@ -24,6 +32,17 @@ public class MergeBatcher
     /// </summary>
     public List<RenderBatch> Plan(IReadOnlyList<IUIPrefabHolder> holders)
     {
+        if (holders == null) throw new System.ArgumentNullException(nameof(holders));
+
+        if (hasPlanCache && MatchesCachedStructure(holders))
+        {
+            LastPlanCacheHit = true;
+            PlanCacheHits++;
+            return batches;
+        }
+
+        LastPlanCacheHit = false;
+        PlanCacheMisses++;
         batches.Clear();
 
         for (int h = 0; h < holders.Count; h++)
@@ -63,7 +82,52 @@ public class MergeBatcher
         if (batches.Count > 1)
             Debug.LogWarning($"[MergeBatcher] split into {batches.Count} batches");
 
+        CaptureStructure(holders);
+
         return batches;
+    }
+
+    private bool MatchesCachedStructure(IReadOnlyList<IUIPrefabHolder> holders)
+    {
+        if (holders.Count != cachedHolders.Count)
+            return false;
+
+        int slotOffset = 0;
+        for (int h = 0; h < holders.Count; h++)
+        {
+            var holder = holders[h];
+            if (!ReferenceEquals(holder, cachedHolders[h]))
+                return false;
+
+            var meshes = holder.UIMeshDatas;
+            if (meshes == null || meshes.Count != cachedMeshCounts[h])
+                return false;
+
+            for (int i = 0; i < meshes.Count; i++)
+            {
+                if (meshes[i]?.TextureIndex != cachedTextureIndices[slotOffset++])
+                    return false;
+            }
+        }
+        return slotOffset == cachedTextureIndices.Count;
+    }
+
+    private void CaptureStructure(IReadOnlyList<IUIPrefabHolder> holders)
+    {
+        cachedHolders.Clear();
+        cachedMeshCounts.Clear();
+        cachedTextureIndices.Clear();
+        for (int h = 0; h < holders.Count; h++)
+        {
+            var holder = holders[h];
+            cachedHolders.Add(holder);
+            var meshes = holder.UIMeshDatas;
+            int count = meshes?.Count ?? 0;
+            cachedMeshCounts.Add(count);
+            for (int i = 0; i < count; i++)
+                cachedTextureIndices.Add(meshes[i]?.TextureIndex ?? 0);
+        }
+        hasPlanCache = true;
     }
 
     private static void CollectSlots(IUIPrefabHolder holder, HashSet<int> slots)
