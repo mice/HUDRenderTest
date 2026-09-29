@@ -72,7 +72,7 @@ public class UIImage :Image,IUIDrawTarget
                     if (BuildMeshDiagnostics.Enabled)
                         lastGenerationStageTimings.SimpleDrawingDimensionsMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - dimensionsStart);
                     long writeStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
-                    meshData.WriteSimpleQuad(drawing, cachedOuterUv, color);
+                    meshData.WriteSimpleQuad(drawing, GetSimpleOuterUv(), color);
                     if (BuildMeshDiagnostics.Enabled)
                         lastGenerationStageTimings.SimpleMeshWriteMs = BuildMeshDiagnostics.Milliseconds(System.Diagnostics.Stopwatch.GetTimestamp() - writeStart);
                     TransformExtractedMesh(meshData);
@@ -107,16 +107,18 @@ public class UIImage :Image,IUIDrawTarget
     internal bool IsSimpleMeshFastPathEligible()
     {
         return AllowSimpleMeshFastPath
-            && sprite != null
             && type == Type.Simple
-            && !preserveAspect
             && !useSpriteMesh
-            && sprite.rect.width > 0f
-            && sprite.rect.height > 0f;
+            && (sprite == null || (!preserveAspect && sprite.rect.width > 0f && sprite.rect.height > 0f));
     }
 
     private Vector4 GetSimpleDrawingDimensions()
     {
+        if (sprite == null)
+        {
+            var pixelRect = GetPixelAdjustedRect();
+            return new Vector4(pixelRect.x, pixelRect.y, pixelRect.x + pixelRect.width, pixelRect.y + pixelRect.height);
+        }
         UpdateSpriteCache();
         var rect = GetPixelAdjustedRect();
         var spriteWidth = Mathf.RoundToInt(cachedSpriteSize.x);
@@ -126,6 +128,11 @@ public class UIImage :Image,IUIDrawTarget
             rect.y + rect.height * cachedPadding.y / spriteHeight,
             rect.x + rect.width * (spriteWidth - cachedPadding.z) / spriteWidth,
             rect.y + rect.height * (spriteHeight - cachedPadding.w) / spriteHeight);
+    }
+
+    private Vector4 GetSimpleOuterUv()
+    {
+        return sprite == null ? new Vector4(0f, 0f, 1f, 1f) : cachedOuterUv;
     }
 
     private int GetTextureIndex(UIPrefabManager manager, Sprite sourceSprite, Texture sourceTexture)

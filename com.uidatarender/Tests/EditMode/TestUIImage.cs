@@ -95,7 +95,40 @@ public class TestUIImage
         image.type = Image.Type.Simple;
         image.sprite = null;
         image.DoGenerate(data);
+        Assert.IsTrue(image.LastGenerationUsedSimpleMeshFastPath);
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/UI/UT_UIIMAGE_005.md
+    [Test]
+    [Category("UT_UIIMAGE_005")]
+    // TestRecord: Documentation~/Testing/Unit/UI/UT_UIIMAGE_005.md
+    public void NullSpriteSimpleImage_FastPathMatchesUguiFallback()
+    {
+        var image = imageObject.AddComponent<UIImage>();
+        image.type = Image.Type.Simple;
+        image.color = new Color32(10, 20, 30, 40);
+        var fast = new UIMeshData { TextureIndex = 2 };
+        var fallback = new UIMeshData { TextureIndex = 2 };
+
+        UIImage.EnableSimpleMeshFastPath = true;
+        image.DoGenerate(fast);
+        Assert.IsTrue(image.LastGenerationUsedSimpleMeshFastPath);
+
+        UIImage.EnableSimpleMeshFastPath = false;
+        image.DoGenerate(fallback);
         Assert.IsFalse(image.LastGenerationUsedSimpleMeshFastPath);
+
+        Assert.AreEqual(fallback.mesh.VertexCount, fast.mesh.VertexCount);
+        Assert.AreEqual(fallback.mesh.IndicesCount, fast.mesh.IndicesCount);
+        for (int i = 0; i < fast.mesh.VertexCount; i++)
+        {
+            Assert.That(fast.vertList[i].x, Is.EqualTo(fallback.vertList[i].x).Within(1e-4f));
+            Assert.That(fast.vertList[i].y, Is.EqualTo(fallback.vertList[i].y).Within(1e-4f));
+            Assert.AreEqual(fallback.uvs[i], fast.uvs[i]);
+            Assert.AreEqual(fallback.colors[i], fast.colors[i]);
+        }
+        CollectionAssert.AreEqual(fallback.triangles, fast.triangles);
+        Assert.AreEqual(-1, fast.TextureIndex);
     }
 
     // TestRecord: Documentation~/Testing/Unit/UI/UT_UIIMAGE_004.md
