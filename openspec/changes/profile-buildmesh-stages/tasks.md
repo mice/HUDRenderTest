@@ -13,4 +13,4 @@
 
 - [x] 3.1 Add EditMode tests for stage accounting and zero-allocation diagnostics-disabled behavior.
 - [x] 3.2 Run package/layout/EditMode validation and update governance records.
-- [ ] 3.3 Build and run the Xiaomi 10 Release IL2CPP APK, compare stage medians/p95 and percentage shares, and record evidence plus the next optimization target.
+- [x] 3.3 Build and run the Xiaomi 10 Release IL2CPP APK, compare stage medians/p95 and percentage shares, and record evidence plus the next optimization target.
