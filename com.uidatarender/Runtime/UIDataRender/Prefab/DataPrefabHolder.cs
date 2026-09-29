@@ -68,6 +68,7 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
             timings.SetupMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
             stageStart = Stopwatch.GetTimestamp();
         }
+        var targetTransform = Target.transform;
         for (int i = 0; i < draws.Length; i++)
         {
             long initStart = BuildMeshDiagnostics.Enabled ? Stopwatch.GetTimestamp() : 0;
@@ -78,7 +79,7 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
                 initStart = Stopwatch.GetTimestamp();
             }
             using (DrawGenerateMarker.Auto())
-                draws[i].DoGenerate(uIMeshDatas[i], Target.transform);
+                draws[i].DoGenerate(uIMeshDatas[i], targetTransform);
             if (BuildMeshDiagnostics.Enabled)
             {
                 var generateMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - initStart);

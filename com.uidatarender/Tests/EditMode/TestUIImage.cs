@@ -131,6 +131,48 @@ public class TestUIImage
         Assert.AreEqual(-1, fast.TextureIndex);
     }
 
+    // TestRecord: Documentation~/Testing/Unit/UI/UT_UIIMAGE_006.md
+    [Test]
+    [Category("UT_UIIMAGE_006")]
+    public void NullSpriteCache_TransitionsToRegisteredSprite()
+    {
+        var image = imageObject.AddComponent<UIImage>();
+        image.type = Image.Type.Simple;
+        var first = new UIMeshData();
+        var second = new UIMeshData();
+
+        var ownerObject = new GameObject("UIImage texture owner");
+        var owner = ownerObject.AddComponent<UIPrefabOwner>();
+        owner.targets = new System.Collections.Generic.List<Transform> { image.transform };
+        var recorder = (ITextureRecorder)UIPrefabManager.Instance;
+        var registration = new UIPrefabRegistration(owner, recorder);
+        var imageKey = image.GetInstanceID();
+        try
+        {
+            image.DoGenerate(first);
+            image.DoGenerate(second);
+
+            Assert.AreEqual(-1, first.TextureIndex);
+            Assert.AreEqual(-1, second.TextureIndex);
+            Assert.AreEqual(first.mesh.VertexCount, second.mesh.VertexCount);
+            Assert.AreEqual(first.mesh.IndicesCount, second.mesh.IndicesCount);
+            CollectionAssert.AreEqual(first.triangles, second.triangles);
+
+            image.sprite = sprite;
+            recorder.OnTextureRegister(imageKey, texture);
+            image.DoGenerate(second);
+
+            Assert.GreaterOrEqual(second.TextureIndex, 1);
+            Assert.Greater(second.mesh.VertexCount, 0);
+            Assert.Greater(second.mesh.IndicesCount, 0);
+        }
+        finally
+        {
+            recorder.OnTextureUnRegister(imageKey);
+            Object.DestroyImmediate(ownerObject);
+        }
+    }
+
     // TestRecord: Documentation~/Testing/Unit/UI/UT_UIIMAGE_004.md
     [Test]
     [Category("UT_UIIMAGE_004")]

@@ -145,6 +145,9 @@ public class UIImage :Image,IUIDrawTarget
     {
         if (sourceTexture == null)
         {
+            if (sourceSprite == null && cachedSprite == null && cachedTexture == null && cachedTextureIndex == -1)
+                return -1;
+
             cachedSprite = sourceSprite;
             cachedTexture = null;
             cachedTextureVersion = manager.TextureVersion;
