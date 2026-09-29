@@ -5,5 +5,5 @@
 
 ## 2. Verification
 
-- [ ] 2.1 Run package/layout/EditMode validation.
-- [ ] 2.2 Run Xiaomi 10 Release IL2CPP and compare texture lookup, dispatch, BuildMesh, and generation stage changes.
+- [x] 2.1 Run package/layout/EditMode validation.
+- [x] 2.2 Run Xiaomi 10 Release IL2CPP and compare texture lookup, dispatch, BuildMesh, and generation stage changes.

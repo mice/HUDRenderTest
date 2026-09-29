@@ -1,6 +1,6 @@
 # HUDRenderPackage TODO
 
-> 当前未闭环事项。更新时间：2026-09-27。`[ ]` 表示仍需执行或重新验证；完成项已归档到 roadmap 节点，不留在活动队列。每个活动条目必须绑定 roadmap 节点；节点完成时，先整体审视本文件，再把已完成条目写入节点记录并从这里清理。
+> 当前未闭环事项。更新时间：2026-09-29。`[ ]` 表示仍需执行或重新验证；完成项已归档到 roadmap 节点，不留在活动队列。每个活动条目必须绑定 roadmap 节点；节点完成时，先整体审视本文件，再把已完成条目写入节点记录并从这里清理。
 
 ## 节点绑定规则
 
@@ -98,3 +98,4 @@
 
   - **BuildMesh 内部阶段复测（2026-09-29）**：`73d0ebb` Xiaomi 10 Burst 全量刷新中位数为 `10.73 ms`，generation `9.6299 ms`，BuildMesh `8.2695 ms`。其中 `DoGenerate` `6.5659 ms`，UGUI fallback `5.3727 ms`，Transform `1.2709 ms`，setup `0.1346 ms`，mesh data 初始化 `0.3490 ms`，循环 dispatch `0.7864 ms`；Simple fast path 为 0，因为 runner 的 UIImage 没有 Sprite。下一步先验证无 Sprite 标准 Image 的 direct quad 是否与 UGUI 等价，再决定是否绕过 fallback。报告：[BuildMesh stages](../openspec/changes/profile-buildmesh-stages/evidence/hud_rc_20260929_143324_438_a5b1c21f.json)。
   - **无 Sprite direct quad 真机复测（2026-09-29）**：`a2e45e4` Xiaomi 10 Release/IL2CPP/ARM64/Vulkan 已通过等价性测试并实测。Burst generation `9.6299→9.2163 ms`（下降 4.3%），BuildMesh `8.2695→7.9520 ms`（下降 3.8%），DoGenerate `6.5659→6.2409 ms`（下降 4.9%）；UGUI fallback `5.3727→0 ms`，但 direct Simple path 为 `5.1265 ms`，说明写入 mesh data 的成本接近原 UGUI fallback。下一步拆分并优化 `UIMeshData.WriteSimpleQuad` / `UIMeshDataX.WriteSimpleQuad`。报告：[null-sprite direct quad](../openspec/changes/optimize-uiimage-null-sprite/evidence/hud_rc_20260929_144534_928_8e236d8b.json)。
+  - **稳定 null texture cache 真机复测（2026-09-29）**：`d6bdecb` Xiaomi 10 Release/IL2CPP/ARM64/Vulkan sourceStatus=`clean`。Burst refresh generation median `8.4972 ms`、BuildMesh `7.3626 ms`、DoGenerate `5.6793 ms`、Simple path `4.8352 ms`、Transform `1.1600 ms`、merge `1.1793 ms`；相对 `a2e45e4` generation 下降约 7.8%，BuildMesh 下降约 7.4%。稳定 null texture early return 和 BuildMesh 内 Transform 复用有效，但当前 PERF-04 仍超过整体 `1 ms` 预算，下一步继续拆分并优化 BuildMesh/direct quad write。证据：[null-texture cache](../openspec/changes/optimize-uiimage-null-texture/evidence.md)。
