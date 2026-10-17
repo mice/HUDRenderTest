@@ -5,8 +5,10 @@ param(
     [string]$ApkPath = 'Builds/HudRc/Xiaomi10/HUDRenderTest.apk',
     [string]$UnityExe = 'C:\Program Files\Unity\Hub\Editor\2022.3.53f1\Editor\Unity.exe',
     [string]$Adb = 'adb',
+    [string]$ProjectPath = '',
+    [string]$ApplicationId = '',
     [switch]$Development,
-    [switch]$UseSlim,
+    [Alias('Slim')][switch]$UseSlim,
     [switch]$ProfileQuadWrites,
     [switch]$DisableBuildMeshDiagnostics,
     [switch]$GenerationBatch,
@@ -24,7 +26,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-$projectPath = Join-Path $repoRoot 'HUDRenderTestSample'
+if ([string]::IsNullOrWhiteSpace($ProjectPath)) {
+    $projectPath = Join-Path $repoRoot 'HUDRenderTestSample'
+} else {
+    $projectPath = (Resolve-Path -LiteralPath $ProjectPath).Path
+}
 $apkAbsolute = [IO.Path]::GetFullPath((Join-Path $repoRoot $ApkPath))
 $logDir = Join-Path $projectPath 'Logs/HudRcAndroid'
 New-Item -ItemType Directory -Path $logDir -Force | Out-Null
@@ -47,6 +53,7 @@ if ($Action -eq 'Build') {
     $logPath = Join-Path $logDir ('Build-' + (Get-Date -Format 'yyyyMMdd_HHmmss') + '.log')
     $args = @('-batchmode','-quit','-projectPath',$projectPath,'-executeMethod','HudRcSceneBuilder.BuildAndroidBatch','-hudRcAndroidOutput',$apkAbsolute,'-hudRcCount',"$HolderCount",'-hudRcSamples',"$SampleFrames",'-hudRcWarmup',"$WarmupFrames",'-hudRcFrameRate',"$TargetFrameRate",'-logFile',$logPath)
     if ($Development) { $args += '-hudRcDevelopment' }
+    if (-not [string]::IsNullOrWhiteSpace($ApplicationId)) { $args += @('-hudRcApplicationId', $ApplicationId) }
     if ($UseSlim) { $args += '-hudRcSlim' }
     if ($ProfileQuadWrites) { $args += '-hudRcProfileQuadWrites' }
     if ($DisableBuildMeshDiagnostics) { $args += '-hudRcDisableBuildMeshDiagnostics' }

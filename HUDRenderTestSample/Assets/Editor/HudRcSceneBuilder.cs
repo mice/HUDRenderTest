@@ -112,6 +112,7 @@ public static class HudRcSceneBuilder
         var androidGroup = BuildPipeline.GetBuildTargetGroup(BuildTarget.Android);
         var previousBackend = PlayerSettings.GetScriptingBackend(androidGroup);
         var previousArchitectures = PlayerSettings.Android.targetArchitectures;
+        var previousApplicationId = PlayerSettings.GetApplicationIdentifier(androidGroup);
         int exitCode = 1;
         try
         {
@@ -135,7 +136,8 @@ public static class HudRcSceneBuilder
             runner.configuration.holderCount = ReadInt("-hudRcCount", runner.configuration.holderCount);
             runner.configuration.sampleFrames = ReadInt("-hudRcSamples", runner.configuration.sampleFrames);
             runner.configuration.warmupFrames = ReadInt("-hudRcWarmup", runner.configuration.warmupFrames);
-            runner.configuration.targetFrameRate = ReadInt("-hudRcFrameRate", runner.configuration.targetFrameRate);
+            runner.configuration.targetFrameRate = ReadInt("-hudRcFrameRate",
+                ReadInt("-hudRcTargetFrameRate", runner.configuration.targetFrameRate));
             runner.configuration.Validate();
             SetSourceMetadata(runner);
             // Include references for optional request-file profiles without editing the committed scene.
@@ -147,6 +149,7 @@ public static class HudRcSceneBuilder
             var buildOptions = ReadBool("-hudRcDevelopment", false)
                 ? BuildOptions.Development | BuildOptions.ConnectWithProfiler
                 : BuildOptions.None;
+            PlayerSettings.SetApplicationIdentifier(androidGroup, ReadString("-hudRcApplicationId", previousApplicationId));
             PlayerSettings.SetScriptingBackend(androidGroup, ScriptingImplementation.IL2CPP);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             var settings = new BuildPlayerOptions
@@ -170,6 +173,7 @@ public static class HudRcSceneBuilder
         {
             PlayerSettings.SetScriptingBackend(androidGroup, previousBackend);
             PlayerSettings.Android.targetArchitectures = previousArchitectures;
+            PlayerSettings.SetApplicationIdentifier(androidGroup, previousApplicationId);
             if (temporaryScenePath != null) AssetDatabase.DeleteAsset(temporaryScenePath);
         }
         EditorApplication.Exit(exitCode);

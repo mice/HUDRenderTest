@@ -49,3 +49,7 @@ See [full device results and next-task decision](evidence/android-results.md), [
 - Original scene and ProjectSettings remain unchanged. The Android build helper uses a temporary scene copy and exposes explicit matrix parameters. All 12 implementation/test/dependency hashes in the earlier local-validation record still match; the four APK builds also compiled the changed Editor helper.
 
 Task 2.2 and this change are now 5/5. Next, close the missing full BuildMesh stage-accounting/disabled warmed-allocation verification before reviewing both profiling changes for spec sync/archive. Investigate Slim merge-fill before speculative quad-write optimization. PERF-04 remains open: the diagnostic scene exceeds the 1 ms reference, scoped device allocation is unavailable, and this dirty snapshot is not a release candidate.
+
+## Earlier measurement conclusion
+
+The [2026-10-17 profiling conclusion](historical-results-2026-10-17.md) preserves the earlier Managed/Slim repeated measurements and their limitations. It uses older instrumentation and is historical evidence; the measurement validity repair and later device verification above remain authoritative. Its raw artifacts are retained locally.

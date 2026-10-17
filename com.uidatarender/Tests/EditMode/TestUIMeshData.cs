@@ -124,16 +124,40 @@ public class TestUIMeshData
     [Category("UT_MESH_025")]
     public void WriteSimpleQuad_WritesCanonicalManagedGeometry()
     {
+        bool previousDiagnostics = BuildMeshDiagnostics.Enabled;
+        bool previousQuadProfiling = BuildMeshDiagnostics.ProfileSimpleQuadWrites;
         var data = new UIMeshData { TextureIndex = 3 };
-        data.WriteSimpleQuad(new Vector4(-2, -1, 2, 1), new Vector4(.1f, .2f, .8f, .9f), new Color32(10, 20, 30, 40));
+        try
+        {
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = true;
+            foreach (bool diagnosticsEnabled in new[] { true, false })
+            {
+                BuildMeshDiagnostics.Enabled = diagnosticsEnabled;
+                data.WriteSimpleQuad(new Vector4(-2, -1, 2, 1), new Vector4(.1f, .2f, .8f, .9f), new Color32(10, 20, 30, 40));
 
-        Assert.AreEqual(4, data.mesh.VertexCount);
-        Assert.AreEqual(6, data.mesh.IndicesCount);
-        CollectionAssert.AreEqual(new[] { 0, 1, 2, 2, 3, 0 }, data.triangles);
-        Assert.AreEqual(new Vector3(-2, -1, 0), data.vertList[0]);
-        Assert.AreEqual(new Vector3(2, 1, 0), data.vertList[2]);
-        Assert.AreEqual(new Vector4(.8f, .9f, 3, 0), data.uvs[2]);
-        Assert.AreEqual(new Color32(10, 20, 30, 40), data.colors[3]);
+                Assert.AreEqual(4, data.mesh.VertexCount);
+                Assert.AreEqual(6, data.mesh.IndicesCount);
+                CollectionAssert.AreEqual(new[] { 0, 1, 2, 2, 3, 0 }, data.triangles);
+                Assert.AreEqual(new Vector3(-2, -1, 0), data.vertList[0]);
+                Assert.AreEqual(new Vector3(2, 1, 0), data.vertList[2]);
+                Assert.AreEqual(new Vector4(.8f, .9f, 3, 0), data.uvs[2]);
+                Assert.AreEqual(new Color32(10, 20, 30, 40), data.colors[3]);
+                var timings = data.LastSimpleQuadWriteTimings;
+                Assert.That(timings.StorageMs, Is.GreaterThanOrEqualTo(0));
+                Assert.That(timings.VertexMs, Is.GreaterThanOrEqualTo(0));
+                Assert.That(timings.UvMs, Is.GreaterThanOrEqualTo(0));
+                Assert.That(timings.ColorMs, Is.GreaterThanOrEqualTo(0));
+                Assert.That(timings.IndexMs, Is.GreaterThanOrEqualTo(0));
+                Assert.AreEqual(diagnosticsEnabled ? 1 : 0, timings.RecordedWrites);
+                if (!diagnosticsEnabled) Assert.AreEqual(default(SimpleQuadWriteTimings), timings);
+            }
+        }
+        finally
+        {
+            data.Dispose();
+            BuildMeshDiagnostics.Enabled = previousDiagnostics;
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = previousQuadProfiling;
+        }
     }
 
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_024.md
