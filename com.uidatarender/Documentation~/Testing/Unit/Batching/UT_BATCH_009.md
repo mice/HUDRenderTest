@@ -2,7 +2,7 @@
 testId: UT_BATCH_009
 module: Batching
 testType: EditMode
-target: MergeBatcher
+target: Holder batching and scheduling
 testFile: Tests/EditMode/TestHolderBatchRenderer.cs
 testMethod: Rebuild_GeometryOnlyChangesReusePlan_AndMatchColdOutput
 status: active

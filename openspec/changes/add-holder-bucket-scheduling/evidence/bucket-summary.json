@@ -1,0 +1,600 @@
+{
+  "sourceFingerprint": "610BC70253BD8340D4B0E5C757EDA7115799F833427081BE13C831AF17241FD4",
+  "validation": "passed",
+  "runs": [
+    {
+      "order": 1,
+      "variant": "bucket-single",
+      "frames": 9006,
+      "burstRefresh": {
+        "count": 100,
+        "median": 2.2771,
+        "p95": 2.388,
+        "max": 2.4706
+      },
+      "burstGeneration": {
+        "count": 100,
+        "median": 1.7166000000000001,
+        "p95": 1.831,
+        "max": 1.9029000000000003
+      },
+      "burstMerge": {
+        "count": 100,
+        "median": 0.5477,
+        "p95": 0.5944,
+        "max": 0.6444
+      },
+      "burstDrawSubmission": {
+        "count": 100,
+        "median": 0.0084,
+        "p95": 0.0102,
+        "max": 0.0242
+      },
+      "twoFrameUpdate": {
+        "count": 100,
+        "median": 2.2961,
+        "p95": 2.4062,
+        "max": 2.49
+      },
+      "ordinaryRefresh": {
+        "count": 3100,
+        "median": 0.8064,
+        "p95": 0.951,
+        "max": 2.8044
+      },
+      "partialUpdate": {
+        "count": 3000,
+        "median": 0.8055,
+        "p95": 0.8754,
+        "max": 2.8044
+      },
+      "over1_5ms": 100,
+      "allocationCounterAvailable": false,
+      "batteryBefore": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 302"
+      ],
+      "batteryAfter": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 307"
+      ],
+      "thermalBefore": [
+        "Thermal Status: 0"
+      ],
+      "thermalAfter": [
+        "Thermal Status: 0"
+      ],
+      "burstHudCpu": {
+        "count": 100,
+        "median": 2.3161,
+        "p95": 2.4289,
+        "max": 2.5162
+      },
+      "twoFrameHudCpu": {
+        "count": 100,
+        "median": 2.3732,
+        "p95": 2.4933,
+        "max": 2.5755
+      },
+      "maxRequestDelay": 0,
+      "requestCount": 103600,
+      "outputChecksums": [
+        "37F226B7F2D3EC6E146C75E1E2285D1E77A3319E14487921610E0FC255C67FDB",
+        "514BB70BA3CCCF658AEF2F07547569412FD3381D739A51C39AFA67523AD2E1BB",
+        "C4E32CE5A29E7068F9B329D8C6CA91E62E825DC14653E56466B365FB766B618C"
+      ],
+      "initializationMs": 6.3217,
+      "ownedMeshes": 2,
+      "ownedUnityObjectBytes": 2928,
+      "ownedUnityObjectBytesAvailable": true
+    },
+    {
+      "order": 2,
+      "variant": "bucket-same",
+      "frames": 9006,
+      "burstRefresh": {
+        "count": 100,
+        "median": 2.3839,
+        "p95": 2.5087,
+        "max": 2.5916
+      },
+      "burstGeneration": {
+        "count": 100,
+        "median": 1.7636000000000003,
+        "p95": 1.9009,
+        "max": 1.9848000000000001
+      },
+      "burstMerge": {
+        "count": 100,
+        "median": 0.6039,
+        "p95": 0.6556,
+        "max": 0.7524
+      },
+      "burstDrawSubmission": {
+        "count": 100,
+        "median": 0.0082,
+        "p95": 0.0095,
+        "max": 0.0107
+      },
+      "twoFrameUpdate": {
+        "count": 100,
+        "median": 2.4012,
+        "p95": 2.5249,
+        "max": 2.6074
+      },
+      "ordinaryRefresh": {
+        "count": 3100,
+        "median": 0.5558,
+        "p95": 0.9479,
+        "max": 2.5916
+      },
+      "partialUpdate": {
+        "count": 3000,
+        "median": 0.5549,
+        "p95": 0.9105,
+        "max": 2.4582
+      },
+      "over1_5ms": 99,
+      "allocationCounterAvailable": false,
+      "batteryBefore": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 307"
+      ],
+      "batteryAfter": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 312"
+      ],
+      "thermalBefore": [
+        "Thermal Status: 0"
+      ],
+      "thermalAfter": [
+        "Thermal Status: 0"
+      ],
+      "burstHudCpu": {
+        "count": 100,
+        "median": 2.4231,
+        "p95": 2.546,
+        "max": 2.6276
+      },
+      "twoFrameHudCpu": {
+        "count": 100,
+        "median": 2.4798,
+        "p95": 2.6048999999999998,
+        "max": 2.6789
+      },
+      "maxRequestDelay": 0,
+      "requestCount": 103600,
+      "outputChecksums": [
+        "37F226B7F2D3EC6E146C75E1E2285D1E77A3319E14487921610E0FC255C67FDB",
+        "514BB70BA3CCCF658AEF2F07547569412FD3381D739A51C39AFA67523AD2E1BB",
+        "C4E32CE5A29E7068F9B329D8C6CA91E62E825DC14653E56466B365FB766B618C"
+      ],
+      "initializationMs": 7.7131,
+      "ownedMeshes": 4,
+      "ownedUnityObjectBytes": 5856,
+      "ownedUnityObjectBytesAvailable": true
+    },
+    {
+      "order": 3,
+      "variant": "bucket-rotating",
+      "frames": 9006,
+      "burstRefresh": {
+        "count": 200,
+        "median": 1.2353,
+        "p95": 1.3555,
+        "max": 5.3688
+      },
+      "burstGeneration": {
+        "count": 200,
+        "median": 0.9184000000000001,
+        "p95": 1.0352999999999999,
+        "max": 4.2904
+      },
+      "burstMerge": {
+        "count": 200,
+        "median": 0.3138,
+        "p95": 0.3526,
+        "max": 1.0784
+      },
+      "burstDrawSubmission": {
+        "count": 200,
+        "median": 0.0082,
+        "p95": 0.0121,
+        "max": 0.0355
+      },
+      "twoFrameUpdate": {
+        "count": 100,
+        "median": 2.4737,
+        "p95": 2.6583,
+        "max": 9.1281
+      },
+      "ordinaryRefresh": {
+        "count": 3200,
+        "median": 0.5666,
+        "p95": 1.2001,
+        "max": 5.3688
+      },
+      "partialUpdate": {
+        "count": 3000,
+        "median": 0.5634,
+        "p95": 0.7521,
+        "max": 1.681
+      },
+      "over1_5ms": 5,
+      "allocationCounterAvailable": false,
+      "batteryBefore": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 312"
+      ],
+      "batteryAfter": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 315"
+      ],
+      "thermalBefore": [
+        "Thermal Status: 0"
+      ],
+      "thermalAfter": [
+        "Thermal Status: 0"
+      ],
+      "burstHudCpu": {
+        "count": 200,
+        "median": 1.2721,
+        "p95": 1.398,
+        "max": 5.4482
+      },
+      "twoFrameHudCpu": {
+        "count": 100,
+        "median": 2.5457,
+        "p95": 2.7392000000000003,
+        "max": 9.2828
+      },
+      "maxRequestDelay": 1,
+      "requestCount": 103600,
+      "outputChecksums": [
+        "37F226B7F2D3EC6E146C75E1E2285D1E77A3319E14487921610E0FC255C67FDB",
+        "514BB70BA3CCCF658AEF2F07547569412FD3381D739A51C39AFA67523AD2E1BB",
+        "C4E32CE5A29E7068F9B329D8C6CA91E62E825DC14653E56466B365FB766B618C"
+      ],
+      "initializationMs": 7.1356,
+      "ownedMeshes": 4,
+      "ownedUnityObjectBytes": 5856,
+      "ownedUnityObjectBytesAvailable": true
+    },
+    {
+      "order": 4,
+      "variant": "bucket-rotating",
+      "frames": 9006,
+      "burstRefresh": {
+        "count": 200,
+        "median": 1.2265,
+        "p95": 1.3413,
+        "max": 1.4607
+      },
+      "burstGeneration": {
+        "count": 200,
+        "median": 0.9108,
+        "p95": 1.0158,
+        "max": 1.1360000000000001
+      },
+      "burstMerge": {
+        "count": 200,
+        "median": 0.31,
+        "p95": 0.3434,
+        "max": 0.4835
+      },
+      "burstDrawSubmission": {
+        "count": 200,
+        "median": 0.0083,
+        "p95": 0.0105,
+        "max": 0.0147
+      },
+      "twoFrameUpdate": {
+        "count": 100,
+        "median": 2.4375999999999998,
+        "p95": 2.6255,
+        "max": 2.6939
+      },
+      "ordinaryRefresh": {
+        "count": 3200,
+        "median": 0.5625,
+        "p95": 1.1838,
+        "max": 2.9053
+      },
+      "partialUpdate": {
+        "count": 3000,
+        "median": 0.5598,
+        "p95": 0.7432,
+        "max": 2.9053
+      },
+      "over1_5ms": 0,
+      "allocationCounterAvailable": false,
+      "batteryBefore": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 315"
+      ],
+      "batteryAfter": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 317"
+      ],
+      "thermalBefore": [
+        "Thermal Status: 0"
+      ],
+      "thermalAfter": [
+        "Thermal Status: 0"
+      ],
+      "burstHudCpu": {
+        "count": 200,
+        "median": 1.2628,
+        "p95": 1.3811,
+        "max": 1.504
+      },
+      "twoFrameHudCpu": {
+        "count": 100,
+        "median": 2.5113000000000003,
+        "p95": 2.6950000000000003,
+        "max": 2.7765
+      },
+      "maxRequestDelay": 1,
+      "requestCount": 103600,
+      "outputChecksums": [
+        "37F226B7F2D3EC6E146C75E1E2285D1E77A3319E14487921610E0FC255C67FDB",
+        "514BB70BA3CCCF658AEF2F07547569412FD3381D739A51C39AFA67523AD2E1BB",
+        "C4E32CE5A29E7068F9B329D8C6CA91E62E825DC14653E56466B365FB766B618C"
+      ],
+      "initializationMs": 7.057,
+      "ownedMeshes": 4,
+      "ownedUnityObjectBytes": 5856,
+      "ownedUnityObjectBytesAvailable": true
+    },
+    {
+      "order": 5,
+      "variant": "bucket-same",
+      "frames": 9006,
+      "burstRefresh": {
+        "count": 100,
+        "median": 2.3559,
+        "p95": 2.4424,
+        "max": 2.9664
+      },
+      "burstGeneration": {
+        "count": 100,
+        "median": 1.7570999999999999,
+        "p95": 1.8294,
+        "max": 2.3837
+      },
+      "burstMerge": {
+        "count": 100,
+        "median": 0.5932,
+        "p95": 0.6446000000000001,
+        "max": 0.7762
+      },
+      "burstDrawSubmission": {
+        "count": 100,
+        "median": 0.0086,
+        "p95": 0.0108,
+        "max": 0.0123
+      },
+      "twoFrameUpdate": {
+        "count": 100,
+        "median": 2.3759,
+        "p95": 2.465,
+        "max": 2.984
+      },
+      "ordinaryRefresh": {
+        "count": 3100,
+        "median": 0.559,
+        "p95": 0.9412,
+        "max": 2.9664
+      },
+      "partialUpdate": {
+        "count": 3000,
+        "median": 0.5572,
+        "p95": 0.9038,
+        "max": 1.8021
+      },
+      "over1_5ms": 99,
+      "allocationCounterAvailable": false,
+      "batteryBefore": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 317"
+      ],
+      "batteryAfter": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 317"
+      ],
+      "thermalBefore": [
+        "Thermal Status: 0"
+      ],
+      "thermalAfter": [
+        "Thermal Status: 0"
+      ],
+      "burstHudCpu": {
+        "count": 100,
+        "median": 2.3961,
+        "p95": 2.4838,
+        "max": 3.0091
+      },
+      "twoFrameHudCpu": {
+        "count": 100,
+        "median": 2.4546,
+        "p95": 2.55,
+        "max": 3.0647
+      },
+      "maxRequestDelay": 0,
+      "requestCount": 103600,
+      "outputChecksums": [
+        "37F226B7F2D3EC6E146C75E1E2285D1E77A3319E14487921610E0FC255C67FDB",
+        "514BB70BA3CCCF658AEF2F07547569412FD3381D739A51C39AFA67523AD2E1BB",
+        "C4E32CE5A29E7068F9B329D8C6CA91E62E825DC14653E56466B365FB766B618C"
+      ],
+      "initializationMs": 7.0778,
+      "ownedMeshes": 4,
+      "ownedUnityObjectBytes": 5856,
+      "ownedUnityObjectBytesAvailable": true
+    },
+    {
+      "order": 6,
+      "variant": "bucket-single",
+      "frames": 9006,
+      "burstRefresh": {
+        "count": 100,
+        "median": 2.2656,
+        "p95": 2.3795,
+        "max": 2.505
+      },
+      "burstGeneration": {
+        "count": 100,
+        "median": 1.7077999999999998,
+        "p95": 1.8290999999999997,
+        "max": 1.8668999999999998
+      },
+      "burstMerge": {
+        "count": 100,
+        "median": 0.5425,
+        "p95": 0.5982,
+        "max": 0.8005
+      },
+      "burstDrawSubmission": {
+        "count": 100,
+        "median": 0.0084,
+        "p95": 0.011,
+        "max": 0.0127
+      },
+      "twoFrameUpdate": {
+        "count": 100,
+        "median": 2.2831,
+        "p95": 2.3977000000000004,
+        "max": 2.5221
+      },
+      "ordinaryRefresh": {
+        "count": 3100,
+        "median": 0.7901,
+        "p95": 0.9463,
+        "max": 2.505
+      },
+      "partialUpdate": {
+        "count": 3000,
+        "median": 0.7894,
+        "p95": 0.8633,
+        "max": 1.3431
+      },
+      "over1_5ms": 100,
+      "allocationCounterAvailable": false,
+      "batteryBefore": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 317"
+      ],
+      "batteryAfter": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 315"
+      ],
+      "thermalBefore": [
+        "Thermal Status: 0"
+      ],
+      "thermalAfter": [
+        "Thermal Status: 0"
+      ],
+      "burstHudCpu": {
+        "count": 100,
+        "median": 2.3047,
+        "p95": 2.4235,
+        "max": 2.5468
+      },
+      "twoFrameHudCpu": {
+        "count": 100,
+        "median": 2.3661,
+        "p95": 2.4854000000000003,
+        "max": 2.599
+      },
+      "maxRequestDelay": 0,
+      "requestCount": 103600,
+      "outputChecksums": [
+        "37F226B7F2D3EC6E146C75E1E2285D1E77A3319E14487921610E0FC255C67FDB",
+        "514BB70BA3CCCF658AEF2F07547569412FD3381D739A51C39AFA67523AD2E1BB",
+        "C4E32CE5A29E7068F9B329D8C6CA91E62E825DC14653E56466B365FB766B618C"
+      ],
+      "initializationMs": 16.3012,
+      "ownedMeshes": 2,
+      "ownedUnityObjectBytes": 2928,
+      "ownedUnityObjectBytesAvailable": true
+    },
+    {
+      "order": 7,
+      "variant": "bucket-legacy",
+      "frames": 9000,
+      "burstRefresh": {
+        "count": 100,
+        "median": 2.168,
+        "p95": 2.2794,
+        "max": 2.3418
+      },
+      "burstGeneration": {
+        "count": 100,
+        "median": 1.6185,
+        "p95": 1.7426,
+        "max": 1.7969
+      },
+      "burstMerge": {
+        "count": 100,
+        "median": 0.5429,
+        "p95": 0.5933,
+        "max": 0.6269
+      },
+      "burstDrawSubmission": {
+        "count": 100,
+        "median": 0.0125,
+        "p95": 0.0145,
+        "max": 0.0175
+      },
+      "twoFrameUpdate": {
+        "count": 100,
+        "median": 2.1696,
+        "p95": 2.2813,
+        "max": 2.3436
+      },
+      "ordinaryRefresh": {
+        "count": 3100,
+        "median": 0.7435999999999999,
+        "p95": 0.9036,
+        "max": 2.5595
+      },
+      "partialUpdate": {
+        "count": 3000,
+        "median": 0.7427,
+        "p95": 0.8270000000000001,
+        "max": 2.5595
+      },
+      "over1_5ms": 100,
+      "allocationCounterAvailable": false,
+      "batteryBefore": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 315"
+      ],
+      "batteryAfter": [
+        "  status: 5",
+        "  level: 100",
+        "  temperature: 310"
+      ],
+      "thermalBefore": [
+        "Thermal Status: 0"
+      ],
+      "thermalAfter": [
+        "Thermal Status: 0"
+      ]
+    }
+  ],
+  "limitations": "Local 1.5 ms p95 target only. RC/GC acceptance remains open. Owned Unity object bytes exclude managed scratch/queue buffers and external assets."
+}

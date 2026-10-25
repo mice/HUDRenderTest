@@ -2,7 +2,7 @@
 testId: UT_BATCH_006
 module: Batching
 testType: EditMode
-target: MergeBatcher
+target: Holder batching and scheduling
 testFile: Tests/EditMode/TestMergeBatcher.cs
 testMethod: GetBatchTextures_ReusesBufferAndPreservesSlotOrder
 status: active

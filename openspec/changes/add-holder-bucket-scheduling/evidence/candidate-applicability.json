@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-25",
+  "sourceFingerprint": "610BC70253BD8340D4B0E5C757EDA7115799F833427081BE13C831AF17241FD4",
+  "unchangedSourceFiles": 1005,
+  "postCaptureDocumentationUpdates": [
+    "com.uidatarender/CHANGELOG.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Batching/UT_BATCH_020.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Batching/UT_BATCH_021.md"
+  ],
+  "functionalSourceUnchanged": true,
+  "userManifestPreserved": true
+}

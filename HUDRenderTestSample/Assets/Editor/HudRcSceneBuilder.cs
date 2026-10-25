@@ -121,6 +121,10 @@ public static class HudRcSceneBuilder
             runner.configuration.profileQuadWrites = ReadBool("-hudRcProfileQuadWrites", false);
             runner.configuration.disableBuildMeshDiagnostics = ReadBool("-hudRcDisableBuildMeshDiagnostics", false);
             runner.configuration.useGenerationBatch = ReadBool("-hudRcGenerationBatch", false);
+            string bucketStrategy = ReadString("-hudRcBucketStrategy", "Legacy");
+            runner.configuration.useBucketScheduling = bucketStrategy != "Legacy";
+            if (runner.configuration.useBucketScheduling)
+                runner.configuration.bucketStrategy = (HolderBucketStrategy)Enum.Parse(typeof(HolderBucketStrategy), bucketStrategy, true);
             runner.configuration.spriteBacked = ReadBool("-hudRcSpriteBacked", false);
             runner.configuration.forceUguiFallback = ReadBool("-hudRcForceUguiFallback", false);
             runner.configuration.holderCount = ReadInt("-hudRcCount", runner.configuration.holderCount);

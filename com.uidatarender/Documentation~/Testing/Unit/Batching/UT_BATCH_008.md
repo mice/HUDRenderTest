@@ -2,7 +2,7 @@
 testId: UT_BATCH_008
 module: Batching
 testType: EditMode
-target: MergeBatcher
+target: Holder batching and scheduling
 testFile: Tests/EditMode/TestHolderBatchRenderer.cs
 testMethod: Plan_InvalidatesHolderOrder_AndPreservesLocalSlotMap
 status: active

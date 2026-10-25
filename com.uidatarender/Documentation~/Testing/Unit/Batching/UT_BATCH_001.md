@@ -2,7 +2,7 @@
 testId: UT_BATCH_001
 module: Batching
 testType: EditMode
-target: MergeBatcher
+target: Holder batching and scheduling
 testFile: Tests/EditMode/TestHolderBatchRenderer.cs
 testMethod: Rebuild_RemapsGlobalSlotsToBatchLocalSlots
 status: active

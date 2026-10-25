@@ -1,6 +1,6 @@
 ## Context
 
-状态：**探索已收敛为实施方案，尚未实现分桶**。用户接受 256 holders / 128 容量 / 两帧轮转及后一桶额外一帧延迟。当前 128-holder 同步查询复用的 Mi 10 p95 为 1.2971 / 1.2310 ms；证据见 [优化归档](../archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。这是局部结果，不能外推为双桶已达标。历史带分段诊断的 7 ms / 3.75 ms 数据不再用作新方案的生产耗时基线。
+状态：**分桶实现、本地验证及同源真机对照完成（10/10）**。用户接受 256 holders / 128 容量 / 两帧轮转及后一桶额外一帧延迟。当前 128-holder 同步查询复用的 Mi 10 p95 为 1.2971 / 1.2310 ms；证据见 [优化归档](../archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。这是局部结果，不能外推为双桶已达标。历史带分段诊断的 7 ms / 3.75 ms 数据不再用作新方案的生产耗时基线。
 
 代码依据：`DataPrefabHolder.BuildMesh` 执行生成；`PrefabHolderExt.SetWidth/SetSprite/SetText` 立即生成；`HolderBatchRenderer.Rebuild` 填充/上传全部纹理 batches；`MergeBatcher.Plan` 使用 first-fit，会将后续 holder 放回早先 batch；`HolderNotifier` 只处理纹理槽变化，`HolderLifecycle` 的 HashSet 不提供绘制顺序。`HolderBatchRenderer.Rebuild` 会逐个 Clear/上传 mesh，故异常后不能假定原输出仍完整。
 
@@ -8,7 +8,7 @@
 
 **Goals:** 在生成之前排队，稳定两桶、公平轮转、保留旧可见状态；以确定的透明绘制顺序和明确资源失效边界完成整条刷新链路；测量每帧更新成本、两帧总成本和更新年龄。
 
-**Non-Goals:** 本轮不写运行时代码；不把同步 API 静默改为异步；不引入 Burst/Job；首版不承诺 SRP、多 camera 与任意外部透明物体交错排序，也不承诺任意复杂 holder 都能装进一个物理 mesh。
+**Non-Goals:** 不把同步 API 静默改为异步；不引入 Burst/Job；首版不承诺 SRP、多 camera 与任意外部透明物体交错排序，也不承诺任意复杂 holder 都能装进一个物理 mesh。
 
 ## Decisions
 
@@ -20,7 +20,7 @@
 
 ### 2. 状态快照与 API 契约
 
-拟新增独立的 `HolderBucketScheduler<TState>` 与 `IHolderStateApplier<TState>`；具体命名可在实施时调整，以下语义固定。
+已新增独立的 `HolderBucketScheduler<TState>` 与 `IHolderStateApplier<TState>`；具体命名可在实施时调整，以下语义固定。
 
 | 操作 | 约定 |
 |---|---|
@@ -29,7 +29,7 @@
 | Tick(frame) | 同一主线程、每帧至多一次；普通模式刷新最多一个脏桶，返回执行/待处理/版本/延迟统计 |
 | FlushAll(reason) | 初始化、成员/顺序、模板层级、资源失效等同步刷新；单独报告原因、数量和耗时 |
 | RecordDraws / Draw adapter | 提交全部 front 网格，独立于本帧哪个桶发生刷新 |
-| Dispose | 解除 camera 命令缓冲与事件订阅，销毁拥有的 mesh/material，释放状态引用；不销毁外部 holder/纹理 |
+| Dispose | 先 Dispose 独立拥有 camera 命令缓冲与订阅的 HolderBucketCameraPass，再 Dispose scheduler 以销毁 mesh/material 和释放状态引用；不销毁外部 holder/纹理 |
 
 `TState : struct` 不等于自动深拷贝：契约要求纯值字段，或由调用方保证寿命的不可变资产引用；禁止捕获共享模板、可变数组/List 或每请求闭包。首个 Sample 状态使用宽度、颜色和位置等值字段。模板/资源布局在普通 epoch 内固定，动态 Sprite/Text 导致资源或拓扑变化时走显式 FlushAll，不宣称首版已经支持通用 UI 属性异步编辑。
 
@@ -96,8 +96,14 @@ F+1 Tick：生成/上传 B(v2)；绘制 A(v1) + B(v2)
 
 ## Migration Plan
 
-探索 1.4 的接口与语义决策已完成；下一任务为 2.1 的调度器/状态快照实现，然后 2.2 的 front/back、顺序与资源屏障，再做测试和同源真机对照。所有新行为 opt-in，现有同步 API 和默认 renderer 不变。若视觉或资源契约无法满足，不以仅数值性能达标替代正确性。
+任务 2.1–3.1 的调度器、front/back、顺序、资源屏障、测试及报告已完成；同源真机对照也已完成，局部 1.5 ms p95 目标通过。所有新行为 opt-in，现有同步 API 和默认 renderer 不变。若视觉或资源契约无法满足，不以仅数值性能达标替代正确性。
 
 ## Deferred scope
 
 SRP、多 camera、与外部透明物体交错、任意 Sprite/Text 资源在普通延迟路径的生命周期、单 holder 超槽拆分和超过 256 的延迟契约均后续处理。本轮无阻止首版实施的产品问题；排序接入、内存和双桶预算是明确的实施验证门槛。
+
+## Implementation checkpoint (2026-10-25)
+
+任务 2.1–3.1 已实现。Rotating 是默认延迟策略；SingleBucket 和 SameFrame 是使用相同状态/发布/绘制路径的同步对照。相机 pass 在 pre-cull 检查发布版本，必要时重新记录命令，避免换版后仍引用旧 mesh。Sample 在状态准备前开始计时，单列 telemetry 与绘制提交；记录逐请求完成、每模式两个 drain 帧和最终几何 SHA256。初始化及双份 mesh/material 计数、Unity 对象内存单独报告，内存口径不含托管 scratch/queue 或外部资产。
+
+EditMode 161/161、D3D11（RTX 3050 Ti）PlayMode 31/31 通过；生产 shader 下的 128/129 跨桶透明覆盖、移动 bounds、A/B/A 连续分批和相机命令寿命已验证。六轮主对照及一轮旧绘制控制已完成；轮转 p95 为 1.3555 / 1.3413 ms，局部 1.5 ms p95 目标通过。单次峰值 5.3688 ms 和两帧总成本均保留，原 RC 整体未通过；详见 [结果](evidence/bucket-results.md)。

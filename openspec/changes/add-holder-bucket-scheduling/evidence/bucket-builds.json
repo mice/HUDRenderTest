@@ -1,0 +1,36 @@
+{
+  "builds": [
+    {
+      "variant": "bucket-single",
+      "strategy": "SingleBucket",
+      "sha256": "82A0770D1B392D5ACFB4CA6EAE577996844C1A580B507FB16EF43C29D482D036",
+      "sourceFingerprint": "610BC70253BD8340D4B0E5C757EDA7115799F833427081BE13C831AF17241FD4",
+      "sourceManifest": "bucket-sources.sha256",
+      "originalManifest": "Build-20261025_221539-sources.sha256"
+    },
+    {
+      "variant": "bucket-same",
+      "strategy": "SameFrame",
+      "sha256": "3745934429B64048DFDA73DC9E49773A52A3D69B6AA2FA9360B6D60040A4EF01",
+      "sourceFingerprint": "610BC70253BD8340D4B0E5C757EDA7115799F833427081BE13C831AF17241FD4",
+      "sourceManifest": "bucket-sources.sha256",
+      "originalManifest": "Build-20261025_222243-sources.sha256"
+    },
+    {
+      "variant": "bucket-rotating",
+      "strategy": "Rotating",
+      "sha256": "B430AA9BF5012FA39E8A9108FB274C676B927B1842DF7C2994CC3B9DAB31075D",
+      "sourceFingerprint": "610BC70253BD8340D4B0E5C757EDA7115799F833427081BE13C831AF17241FD4",
+      "sourceManifest": "bucket-sources.sha256",
+      "originalManifest": "Build-20261025_222648-sources.sha256"
+    },
+    {
+      "variant": "bucket-legacy",
+      "strategy": "Legacy",
+      "sha256": "D048BED522A35F22424A454CEBF2BD7B5C3C6B2DBCB9EAEB77549CFC5CB934FE",
+      "sourceFingerprint": "610BC70253BD8340D4B0E5C757EDA7115799F833427081BE13C831AF17241FD4",
+      "sourceManifest": "bucket-sources.sha256",
+      "originalManifest": "Build-20261025_223453-sources.sha256"
+    }
+  ]
+}

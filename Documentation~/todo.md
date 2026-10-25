@@ -12,7 +12,7 @@
 ## M5 v0.1.2 治理周期
 
 - [ ] **PERF-04 代表性 HUD 场景性能验收** (`node: M5`, `target: v0.1.2`, `source: hud-rc-performance-acceptance`)
-  - **当前进展（2026-10-25）**：128-holder 同步查询复用已完成四轮 Mi 10 对照，候选两轮各 100 次全量刷新 p95 为 **1.2971 / 1.2310 ms**，满足局部 1.5 ms p95 目标；单次峰值 1.5241 ms 已保留，不承诺硬最大值。两边都关闭分段诊断，查询复用使中位数下降约 37%，并未实现 Burst/SIMD。EditMode 150/150、PlayMode 29/29、治理 179/179 通过。见 [性能证据](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。128-holder 优化已于 2026-10-25 归档；分桶状态/API/失效和排序设计已完成（4/10），下一步实施 2.1 状态队列与公平调度，再接入 2×128 两帧轮转；设备 GC、原 RC 矩阵和发布证据仍未闭环，PERF-04 继续开放。
+  - **当前进展（2026-10-25）**：128-holder 查询复用优化已归档；2×128 显式分桶已实现并完成同源六轮 Mi 10 对照及旧绘制控制。轮转刷新 p95 **1.3555 / 1.3413 ms**，完成延迟最多一帧，满足局部 1.5 ms p95 目标；峰值 **5.3688 ms**，不承诺硬最大值，两帧累计成本略增。EditMode 161/161、实际图形 PlayMode 31/31、治理 192/192 通过。见 [分桶证据](../openspec/changes/add-holder-bucket-scheduling/evidence/bucket-results.md)。下一步补代表性资源负载、设备分配计数器和精确候选验证；原 1 ms 参考、完整 RC 矩阵、独立分发/覆盖率/发布证据仍未闭环，PERF-04 继续开放。
   - **当前入口（2026-10-21）**：现有 5 个 change 已同步主规格并归档：4 个优化按完成归档；总体验收以 `inconclusive/environment-limited` 阶段交付归档，2.3/3.4 保持未完成。缓存几何/冷暖完整输出等价和 Sprite 双路径缺口已补齐，EditMode 147/147、PlayMode 28/28、治理 175/175 通过；Sprite 四轮 7,200 帧确认路径命中及等价，但没有可靠总耗时改善。用户确认当前 256-holder 目标未通过，已建立 [分桶探索 change](../openspec/changes/add-holder-bucket-scheduling/proposal.md)，允许 2×128 两帧轮转及后一桶额外一帧延迟。128-holder 两轮整体全量刷新 p95 为 3.7467 / 3.7664 ms；当前优先 [128-holder 生成优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)，目标为同步整体刷新 p95 ≤ 1.5 ms，先量化查询/准备，再评估批量 Burst/SIMD；分桶实施后置。
   - **行动**：基于已归档 `PERF-01` 微基准，新增专用 `Scene_Perf_HUD_RC.unity` 和 Sample runner，记录静态、局部更新、集中刷新下的 regeneration CPU、主线程/帧时间 median/p95、负载、预热、采样环境和分配归因。沿用 `PERF-04`，不重新分配已有后续 ID。
   - **验收**：先通过 Player/目标设备、计数器有效性、重复采样和噪声控制的环境有效性门；再关联 `PERF-01` 正确性与 0 B warm allocation 证据，对照 5 us / 30x 参考形成场景预算、风险和重开条件。环境无效时不得直接判定性能失败或要求用户确认例外。
@@ -79,7 +79,7 @@
   - **来源**：[场景测试说明](Legacy/场景测试说明.md) §3.2、`HUDRenderTestSample/Assets/Scripts/HOT/PerfBaselineRunner.cs`。
 
 - [ ] **JOB-01 量化 Burst SoA 与托管 Job 的收益** (`node: M3`)
-  - **新增后续候选（2026-10-25）**：128-holder 查询复用已满足局部 1.5 ms p95 目标；原生成优化计划中的纯数据 C#/同步 Burst/批量 Job 对照和 ARM64 SIMD 检查后置到本项。尚未实现或测量这些候选，若新工作量/预算需要进一步优化再恢复；当前优先完成分桶计划。
+  - **新增后续候选（2026-10-25）**：128-holder 查询复用已满足局部 1.5 ms p95 目标；原生成优化计划中的纯数据 C#/同步 Burst/批量 Job 对照和 ARM64 SIMD 检查后置到本项。尚未实现或测量这些候选，若新工作量/预算需要进一步优化再恢复；分桶局部目标已通过；若恢复原 1 ms 参考或新负载需要继续降低成本，再启动本项对照。
   - **现状**：Burst 输出等价测试已存在，主渲染路径是否切换仍由性能数据决定。
   - **行动**：在统一基线场景中比较吞吐、主线程时间、Job 调度开销、GC 和不同 mesh 数量；检查低数量场景是否因转换成本反而变慢。
   - **验收**：给出切换阈值或保持兼容路径的理由；不以 `dotnet build` 代替 Unity runtime 性能证据。

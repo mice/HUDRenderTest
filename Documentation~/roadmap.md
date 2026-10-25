@@ -17,6 +17,8 @@
 
 2026-10-25 增量验证：查询复用候选已通过 EditMode 150/150、PlayMode 29/29、治理 179/179。Mi 10 四轮 36,000 帧对照中，128-holder 全量刷新候选 p95 为 1.2971 / 1.2310 ms，满足局部 1.5 ms p95 目标；峰值 1.5241 ms，未宣称硬最大值或 RC 整体验收通过。见 [结果与边界](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。
 
+2026-10-25 分桶交付：显式状态队列、2×128 公平轮转、front/back 发布和透明顺序已验证。EditMode 161/161、D3D11 PlayMode 31/31、治理 192/192；Mi 10 六轮主对照和旧绘制控制共 63,036 帧，轮转 p95 1.3555 / 1.3413 ms，局部 1.5 ms p95 目标通过。峰值 5.3688 ms，仍保留长尾、两帧总成本和设备 GC 限制。见 [完整证据](../openspec/changes/add-holder-bucket-scheduling/evidence/bucket-results.md)。
+
 ## 里程碑
 
 ### M0：UPM 独立分发与可复现验证 —— 已完成
@@ -132,6 +134,8 @@
 
 **现有 change 收尾归档（2026-10-21）**：新增 UT_BATCH_009/010、UT_UIIMAGE_008、UT_PERF_017 后，缓存输出/失效及 Sprite 路径验证缺口关闭。4 个优化分别以 5/5、5/5、6/6、9/9 完成归档；总体验收保留 10/12，以未验收阶段交付归档。五份主规格共 16 条需求、30 个场景已同步。用户确认目标未满足并转入分桶探索，原 12 项 TODO 继续活动，M3/M5、PERF-04 不因归档关闭。新 change 当前仅探索和 128-holder 基线测量，无分桶实现、提交、tag 或发布。
 
+**分桶交付后的 TODO 整体复核（2026-10-25）**：本次以 PERF-04/M5 的子项完成 `add-holder-bucket-scheduling`，目标仍为 0.1.2 Unreleased。完整复核 12 个活动 TODO 后，没有一项可按整体要求关闭：PERF-04 保留原 1 ms/GC/代表性矩阵缺口；GOV-002、GOV-004 保持历史发布与候选 CI 阻塞；VERIFY-02、MAINT-01 继续 M5；VERIFY-01、PERF-02、PERF-03、JOB-01 继续 M3；TMP-01..03 继续 M4。无 TODO ID 被删除或复用。本次局部验收与残余风险见 [分桶结果](../openspec/changes/add-holder-bucket-scheduling/evidence/bucket-results.md)，功能记录于 [0.1.2 Unreleased changelog](../com.uidatarender/CHANGELOG.md)。本地无 release tag，未准备或发布 RC，不宣称 M3/M5 完成。
+
 **发布规则**：`package.json` 是包版本唯一来源；候选使用递增且不可复用的 `0.1.2-rc.N` / `v0.1.2-rc.N`，每个候选绑定精确提交和验证证据。CI 不因 tag 推送自动视为通过；正式 `v0.1.2` 只能在 RC 验收完成并获得用户明确确认后发布。
 
 - 每次 Runtime、Shader、包依赖或 Sample 场景变更后执行结构校验、相关 Unity 测试、治理同步和必要的 clean validation。
@@ -141,7 +145,7 @@
 
 ## 优先级顺序
 
-1. **P0**：旧 change 已收尾归档，保持整体性能未验收。[128-holder 生成优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)已满足同步整体刷新 p95 ≤ 1.5 ms 的局部目标，Burst/SIMD 原型后置至 JOB-01。该优化已归档并同步主规格；[分桶设计](../openspec/changes/add-holder-bucket-scheduling/design.md)已完成（4/10），下一步实施 2.1 显式状态队列与公平调度，再推进 2×128 跨帧轮转；用户已接受后一桶额外一帧延迟。继续跟踪设备分配环境、VERIFY-02 独立分发、PERF-04 预算、覆盖率及精确候选 Jenkins。
+1. **P0**：[128-holder 优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)已归档，[分桶交付](../openspec/changes/add-holder-bucket-scheduling/evidence/bucket-results.md)已完成 10/10，局部 1.5 ms p95 目标通过。下一步围绕 PERF-04 补齐代表性资源负载和真机分配证据，继续处理原 1 ms 参考、VERIFY-02 独立分发、覆盖率和精确候选 Jenkins。若需要进一步优化，再启动 JOB-01 的 Burst/SIMD 对照。
 2. **P1**：8 槽 GPU 证据和统一性能场景，确定默认槽数与 Job 路径选择。
 3. **P2**：TMP 高级材质/资源能力、低风险代码清理和可选 UI 能力扩展。
 

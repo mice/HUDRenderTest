@@ -2,7 +2,7 @@
 testId: UT_BATCH_003
 module: Batching
 testType: EditMode
-target: MergeBatcher
+target: Holder batching and scheduling
 testFile: Tests/EditMode/TestMergeBatcher.cs
 testMethod: Plan_FirstFit_MinimizesBatches
 status: active

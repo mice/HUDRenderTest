@@ -10,6 +10,77 @@ using UnityEditor.SceneManagement;
 
 public class TestHudRcPerformanceRunner
 {
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_020.md
+    [UnityTest]
+    [Category("UT_PERF_020")]
+    public IEnumerator BucketStrategies_PreserveRequestsAndConvergedOutput_AndReportSecondFrameWork()
+    {
+        Create(true);
+        runner.configuration.holderCount = 129;
+        runner.configuration.useBucketScheduling = true;
+        runner.configuration.disableBuildMeshDiagnostics = true;
+        runner.configuration.useGenerationBatch = true;
+        HudRcPerformanceRunner.Report reference = null;
+        foreach (var strategy in new[] { HolderBucketStrategy.SingleBucket, HolderBucketStrategy.SameFrame, HolderBucketStrategy.Rotating })
+        {
+            runner.configuration.bucketStrategy = strategy;
+            runner.BeginRun();
+            yield return Complete();
+            var report = runner.CreateReport();
+            Assert.AreEqual("hud-rc-buckets-v1", report.schema);
+            Assert.AreEqual(24, report.frames.Length, "Each of three modes includes two explicit drain frames.");
+            int drains = 0, secondFrameWork = 0;
+            foreach (var frame in report.frames)
+            {
+                if (frame.drainFrame) { drains++; Assert.AreEqual(0, frame.requestedHolders); }
+                if (frame.mode == (int)HudRcPerformanceRunner.Workload.Burst && !frame.drainFrame && frame.requestedHolders == 0 && frame.completedHolders > 0) secondFrameWork++;
+                Assert.AreEqual(strategy == HolderBucketStrategy.SingleBucket ? 1 : 2, frame.logicalBuckets);
+                Assert.AreEqual(frame.logicalBuckets, frame.batches);
+                Assert.LessOrEqual(frame.completedFirstPendingAge, 1);
+                Assert.GreaterOrEqual(frame.hudCpuMs, frame.updateCpuMs + frame.drawSubmitMs - 1e-6);
+                Assert.That(frame.generationMs + frame.mergeMs, Is.EqualTo(frame.updateCpuMs).Within(1e-9));
+                Assert.IsFalse(frame.buildMeshStagesAvailable);
+                Assert.AreEqual(frame.refreshedBuckets * 2, frame.generationBatchCount);
+            }
+            Assert.AreEqual(6, drains);
+            Assert.AreEqual(strategy == HolderBucketStrategy.Rotating ? 2 : 0, secondFrameWork);
+            Assert.AreEqual(strategy == HolderBucketStrategy.Rotating ? 4 : 2, report.summaries[3].samples);
+            foreach (var request in report.bucketRequests)
+            {
+                Assert.That(request.completedFrame - request.requestFrame, Is.InRange(0, 1));
+                Assert.GreaterOrEqual(request.completedVersion, request.requestVersion);
+            }
+            foreach (var final in report.bucketFinalStates) Assert.AreEqual(final.requestedVersion, final.completedVersion);
+            if (reference == null) reference = report;
+            else
+            {
+                CollectionAssert.AreEqual(reference.bucketOutputChecksums, report.bucketOutputChecksums);
+                Assert.AreEqual(reference.bucketRequests.Length, report.bucketRequests.Length);
+                for (int i = 0; i < report.bucketRequests.Length; i++)
+                {
+                    Assert.AreEqual(reference.bucketRequests[i].holder, report.bucketRequests[i].holder);
+                    Assert.AreEqual(reference.bucketRequests[i].requestVersion, report.bucketRequests[i].requestVersion);
+                    Assert.AreEqual(reference.bucketRequests[i].requestFrame, report.bucketRequests[i].requestFrame);
+                }
+            }
+            string path = null;
+            try
+            {
+                runner.ExportReport(); path = runner.LastReportPath;
+                var restored = JsonUtility.FromJson<HudRcPerformanceRunner.Report>(File.ReadAllText(path));
+                Assert.AreEqual(report.bucketRequests.Length, restored.bucketRequests.Length);
+                Assert.AreEqual(25, File.ReadAllLines(Path.ChangeExtension(path, null) + "-buckets.csv").Length);
+            }
+            finally
+            {
+                if (path != null)
+                { File.Delete(path); File.Delete(Path.ChangeExtension(path, ".csv")); File.Delete(Path.ChangeExtension(path, null) + "-buckets.csv"); }
+            }
+            Assert.AreEqual(0, runner.outputCamera.GetCommandBuffers(UnityEngine.Rendering.CameraEvent.AfterForwardAlpha).Length);
+            runner.ResetRun();
+        }
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_018.md
     [UnityTest]
     [Category("UT_PERF_018")]

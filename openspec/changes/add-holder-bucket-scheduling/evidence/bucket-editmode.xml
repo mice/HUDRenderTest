@@ -1,0 +1,942 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="161" result="Passed" total="161" passed="161" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:05Z" duration="1.6199212">
+  <test-suite type="TestSuite" id="1200" name="HUDRenderTest" fullname="HUDRenderTest" runstate="Runnable" testcasecount="161" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:05Z" duration="1.619921" total="161" passed="161" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1392" name="Tests.dll" fullname="D:/UnityPackages/HUDRenderPackage/HUDRenderTestSample/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="161" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:05Z" duration="1.590783" total="161" passed="161" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="33640" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestFixture" id="1201" name="TestCalcMatrix" fullname="TestCalcMatrix" classname="TestCalcMatrix" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.081221" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1202" name="CalcMatrix_OptimizedMatchesLegacy_AndReportsCost" fullname="TestCalcMatrix.CalcMatrix_OptimizedMatchesLegacy_AndReportsCost" methodname="CalcMatrix_OptimizedMatchesLegacy_AndReportsCost" classname="TestCalcMatrix" runstate="Runnable" seed="1886449818" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.052532" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MTX_003" />
+          </properties>
+          <output><![CDATA[CalcMatrix comparison: iterations=10000, frequency=10000000, legacyTicks=159198, optimizedTicks=68461, legacyUs=15919.800, optimizedUs=6846.100, speedup=2.33x
+]]></output>
+        </test-case>
+        <test-case id="1204" name="Nested_ReturnsRelativeTRS" fullname="TestCalcMatrix.Nested_ReturnsRelativeTRS" methodname="Nested_ReturnsRelativeTRS" classname="TestCalcMatrix" runstate="Runnable" seed="1817035700" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001622" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MTX_001" />
+          </properties>
+        </test-case>
+        <test-case id="1203" name="SameLevel_IdentityLocal_ReturnsIdentity" fullname="TestCalcMatrix.SameLevel_IdentityLocal_ReturnsIdentity" methodname="SameLevel_IdentityLocal_ReturnsIdentity" classname="TestCalcMatrix" runstate="Runnable" seed="656764274" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002420" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MTX_002" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1205" name="TestFreeListAllocator" fullname="TestFreeListAllocator" classname="TestFreeListAllocator" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.025180" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1207" name="Alloc_ExactMatch_RemovesSlice" fullname="TestFreeListAllocator.Alloc_ExactMatch_RemovesSlice" methodname="Alloc_ExactMatch_RemovesSlice" classname="TestFreeListAllocator" runstate="Runnable" seed="825208178" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003048" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_001" />
+          </properties>
+        </test-case>
+        <test-case id="1209" name="Alloc_NoFit_ReturnsFalse" fullname="TestFreeListAllocator.Alloc_NoFit_ReturnsFalse" methodname="Alloc_NoFit_ReturnsFalse" classname="TestFreeListAllocator" runstate="Runnable" seed="634515934" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000711" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_002" />
+          </properties>
+        </test-case>
+        <test-case id="1208" name="Alloc_Split_LargerSlice" fullname="TestFreeListAllocator.Alloc_Split_LargerSlice" methodname="Alloc_Split_LargerSlice" classname="TestFreeListAllocator" runstate="Runnable" seed="219016518" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000498" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_003" />
+          </properties>
+        </test-case>
+        <test-case id="1206" name="Ctor_SingleFullSlice" fullname="TestFreeListAllocator.Ctor_SingleFullSlice" methodname="Ctor_SingleFullSlice" classname="TestFreeListAllocator" runstate="Runnable" seed="490178613" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000351" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_004" />
+          </properties>
+        </test-case>
+        <test-case id="1216" name="Fuzz_RandomAllocRelease" fullname="TestFreeListAllocator.Fuzz_RandomAllocRelease" methodname="Fuzz_RandomAllocRelease" classname="TestFreeListAllocator" runstate="Runnable" seed="178595462" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.008758" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_005" />
+          </properties>
+        </test-case>
+        <test-case id="1212" name="Release_BothAdjacent_MergesThreeWay" fullname="TestFreeListAllocator.Release_BothAdjacent_MergesThreeWay" methodname="Release_BothAdjacent_MergesThreeWay" classname="TestFreeListAllocator" runstate="Runnable" seed="1395988801" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000802" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_006" />
+          </properties>
+        </test-case>
+        <test-case id="1215" name="Release_Case0_Middle_Standalone" fullname="TestFreeListAllocator.Release_Case0_Middle_Standalone" methodname="Release_Case0_Middle_Standalone" classname="TestFreeListAllocator" runstate="Runnable" seed="1232219323" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000738" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_007" />
+          </properties>
+        </test-case>
+        <test-case id="1214" name="Release_InsertAfterTail_NotAdjacent" fullname="TestFreeListAllocator.Release_InsertAfterTail_NotAdjacent" methodname="Release_InsertAfterTail_NotAdjacent" classname="TestFreeListAllocator" runstate="Runnable" seed="315035431" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000556" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_008" />
+          </properties>
+        </test-case>
+        <test-case id="1213" name="Release_InsertBeforeHead_NotAdjacent" fullname="TestFreeListAllocator.Release_InsertBeforeHead_NotAdjacent" methodname="Release_InsertBeforeHead_NotAdjacent" classname="TestFreeListAllocator" runstate="Runnable" seed="1947080312" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000549" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_009" />
+          </properties>
+        </test-case>
+        <test-case id="1210" name="Release_LeftAdjacent_MergesForward" fullname="TestFreeListAllocator.Release_LeftAdjacent_MergesForward" methodname="Release_LeftAdjacent_MergesForward" classname="TestFreeListAllocator" runstate="Runnable" seed="939170237" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000584" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_010" />
+          </properties>
+        </test-case>
+        <test-case id="1217" name="Release_OrderIndependence" fullname="TestFreeListAllocator.Release_OrderIndependence" methodname="Release_OrderIndependence" classname="TestFreeListAllocator" runstate="Runnable" seed="1562391001" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000543" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_011" />
+          </properties>
+        </test-case>
+        <test-case id="1211" name="Release_RightAdjacent_MergesBackward" fullname="TestFreeListAllocator.Release_RightAdjacent_MergesBackward" methodname="Release_RightAdjacent_MergesBackward" classname="TestFreeListAllocator" runstate="Runnable" seed="270188614" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000382" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_012" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1218" name="TestGeometryBuffer" fullname="TestGeometryBuffer" classname="TestGeometryBuffer" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.016416" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1220" name="EnsureIndex_Grows" fullname="TestGeometryBuffer.EnsureIndex_Grows" methodname="EnsureIndex_Grows" classname="TestGeometryBuffer" runstate="Runnable" seed="1738845233" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.008689" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_001" />
+          </properties>
+        </test-case>
+        <test-case id="1219" name="EnsureVertex_KeepsArraysParallel" fullname="TestGeometryBuffer.EnsureVertex_KeepsArraysParallel" methodname="EnsureVertex_KeepsArraysParallel" classname="TestGeometryBuffer" runstate="Runnable" seed="514066939" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001027" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_002" />
+          </properties>
+        </test-case>
+        <test-case id="1221" name="Grow_PreservesContent" fullname="TestGeometryBuffer.Grow_PreservesContent" methodname="Grow_PreservesContent" classname="TestGeometryBuffer" runstate="Runnable" seed="258702588" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003854" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_003" />
+          </properties>
+        </test-case>
+        <test-case id="1222" name="Grow_UsesGrowthStep" fullname="TestGeometryBuffer.Grow_UsesGrowthStep" methodname="Grow_UsesGrowthStep" classname="TestGeometryBuffer" runstate="Runnable" seed="726590823" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000396" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_004" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1223" name="TestHolderBatchRenderer" fullname="TestHolderBatchRenderer" classname="TestHolderBatchRenderer" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.068827" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1227" name="Plan_InvalidatesHolderOrder_AndPreservesLocalSlotMap" fullname="TestHolderBatchRenderer.Plan_InvalidatesHolderOrder_AndPreservesLocalSlotMap" methodname="Plan_InvalidatesHolderOrder_AndPreservesLocalSlotMap" classname="TestHolderBatchRenderer" runstate="Runnable" seed="1159419079" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.009652" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_008" />
+          </properties>
+        </test-case>
+        <test-case id="1226" name="Plan_ReusesStableStructure_AndInvalidatesTextureChanges" fullname="TestHolderBatchRenderer.Plan_ReusesStableStructure_AndInvalidatesTextureChanges" methodname="Plan_ReusesStableStructure_AndInvalidatesTextureChanges" classname="TestHolderBatchRenderer" runstate="Runnable" seed="2120429805" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001093" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_007" />
+          </properties>
+        </test-case>
+        <test-case id="1229" name="Plan_WarmAndColdPartitionsMatch_AndCollectionChangesInvalidate" fullname="TestHolderBatchRenderer.Plan_WarmAndColdPartitionsMatch_AndCollectionChangesInvalidate" methodname="Plan_WarmAndColdPartitionsMatch_AndCollectionChangesInvalidate" classname="TestHolderBatchRenderer" runstate="Runnable" seed="172336763" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.011998" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_010" />
+          </properties>
+          <output><![CDATA[[MergeBatcher] split into 2 batches
+[MergeBatcher] split into 2 batches
+[MergeBatcher] split into 2 batches
+[MergeBatcher] split into 2 batches
+]]></output>
+        </test-case>
+        <test-case id="1228" name="Rebuild_GeometryOnlyChangesReusePlan_AndMatchColdOutput" fullname="TestHolderBatchRenderer.Rebuild_GeometryOnlyChangesReusePlan_AndMatchColdOutput" methodname="Rebuild_GeometryOnlyChangesReusePlan_AndMatchColdOutput" classname="TestHolderBatchRenderer" runstate="Runnable" seed="1310887374" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.039582" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_009" />
+          </properties>
+        </test-case>
+        <test-case id="1225" name="Rebuild_RemapsGlobalSlotsToBatchLocalSlots" fullname="TestHolderBatchRenderer.Rebuild_RemapsGlobalSlotsToBatchLocalSlots" methodname="Rebuild_RemapsGlobalSlotsToBatchLocalSlots" classname="TestHolderBatchRenderer" runstate="Runnable" seed="1704779064" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001352" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_001" />
+          </properties>
+        </test-case>
+        <test-case id="1224" name="Rebuild_SplitsThroughMergeBatcher_AndRecordsPerf" fullname="TestHolderBatchRenderer.Rebuild_SplitsThroughMergeBatcher_AndRecordsPerf" methodname="Rebuild_SplitsThroughMergeBatcher_AndRecordsPerf" classname="TestHolderBatchRenderer" runstate="Runnable" seed="860738044" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002166" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_002" />
+          </properties>
+          <output><![CDATA[[MergeBatcher] split into 2 batches
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1230" name="TestHolderBucketScheduler" fullname="TestHolderBucketScheduler" classname="TestHolderBucketScheduler" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.124904" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1240" name="FailedBindingAfterUpload_DoesNotPublishOrCompleteRequest" fullname="TestHolderBucketScheduler.FailedBindingAfterUpload_DoesNotPublishOrCompleteRequest" methodname="FailedBindingAfterUpload_DoesNotPublishOrCompleteRequest" classname="TestHolderBucketScheduler" runstate="Runnable" seed="949940001" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.013238" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_020" />
+          </properties>
+        </test-case>
+        <test-case id="1234" name="FailedGeneration_PreservesFrontAndVersions_UntilFullRecovery" fullname="TestHolderBucketScheduler.FailedGeneration_PreservesFrontAndVersions_UntilFullRecovery" methodname="FailedGeneration_PreservesFrontAndVersions_UntilFullRecovery" classname="TestHolderBucketScheduler" runstate="Runnable" seed="1506419277" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.012940" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_014" />
+          </properties>
+        </test-case>
+        <test-case id="1241" name="FailedReplacement_KeepsOldEpochAndOutput_ThenSuccessfulReplacementCancelsRequests" fullname="TestHolderBucketScheduler.FailedReplacement_KeepsOldEpochAndOutput_ThenSuccessfulReplacementCancelsRequests" methodname="FailedReplacement_KeepsOldEpochAndOutput_ThenSuccessfulReplacementCancelsRequests" classname="TestHolderBucketScheduler" runstate="Runnable" seed="1157841462" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003920" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_021" />
+          </properties>
+        </test-case>
+        <test-case id="1231" name="Membership_UsesStableBoundaries_AndRejectsStaleForeignOrDuplicateMembers" fullname="TestHolderBucketScheduler.Membership_UsesStableBoundaries_AndRejectsStaleForeignOrDuplicateMembers" methodname="Membership_UsesStableBoundaries_AndRejectsStaleForeignOrDuplicateMembers" classname="TestHolderBucketScheduler" runstate="Runnable" seed="143988739" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.011509" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_011" />
+          </properties>
+        </test-case>
+        <test-case id="1237" name="OrderedPlanning_PreservesAlternatingTextures_AndRecoversAfterOversizedHolder" fullname="TestHolderBucketScheduler.OrderedPlanning_PreservesAlternatingTextures_AndRecoversAfterOversizedHolder" methodname="OrderedPlanning_PreservesAlternatingTextures_AndRecoversAfterOversizedHolder" classname="TestHolderBucketScheduler" runstate="Runnable" seed="248761687" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.004026" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_017" />
+          </properties>
+          <output><![CDATA[[MergeBatcher] split into 3 batches
+[MergeBatcher] split into 2 batches
+[MergeBatcher] split into 3 batches
+]]></output>
+        </test-case>
+        <test-case id="1236" name="ResourceChanges_BlockDrawAndOrdinaryTicks_UntilExplicitResynchronization" fullname="TestHolderBucketScheduler.ResourceChanges_BlockDrawAndOrdinaryTicks_UntilExplicitResynchronization" methodname="ResourceChanges_BlockDrawAndOrdinaryTicks_UntilExplicitResynchronization" classname="TestHolderBucketScheduler" runstate="Runnable" seed="2067341310" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002350" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_016" />
+          </properties>
+        </test-case>
+        <test-case id="1232" name="Rotation_LatestSnapshotKeepsFirstPendingAge_AndDoesNotStarveSecondBucket" fullname="TestHolderBucketScheduler.Rotation_LatestSnapshotKeepsFirstPendingAge_AndDoesNotStarveSecondBucket" methodname="Rotation_LatestSnapshotKeepsFirstPendingAge_AndDoesNotStarveSecondBucket" classname="TestHolderBucketScheduler" runstate="Runnable" seed="315368238" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.013234" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_012" />
+          </properties>
+        </test-case>
+        <test-case id="1239" name="Strategies_ConvergeToIdenticalGeometry_AndDisposeOwnedResourcesOnly" fullname="TestHolderBucketScheduler.Strategies_ConvergeToIdenticalGeometry_AndDisposeOwnedResourcesOnly" methodname="Strategies_ConvergeToIdenticalGeometry_AndDisposeOwnedResourcesOnly" classname="TestHolderBucketScheduler" runstate="Runnable" seed="1308065411" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.035116" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_019" />
+          </properties>
+        </test-case>
+        <test-case id="1235" name="StructuralBarrier_DoesNotPublishAnyBucket_WhenLaterBucketFails" fullname="TestHolderBucketScheduler.StructuralBarrier_DoesNotPublishAnyBucket_WhenLaterBucketFails" methodname="StructuralBarrier_DoesNotPublishAnyBucket_WhenLaterBucketFails" classname="TestHolderBucketScheduler" runstate="Runnable" seed="2056618484" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003565" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_015" />
+          </properties>
+        </test-case>
+        <test-case id="1233" name="Tick_RejectsReentrancyAndBackwardsFrames_AndDefersPostCutoffRequests" fullname="TestHolderBucketScheduler.Tick_RejectsReentrancyAndBackwardsFrames_AndDefersPostCutoffRequests" methodname="Tick_RejectsReentrancyAndBackwardsFrames_AndDefersPostCutoffRequests" classname="TestHolderBucketScheduler" runstate="Runnable" seed="1933231550" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002403" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_013" />
+          </properties>
+        </test-case>
+        <test-case id="1238" name="WarmSubmitAndTick_DoNotAllocate_WithPositiveCounterControl" fullname="TestHolderBucketScheduler.WarmSubmitAndTick_DoNotAllocate_WithPositiveCounterControl" methodname="WarmSubmitAndTick_DoNotAllocate_WithPositiveCounterControl" classname="TestHolderBucketScheduler" runstate="Runnable" seed="1734280883" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.016463" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_018" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1242" name="TestHolderLifecycle" fullname="TestHolderLifecycle" classname="TestHolderLifecycle" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.014055" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1243" name="Add_MarksHolderInLifecycle" fullname="TestHolderLifecycle.Add_MarksHolderInLifecycle" methodname="Add_MarksHolderInLifecycle" classname="TestHolderLifecycle" runstate="Runnable" seed="987138635" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003280" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_001" />
+          </properties>
+        </test-case>
+        <test-case id="1244" name="Remove_AfterTrack_ClearsLifecycleAndNotifier" fullname="TestHolderLifecycle.Remove_AfterTrack_ClearsLifecycleAndNotifier" methodname="Remove_AfterTrack_ClearsLifecycleAndNotifier" classname="TestHolderLifecycle" runstate="Runnable" seed="2112184050" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.005292" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_002" />
+          </properties>
+        </test-case>
+        <test-case id="1245" name="Remove_WhenNotAdded_IsNoOp" fullname="TestHolderLifecycle.Remove_WhenNotAdded_IsNoOp" methodname="Remove_WhenNotAdded_IsNoOp" classname="TestHolderLifecycle" runstate="Runnable" seed="304535403" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001572" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_003" />
+          </properties>
+        </test-case>
+        <test-case id="1246" name="Track_RegistersMeshInNotifier_AndLifecycle" fullname="TestHolderLifecycle.Track_RegistersMeshInNotifier_AndLifecycle" methodname="Track_RegistersMeshInNotifier_AndLifecycle" classname="TestHolderLifecycle" runstate="Runnable" seed="693158374" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001310" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_004" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1247" name="TestHolderNotifier" fullname="TestHolderNotifier" classname="TestHolderNotifier" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.019240" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1253" name="RemoveHolder_AfterAddHolder_ClearsAllMeshTracking" fullname="TestHolderNotifier.RemoveHolder_AfterAddHolder_ClearsAllMeshTracking" methodname="RemoveHolder_AfterAddHolder_ClearsAllMeshTracking" classname="TestHolderNotifier" runstate="Runnable" seed="68294578" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001339" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_005" />
+          </properties>
+        </test-case>
+        <test-case id="1252" name="Retrack_AfterTextureIndexChange_SlotEventHitsNewSlotOnly" fullname="TestHolderNotifier.Retrack_AfterTextureIndexChange_SlotEventHitsNewSlotOnly" methodname="Retrack_AfterTextureIndexChange_SlotEventHitsNewSlotOnly" classname="TestHolderNotifier" runstate="Runnable" seed="1474594405" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000643" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_006" />
+          </properties>
+        </test-case>
+        <test-case id="1249" name="SlotRemoved_SetsMinusOne" fullname="TestHolderNotifier.SlotRemoved_SetsMinusOne" methodname="SlotRemoved_SetsMinusOne" classname="TestHolderNotifier" runstate="Runnable" seed="489959300" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000505" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_007" />
+          </properties>
+        </test-case>
+        <test-case id="1251" name="SlotRemoved_ViaTSlotEvent_SetsMinusOne" fullname="TestHolderNotifier.SlotRemoved_ViaTSlotEvent_SetsMinusOne" methodname="SlotRemoved_ViaTSlotEvent_SetsMinusOne" classname="TestHolderNotifier" runstate="Runnable" seed="761341051" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.011910" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_008" />
+          </properties>
+        </test-case>
+        <test-case id="1248" name="SlotReplaced_TargetedNotify" fullname="TestHolderNotifier.SlotReplaced_TargetedNotify" methodname="SlotReplaced_TargetedNotify" classname="TestHolderNotifier" runstate="Runnable" seed="1099716882" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000862" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_009" />
+          </properties>
+        </test-case>
+        <test-case id="1250" name="SlotReplaced_ViaTSlotEvent_UpdatesMesh" fullname="TestHolderNotifier.SlotReplaced_ViaTSlotEvent_UpdatesMesh" methodname="SlotReplaced_ViaTSlotEvent_UpdatesMesh" classname="TestHolderNotifier" runstate="Runnable" seed="2088738450" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001097" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_010" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1254" name="TestLogHygiene" fullname="TestLogHygiene" classname="TestLogHygiene" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.012180" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1255" name="NoUnexpectedErrors_OnHotPath" fullname="TestLogHygiene.NoUnexpectedErrors_OnHotPath" methodname="NoUnexpectedErrors_OnHotPath" classname="TestLogHygiene" runstate="Runnable" seed="1396480225" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.010765" asserts="0">
+          <properties>
+            <property name="Category" value="UT_DIAG_001" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1256" name="TestManagedTaskCoverage" fullname="TestManagedTaskCoverage" classname="TestManagedTaskCoverage" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.028970" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1257" name="ManagedCodeInJob_ScheduleAndLateUpdate_ExecutesAndCleansUp" fullname="TestManagedTaskCoverage.ManagedCodeInJob_ScheduleAndLateUpdate_ExecutesAndCleansUp" methodname="ManagedCodeInJob_ScheduleAndLateUpdate_ExecutesAndCleansUp" classname="TestManagedTaskCoverage" runstate="Runnable" seed="2054085830" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.008410" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_024" />
+          </properties>
+        </test-case>
+        <test-case id="1258" name="NativeArrayExtensions_ReturnWritableAndReadonlyPointers" fullname="TestManagedTaskCoverage.NativeArrayExtensions_ReturnWritableAndReadonlyPointers" methodname="NativeArrayExtensions_ReturnWritableAndReadonlyPointers" classname="TestManagedTaskCoverage" runstate="Runnable" seed="1905702225" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.004542" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_025" />
+          </properties>
+        </test-case>
+        <test-case id="1259" name="SharedArray_ResizeClearEnumerateAndDispose" fullname="TestManagedTaskCoverage.SharedArray_ResizeClearEnumerateAndDispose" methodname="SharedArray_ResizeClearEnumerateAndDispose" classname="TestManagedTaskCoverage" runstate="Runnable" seed="1287838786" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.005671" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_026" />
+          </properties>
+        </test-case>
+        <test-case id="1260" name="SharedArray_ThrowsWhenNativeAliasSizeDiffers" fullname="TestManagedTaskCoverage.SharedArray_ThrowsWhenNativeAliasSizeDiffers" methodname="SharedArray_ThrowsWhenNativeAliasSizeDiffers" classname="TestManagedTaskCoverage" runstate="Runnable" seed="685414081" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000895" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_027" />
+          </properties>
+        </test-case>
+        <test-case id="1261" name="UnsafeFastCopy_CopyMatrixAndVectorNativeArrays" fullname="TestManagedTaskCoverage.UnsafeFastCopy_CopyMatrixAndVectorNativeArrays" methodname="UnsafeFastCopy_CopyMatrixAndVectorNativeArrays" classname="TestManagedTaskCoverage" runstate="Runnable" seed="2001039440" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.006517" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_028" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1262" name="TestMaterialBinder" fullname="TestMaterialBinder" classname="TestMaterialBinder" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.005942" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1263" name="Bind_NullMaterial_DoesNotThrow" fullname="TestMaterialBinder.Bind_NullMaterial_DoesNotThrow" methodname="Bind_NullMaterial_DoesNotThrow" classname="TestMaterialBinder" runstate="Runnable" seed="698032834" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001548" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MAT_001" />
+          </properties>
+        </test-case>
+        <test-case id="1264" name="Bind_WritesSequentialSlots_AndCapsAtSeven" fullname="TestMaterialBinder.Bind_WritesSequentialSlots_AndCapsAtSeven" methodname="Bind_WritesSequentialSlots_AndCapsAtSeven" classname="TestMaterialBinder" runstate="Runnable" seed="641844597" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002526" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MAT_002" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1265" name="TestMergeBatcher" fullname="TestMergeBatcher" classname="TestMergeBatcher" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.007750" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1269" name="GetBatchTextures_ReusesBufferAndPreservesSlotOrder" fullname="TestMergeBatcher.GetBatchTextures_ReusesBufferAndPreservesSlotOrder" methodname="GetBatchTextures_ReusesBufferAndPreservesSlotOrder" classname="TestMergeBatcher" runstate="Runnable" seed="946829521" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003007" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_006" />
+          </properties>
+        </test-case>
+        <test-case id="1268" name="Plan_FirstFit_MinimizesBatches" fullname="TestMergeBatcher.Plan_FirstFit_MinimizesBatches" methodname="Plan_FirstFit_MinimizesBatches" classname="TestMergeBatcher" runstate="Runnable" seed="1788575716" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000672" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_003" />
+          </properties>
+        </test-case>
+        <test-case id="1266" name="Plan_FitsInOneBatch" fullname="TestMergeBatcher.Plan_FitsInOneBatch" methodname="Plan_FitsInOneBatch" classname="TestMergeBatcher" runstate="Runnable" seed="1022750133" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000565" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_004" />
+          </properties>
+        </test-case>
+        <test-case id="1267" name="Plan_SplitsWhenOver" fullname="TestMergeBatcher.Plan_SplitsWhenOver" methodname="Plan_SplitsWhenOver" classname="TestMergeBatcher" runstate="Runnable" seed="1047794204" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001331" asserts="0">
+          <properties>
+            <property name="Category" value="UT_BATCH_005" />
+          </properties>
+          <output><![CDATA[[MergeBatcher] split into 2 batches
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1270" name="TestMeshJobsCoverage" fullname="TestMeshJobsCoverage" classname="TestMeshJobsCoverage" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.018905" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1273" name="BigXMergeJob_WritesAllOutputs" fullname="TestMeshJobsCoverage.BigXMergeJob_WritesAllOutputs" methodname="BigXMergeJob_WritesAllOutputs" classname="TestMeshJobsCoverage" runstate="Runnable" seed="348799989" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.007888" asserts="0">
+          <properties>
+            <property name="Category" value="UT_JOB_008" />
+          </properties>
+        </test-case>
+        <test-case id="1274" name="BurstMergeJobUtility_CopiesMeshSlimOffsets" fullname="TestMeshJobsCoverage.BurstMergeJobUtility_CopiesMeshSlimOffsets" methodname="BurstMergeJobUtility_CopiesMeshSlimOffsets" classname="TestMeshJobsCoverage" runstate="Runnable" seed="544463442" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000779" asserts="0">
+          <properties>
+            <property name="Category" value="UT_JOB_009" />
+          </properties>
+        </test-case>
+        <test-case id="1271" name="LegacyMergeJobs_WriteExpectedArrays" fullname="TestMeshJobsCoverage.LegacyMergeJobs_WriteExpectedArrays" methodname="LegacyMergeJobs_WriteExpectedArrays" classname="TestMeshJobsCoverage" runstate="Runnable" seed="1107271518" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.004054" asserts="0">
+          <properties>
+            <property name="Category" value="UT_JOB_006" />
+          </properties>
+        </test-case>
+        <test-case id="1272" name="XMergeJobs_WriteExpectedArrays" fullname="TestMeshJobsCoverage.XMergeJobs_WriteExpectedArrays" methodname="XMergeJobs_WriteExpectedArrays" classname="TestMeshJobsCoverage" runstate="Runnable" seed="1327997514" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003783" asserts="0">
+          <properties>
+            <property name="Category" value="UT_JOB_007" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1275" name="TestMeshSlim" fullname="TestMeshSlim" classname="TestMeshSlim" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.004745" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1276" name="Dispose_Resets_AllFields" fullname="TestMeshSlim.Dispose_Resets_AllFields" methodname="Dispose_Resets_AllFields" classname="TestMeshSlim" runstate="Runnable" seed="518979271" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000904" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_001" />
+          </properties>
+        </test-case>
+        <test-case id="1277" name="Equals_AndComparer_Ignore_Index_But_UseGeometryFields" fullname="TestMeshSlim.Equals_AndComparer_Ignore_Index_But_UseGeometryFields" methodname="Equals_AndComparer_Ignore_Index_But_UseGeometryFields" classname="TestMeshSlim" runstate="Runnable" seed="1709222096" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002142" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_002" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1278" name="TestMeshVertexBufferLayout" fullname="TestMeshVertexBufferLayout" classname="TestMeshVertexBufferLayout" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.004825" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1279" name="OneStreamLayout_OrdersColorBeforeTexCoord0" fullname="TestMeshVertexBufferLayout.OneStreamLayout_OrdersColorBeforeTexCoord0" methodname="OneStreamLayout_OrdersColorBeforeTexCoord0" classname="TestMeshVertexBufferLayout" runstate="Runnable" seed="1751853107" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002613" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_015" />
+          </properties>
+          <output><![CDATA[Mesh vertex buffer attributes were supplied in non-standard order. Layout was adjusted to this order: Position, Color, TexCoord0.
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1280" name="TestOwnerRegistry" fullname="TestOwnerRegistry" classname="TestOwnerRegistry" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.009400" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1281" name="GetOrCreate_SameOwner_ReturnsSameRegistration" fullname="TestOwnerRegistry.GetOrCreate_SameOwner_ReturnsSameRegistration" methodname="GetOrCreate_SameOwner_ReturnsSameRegistration" classname="TestOwnerRegistry" runstate="Runnable" seed="851333049" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002662" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_011" />
+          </properties>
+        </test-case>
+        <test-case id="1282" name="TryGet_ReturnsFalseBeforeCreate_TrueAfter" fullname="TestOwnerRegistry.TryGet_ReturnsFalseBeforeCreate_TrueAfter" methodname="TryGet_ReturnsFalseBeforeCreate_TrueAfter" classname="TestOwnerRegistry" runstate="Runnable" seed="540027489" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001103" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_012" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1283" name="TestPerfProbe" fullname="TestPerfProbe" classname="TestPerfProbe" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.058769" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1287" name="Flush_EmptyProbe_WritesZeroes" fullname="TestPerfProbe.Flush_EmptyProbe_WritesZeroes" methodname="Flush_EmptyProbe_WritesZeroes" classname="TestPerfProbe" runstate="Runnable" seed="1630638418" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.038389" asserts="0">
+          <properties>
+            <property name="Category" value="UT_DIAG_002" />
+          </properties>
+        </test-case>
+        <test-case id="1288" name="Flush_Sanitizes_FileName_Tag" fullname="TestPerfProbe.Flush_Sanitizes_FileName_Tag" methodname="Flush_Sanitizes_FileName_Tag" classname="TestPerfProbe" runstate="Runnable" seed="1308134890" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002849" asserts="0">
+          <properties>
+            <property name="Category" value="UT_DIAG_003" />
+          </properties>
+        </test-case>
+        <test-case id="1289" name="Flush_Writes_Context_Metadata" fullname="TestPerfProbe.Flush_Writes_Context_Metadata" methodname="Flush_Writes_Context_Metadata" classname="TestPerfProbe" runstate="Runnable" seed="1743037503" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.006516" asserts="0">
+          <properties>
+            <property name="Category" value="UT_DIAG_004" />
+          </properties>
+        </test-case>
+        <test-case id="1286" name="Flush_WritesCsv" fullname="TestPerfProbe.Flush_WritesCsv" methodname="Flush_WritesCsv" classname="TestPerfProbe" runstate="Runnable" seed="122113501" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.006907" asserts="0">
+          <properties>
+            <property name="Category" value="UT_DIAG_005" />
+          </properties>
+        </test-case>
+        <test-case id="1284" name="Window_AvgMaxCorrect" fullname="TestPerfProbe.Window_AvgMaxCorrect" methodname="Window_AvgMaxCorrect" classname="TestPerfProbe" runstate="Runnable" seed="1995123687" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000839" asserts="0">
+          <properties>
+            <property name="Category" value="UT_DIAG_006" />
+          </properties>
+        </test-case>
+        <test-case id="1285" name="Window_CircularBuffer_WrapsCorrectly" fullname="TestPerfProbe.Window_CircularBuffer_WrapsCorrectly" methodname="Window_CircularBuffer_WrapsCorrectly" classname="TestPerfProbe" runstate="Runnable" seed="1473608465" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000495" asserts="0">
+          <properties>
+            <property name="Category" value="UT_DIAG_007" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1290" name="TestPrefabHolderExtCoverage" fullname="TestPrefabHolderExtCoverage" classname="TestPrefabHolderExtCoverage" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.005451" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1291" name="NullHolder_ExtensionSettersAreNoOp" fullname="TestPrefabHolderExtCoverage.NullHolder_ExtensionSettersAreNoOp" methodname="NullHolder_ExtensionSettersAreNoOp" classname="TestPrefabHolderExtCoverage" runstate="Runnable" seed="2068937133" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001431" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_017" />
+          </properties>
+        </test-case>
+        <test-case id="1293" name="SetTextureIndex_IgnoresOutOfRangeIndex" fullname="TestPrefabHolderExtCoverage.SetTextureIndex_IgnoresOutOfRangeIndex" methodname="SetTextureIndex_IgnoresOutOfRangeIndex" classname="TestPrefabHolderExtCoverage" runstate="Runnable" seed="1972024310" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000553" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_019" />
+          </properties>
+        </test-case>
+        <test-case id="1292" name="SetTextureIndex_UpdatesMeshWhenIndexExists" fullname="TestPrefabHolderExtCoverage.SetTextureIndex_UpdatesMeshWhenIndexExists" methodname="SetTextureIndex_UpdatesMeshWhenIndexExists" classname="TestPrefabHolderExtCoverage" runstate="Runnable" seed="3740933" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001153" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_018" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1294" name="TestResourceUtility" fullname="TestResourceUtility" classname="TestResourceUtility" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.138865" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1300" name="BuildTextMesh_StringBuilder_CentersAndScalesGlyphs" fullname="TestResourceUtility.BuildTextMesh_StringBuilder_CentersAndScalesGlyphs" methodname="BuildTextMesh_StringBuilder_CentersAndScalesGlyphs" classname="TestResourceUtility" runstate="Runnable" seed="1343316014" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.109001" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_023" />
+          </properties>
+        </test-case>
+        <test-case id="1298" name="BuildTextMesh_Vector4Uvs_WritesTextureIndexAndFlags" fullname="TestResourceUtility.BuildTextMesh_Vector4Uvs_WritesTextureIndexAndFlags" methodname="BuildTextMesh_Vector4Uvs_WritesTextureIndexAndFlags" classname="TestResourceUtility" runstate="Runnable" seed="1830958879" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.006703" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_021" />
+          </properties>
+        </test-case>
+        <test-case id="1297" name="CreateCircle_ReturnsCenterFan" fullname="TestResourceUtility.CreateCircle_ReturnsCenterFan" methodname="CreateCircle_ReturnsCenterFan" classname="TestResourceUtility" runstate="Runnable" seed="1530416735" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.008718" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_020" />
+          </properties>
+        </test-case>
+        <test-case id="1295" name="CreateMaterial_UsesUnlitColor_AndAssignedColor" fullname="TestResourceUtility.CreateMaterial_UsesUnlitColor_AndAssignedColor" methodname="CreateMaterial_UsesUnlitColor_AndAssignedColor" classname="TestResourceUtility" runstate="Runnable" seed="545553456" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003424" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_018" />
+          </properties>
+        </test-case>
+        <test-case id="1296" name="CreateQuad_ReturnsFourVerticesAndTwoTriangles" fullname="TestResourceUtility.CreateQuad_ReturnsFourVerticesAndTwoTriangles" methodname="CreateQuad_ReturnsFourVerticesAndTwoTriangles" classname="TestResourceUtility" runstate="Runnable" seed="896717674" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000789" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_019" />
+          </properties>
+        </test-case>
+        <test-case id="1299" name="CreateTextMeshVariants_CreateMeshesWithExpectedChannels" fullname="TestResourceUtility.CreateTextMeshVariants_CreateMeshesWithExpectedChannels" methodname="CreateTextMeshVariants_CreateMeshesWithExpectedChannels" classname="TestResourceUtility" runstate="Runnable" seed="1478703827" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.006795" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_022" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1301" name="TestSharedArray" fullname="TestSharedArray" classname="TestSharedArray" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.006341" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1302" name="ManagedWrite_NativeRead" fullname="TestSharedArray.ManagedWrite_NativeRead" methodname="ManagedWrite_NativeRead" classname="TestSharedArray" runstate="Runnable" seed="207182768" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002702" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_013" />
+          </properties>
+        </test-case>
+        <test-case id="1303" name="NativeWrite_ManagedRead" fullname="TestSharedArray.NativeWrite_ManagedRead" methodname="NativeWrite_ManagedRead" classname="TestSharedArray" runstate="Runnable" seed="275899707" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001538" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_014" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1304" name="TestTextureSlotTable" fullname="TestTextureSlotTable" classname="TestTextureSlotTable" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.020683" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1313" name="ExpandTo_CappedAt7_AndNoOpBelowCurrent" fullname="TestTextureSlotTable.ExpandTo_CappedAt7_AndNoOpBelowCurrent" methodname="ExpandTo_CappedAt7_AndNoOpBelowCurrent" classname="TestTextureSlotTable" runstate="Runnable" seed="1996359536" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001263" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_001" />
+          </properties>
+        </test-case>
+        <test-case id="1312" name="ExpandTo_IncreasesCapacityAndAllowsRegistration" fullname="TestTextureSlotTable.ExpandTo_IncreasesCapacityAndAllowsRegistration" methodname="ExpandTo_IncreasesCapacityAndAllowsRegistration" classname="TestTextureSlotTable" runstate="Runnable" seed="1372123750" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001082" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_002" />
+          </properties>
+        </test-case>
+        <test-case id="1305" name="Register_First_ReturnsSlot1" fullname="TestTextureSlotTable.Register_First_ReturnsSlot1" methodname="Register_First_ReturnsSlot1" classname="TestTextureSlotTable" runstate="Runnable" seed="105923550" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000724" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_003" />
+          </properties>
+        </test-case>
+        <test-case id="1310" name="Register_OverCapacity_RegistersAndWarns" fullname="TestTextureSlotTable.Register_OverCapacity_RegistersAndWarns" methodname="Register_OverCapacity_RegistersAndWarns" classname="TestTextureSlotTable" runstate="Runnable" seed="1414002824" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002240" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_004" />
+          </properties>
+          <output><![CDATA[[TextureSlotTable] texture count exceeds per-batch limit (3/2); draw calls will be split by MergeBatcher.
+]]></output>
+        </test-case>
+        <test-case id="1311" name="Register_OverCapacity_UnregisterReassignsSlot" fullname="TestTextureSlotTable.Register_OverCapacity_UnregisterReassignsSlot" methodname="Register_OverCapacity_UnregisterReassignsSlot" classname="TestTextureSlotTable" runstate="Runnable" seed="673645947" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002120" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_005" />
+          </properties>
+          <output><![CDATA[[TextureSlotTable] texture count exceeds per-batch limit (3/2); draw calls will be split by MergeBatcher.
+]]></output>
+        </test-case>
+        <test-case id="1307" name="Register_SameOwnerNewTex_ReplacesOld" fullname="TestTextureSlotTable.Register_SameOwnerNewTex_ReplacesOld" methodname="Register_SameOwnerNewTex_ReplacesOld" classname="TestTextureSlotTable" runstate="Runnable" seed="401601924" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002303" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_006" />
+          </properties>
+        </test-case>
+        <test-case id="1306" name="Register_SameTexture_SharesSlot" fullname="TestTextureSlotTable.Register_SameTexture_SharesSlot" methodname="Register_SameTexture_SharesSlot" classname="TestTextureSlotTable" runstate="Runnable" seed="1860612128" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000759" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_007" />
+          </properties>
+        </test-case>
+        <test-case id="1314" name="SetMaxImageSlots_BeforeRegister_AvoidsOverCapacityWarning" fullname="TestTextureSlotTable.SetMaxImageSlots_BeforeRegister_AvoidsOverCapacityWarning" methodname="SetMaxImageSlots_BeforeRegister_AvoidsOverCapacityWarning" classname="TestTextureSlotTable" runstate="Runnable" seed="277864556" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001932" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_008" />
+          </properties>
+        </test-case>
+        <test-case id="1315" name="SetMaxImageSlots_CanReduceCapacityForFutureWarnings" fullname="TestTextureSlotTable.SetMaxImageSlots_CanReduceCapacityForFutureWarnings" methodname="SetMaxImageSlots_CanReduceCapacityForFutureWarnings" classname="TestTextureSlotTable" runstate="Runnable" seed="1787530694" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001762" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_009" />
+          </properties>
+          <output><![CDATA[[TextureSlotTable] texture count exceeds per-batch limit (4/3); draw calls will be split by MergeBatcher.
+]]></output>
+        </test-case>
+        <test-case id="1309" name="Unregister_LastSlot_OnlyRemoved" fullname="TestTextureSlotTable.Unregister_LastSlot_OnlyRemoved" methodname="Unregister_LastSlot_OnlyRemoved" classname="TestTextureSlotTable" runstate="Runnable" seed="413050374" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001006" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_010" />
+          </properties>
+        </test-case>
+        <test-case id="1308" name="Unregister_TriggersSwapWithLast" fullname="TestTextureSlotTable.Unregister_TriggersSwapWithLast" methodname="Unregister_TriggersSwapWithLast" classname="TestTextureSlotTable" runstate="Runnable" seed="467030091" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001126" asserts="0">
+          <properties>
+            <property name="Category" value="UT_TEX_011" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1316" name="TestUIGeometry" fullname="TestUIGeometry" classname="TestUIGeometry" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.047080" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1327" name="Alloc_Triggers_Grow" fullname="TestUIGeometry.Alloc_Triggers_Grow" methodname="Alloc_Triggers_Grow" classname="TestUIGeometry" runstate="Runnable" seed="1204461848" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.008183" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_005" />
+          </properties>
+        </test-case>
+        <test-case id="1328" name="ReAlloc_FreesOldSlice" fullname="TestUIGeometry.ReAlloc_FreesOldSlice" methodname="ReAlloc_FreesOldSlice" classname="TestUIGeometry" runstate="Runnable" seed="1049782076" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000875" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_006" />
+          </properties>
+        </test-case>
+        <test-case id="1329" name="Release_Case0_Middle_Standalone" fullname="TestUIGeometry.Release_Case0_Middle_Standalone" methodname="Release_Case0_Middle_Standalone" classname="TestUIGeometry" runstate="Runnable" seed="2119748466" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001435" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_007" />
+          </properties>
+        </test-case>
+        <test-case id="1323" name="TestUIGeometry_release_case1" fullname="TestUIGeometry.TestUIGeometry_release_case1" methodname="TestUIGeometry_release_case1" classname="TestUIGeometry" runstate="Runnable" seed="81818260" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001282" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_008" />
+          </properties>
+        </test-case>
+        <test-case id="1322" name="TestUIGeometry_release_case2" fullname="TestUIGeometry.TestUIGeometry_release_case2" methodname="TestUIGeometry_release_case2" classname="TestUIGeometry" runstate="Runnable" seed="830273028" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.007263" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_009" />
+          </properties>
+        </test-case>
+        <test-case id="1324" name="TestUIGeometry_release_case3" fullname="TestUIGeometry.TestUIGeometry_release_case3" methodname="TestUIGeometry_release_case3" classname="TestUIGeometry" runstate="Runnable" seed="705212838" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.007225" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_010" />
+          </properties>
+        </test-case>
+        <test-case id="1325" name="TestUIGeometry_release_case4" fullname="TestUIGeometry.TestUIGeometry_release_case4" methodname="TestUIGeometry_release_case4" classname="TestUIGeometry" runstate="Runnable" seed="1756739471" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001188" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_011" />
+          </properties>
+        </test-case>
+        <test-case id="1326" name="TestUIGeometry_release_case5" fullname="TestUIGeometry.TestUIGeometry_release_case5" methodname="TestUIGeometry_release_case5" classname="TestUIGeometry" runstate="Runnable" seed="978735054" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001066" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_012" />
+          </properties>
+        </test-case>
+        <test-case id="1320" name="TestUIGeometryAlloc2T46" fullname="TestUIGeometry.TestUIGeometryAlloc2T46" methodname="TestUIGeometryAlloc2T46" classname="TestUIGeometry" runstate="Runnable" seed="1353329810" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.007305" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_013" />
+          </properties>
+        </test-case>
+        <test-case id="1321" name="TestUIGeometryAlloc2T46_release" fullname="TestUIGeometry.TestUIGeometryAlloc2T46_release" methodname="TestUIGeometryAlloc2T46_release" classname="TestUIGeometry" runstate="Runnable" seed="1649036783" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001215" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_014" />
+          </properties>
+        </test-case>
+        <test-case id="1318" name="TestUIGeometryAlloc46" fullname="TestUIGeometry.TestUIGeometryAlloc46" methodname="TestUIGeometryAlloc46" classname="TestUIGeometry" runstate="Runnable" seed="1104335159" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000526" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_015" />
+          </properties>
+        </test-case>
+        <test-case id="1319" name="TestUIGeometryAllocRelease" fullname="TestUIGeometry.TestUIGeometryAllocRelease" methodname="TestUIGeometryAllocRelease" classname="TestUIGeometry" runstate="Runnable" seed="1293839043" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003491" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_016" />
+          </properties>
+        </test-case>
+        <test-case id="1317" name="TestUIGeometryctor" fullname="TestUIGeometry.TestUIGeometryctor" methodname="TestUIGeometryctor" classname="TestUIGeometry" runstate="Runnable" seed="1168325542" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.000960" asserts="0">
+          <properties>
+            <property name="Category" value="UT_GEO_017" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1330" name="TestUIImage" fullname="TestUIImage" classname="TestUIImage" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.101398" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1337" name="FilledImage_UsesUguiFallback" fullname="TestUIImage.FilledImage_UsesUguiFallback" methodname="FilledImage_UsesUguiFallback" classname="TestUIImage" runstate="Runnable" seed="1700650871" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.039546" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_002" />
+          </properties>
+        </test-case>
+        <test-case id="1332" name="GenerationBatch_MatchesLiveGeneration_AcrossDynamicInputsAndNewHierarchies" fullname="TestUIImage.GenerationBatch_MatchesLiveGeneration_AcrossDynamicInputsAndNewHierarchies" methodname="GenerationBatch_MatchesLiveGeneration_AcrossDynamicInputsAndNewHierarchies" classname="TestUIImage" runstate="Runnable" seed="1250272791" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.018888" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_009" />
+          </properties>
+        </test-case>
+        <test-case id="1333" name="GenerationBatch_RejectsNesting_AndStaleDisposeDoesNotCloseNewBatch" fullname="TestUIImage.GenerationBatch_RejectsNesting_AndStaleDisposeDoesNotCloseNewBatch" methodname="GenerationBatch_RejectsNesting_AndStaleDisposeDoesNotCloseNewBatch" classname="TestUIImage" runstate="Runnable" seed="871238984" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001995" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_010" />
+          </properties>
+        </test-case>
+        <test-case id="1331" name="GenerationBatch_WarmScopesAndGeneration_DoNotAllocate" fullname="TestUIImage.GenerationBatch_WarmScopesAndGeneration_DoNotAllocate" methodname="GenerationBatch_WarmScopesAndGeneration_DoNotAllocate" classname="TestUIImage" runstate="Runnable" seed="694219363" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002848" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_011" />
+          </properties>
+        </test-case>
+        <test-case id="1340" name="NullSpriteCache_TransitionsToRegisteredSprite" fullname="TestUIImage.NullSpriteCache_TransitionsToRegisteredSprite" methodname="NullSpriteCache_TransitionsToRegisteredSprite" classname="TestUIImage" runstate="Runnable" seed="925511328" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002366" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_006" />
+          </properties>
+        </test-case>
+        <test-case id="1335" name="NullSpriteHolder_DiagnosticsAggregate_AndClearAfterFallbackOrDisable" fullname="TestUIImage.NullSpriteHolder_DiagnosticsAggregate_AndClearAfterFallbackOrDisable" methodname="NullSpriteHolder_DiagnosticsAggregate_AndClearAfterFallbackOrDisable" classname="TestUIImage" runstate="Runnable" seed="1792337328" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.010181" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_007" />
+          </properties>
+        </test-case>
+        <test-case id="1339" name="NullSpriteSimpleImage_FastPathMatchesUguiFallback" fullname="TestUIImage.NullSpriteSimpleImage_FastPathMatchesUguiFallback" methodname="NullSpriteSimpleImage_FastPathMatchesUguiFallback" classname="TestUIImage" runstate="Runnable" seed="1244640108" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002347" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_005" />
+          </properties>
+        </test-case>
+        <test-case id="1336" name="SimpleImage_FastPathMatchesUguiFallback" fullname="TestUIImage.SimpleImage_FastPathMatchesUguiFallback" methodname="SimpleImage_FastPathMatchesUguiFallback" classname="TestUIImage" runstate="Runnable" seed="1363537900" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002792" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_001" />
+          </properties>
+        </test-case>
+        <test-case id="1341" name="SimpleImage_ParentTransformMatchesUguiFallback" fullname="TestUIImage.SimpleImage_ParentTransformMatchesUguiFallback" methodname="SimpleImage_ParentTransformMatchesUguiFallback" classname="TestUIImage" runstate="Runnable" seed="961131860" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002079" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_004" />
+          </properties>
+        </test-case>
+        <test-case id="1334" name="SpriteHolder_FastAndFallbackMatchForManagedAndSlimUnderParentTransform" fullname="TestUIImage.SpriteHolder_FastAndFallbackMatchForManagedAndSlimUnderParentTransform" methodname="SpriteHolder_FastAndFallbackMatchForManagedAndSlimUnderParentTransform" classname="TestUIImage" runstate="Runnable" seed="68218907" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002911" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_008" />
+          </properties>
+        </test-case>
+        <test-case id="1338" name="UnsupportedImageModes_UseUguiFallback" fullname="TestUIImage.UnsupportedImageModes_UseUguiFallback" methodname="UnsupportedImageModes_UseUguiFallback" classname="TestUIImage" runstate="Runnable" seed="1033382200" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.011029" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UIIMAGE_003" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1342" name="TestUIMeshData" fullname="TestUIMeshData" classname="TestUIMeshData" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:05Z" duration="0.129742" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1349" name="FillToDrawData_AppliesLocalPosition" fullname="TestUIMeshData.FillToDrawData_AppliesLocalPosition" methodname="FillToDrawData_AppliesLocalPosition" classname="TestUIMeshData" runstate="Runnable" seed="1593211489" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001660" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_003" />
+          </properties>
+        </test-case>
+        <test-case id="1350" name="FillToDrawData_RebasesIndices" fullname="TestUIMeshData.FillToDrawData_RebasesIndices" methodname="FillToDrawData_RebasesIndices" classname="TestUIMeshData" runstate="Runnable" seed="1861957079" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001503" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_004" />
+          </properties>
+        </test-case>
+        <test-case id="1347" name="FillVertex_CapturesCompleteMeshContract" fullname="TestUIMeshData.FillVertex_CapturesCompleteMeshContract" methodname="FillVertex_CapturesCompleteMeshContract" classname="TestUIMeshData" runstate="Runnable" seed="619643855" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001717" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_021" />
+          </properties>
+        </test-case>
+        <test-case id="1352" name="FillWithMatrix_ScaleRotation" fullname="TestUIMeshData.FillWithMatrix_ScaleRotation" methodname="FillWithMatrix_ScaleRotation" classname="TestUIMeshData" runstate="Runnable" seed="953464424" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.002767" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_005" />
+          </properties>
+        </test-case>
+        <test-case id="1343" name="QuadDiagnostics_RequireBothSwitches_AndPreserveBothMeshOutputs" fullname="TestUIMeshData.QuadDiagnostics_RequireBothSwitches_AndPreserveBothMeshOutputs" methodname="QuadDiagnostics_RequireBothSwitches_AndPreserveBothMeshOutputs" classname="TestUIMeshData" runstate="Runnable" seed="2117682060" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.005477" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_027" />
+          </properties>
+        </test-case>
+        <test-case id="1344" name="QuadDiagnostics_WarmedWrites_AllocateNoManagedMemory" fullname="TestUIMeshData.QuadDiagnostics_WarmedWrites_AllocateNoManagedMemory" methodname="QuadDiagnostics_WarmedWrites_AllocateNoManagedMemory" classname="TestUIMeshData" runstate="Runnable" seed="125607152" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.003200" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_028" />
+          </properties>
+        </test-case>
+        <test-case id="1348" name="TransformVertex_ChangesPositionsWithoutChangingTopology" fullname="TestUIMeshData.TransformVertex_ChangesPositionsWithoutChangingTopology" methodname="TransformVertex_ChangesPositionsWithoutChangingTopology" classname="TestUIMeshData" runstate="Runnable" seed="199101853" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:04Z" duration="0.001016" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_022" />
+          </properties>
+        </test-case>
+        <test-case id="1346" name="TransformVertex_MultiplyPoint3x4MatchesLegacy_AndReportsCost" fullname="TestUIMeshData.TransformVertex_MultiplyPoint3x4MatchesLegacy_AndReportsCost" methodname="TransformVertex_MultiplyPoint3x4MatchesLegacy_AndReportsCost" classname="TestUIMeshData" runstate="Runnable" seed="717943161" result="Passed" start-time="2026-10-25 14:11:04Z" end-time="2026-10-25 14:11:05Z" duration="0.102454" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_024" />
+          </properties>
+          <output><![CDATA[TransformVertex comparison: vertices=768, iterations=1000, frequency=10000000, legacyTicks=564907, optimizedTicks=315362, legacyMs=56.491, optimizedMs=31.536, speedup=1.79x
+]]></output>
+        </test-case>
+        <test-case id="1351" name="UpdateTextureIndex_WritesUvZForAll" fullname="TestUIMeshData.UpdateTextureIndex_WritesUvZForAll" methodname="UpdateTextureIndex_WritesUvZForAll" classname="TestUIMeshData" runstate="Runnable" seed="884181275" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.000918" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_006" />
+          </properties>
+        </test-case>
+        <test-case id="1345" name="WriteSimpleQuad_WritesCanonicalManagedGeometry" fullname="TestUIMeshData.WriteSimpleQuad_WritesCanonicalManagedGeometry" methodname="WriteSimpleQuad_WritesCanonicalManagedGeometry" classname="TestUIMeshData" runstate="Runnable" seed="2009376673" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.000957" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_025" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1353" name="TestUIMeshDataX" fullname="TestUIMeshDataX" classname="TestUIMeshDataX" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.040213" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1361" name="FillToDrawData_IndicesEqual" fullname="TestUIMeshDataX.FillToDrawData_IndicesEqual" methodname="FillToDrawData_IndicesEqual" classname="TestUIMeshDataX" runstate="Runnable" seed="168556932" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.003148" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_007" />
+          </properties>
+        </test-case>
+        <test-case id="1360" name="FillToDrawData_UVsColorsEqual" fullname="TestUIMeshDataX.FillToDrawData_UVsColorsEqual" methodname="FillToDrawData_UVsColorsEqual" classname="TestUIMeshDataX" runstate="Runnable" seed="475531981" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.000936" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_008" />
+          </properties>
+        </test-case>
+        <test-case id="1359" name="FillToDrawData_VertsEqual" fullname="TestUIMeshDataX.FillToDrawData_VertsEqual" methodname="FillToDrawData_VertsEqual" classname="TestUIMeshDataX" runstate="Runnable" seed="41585646" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.003932" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_009" />
+          </properties>
+        </test-case>
+        <test-case id="1358" name="FillToTriangleData_UsesIndicesOffset" fullname="TestUIMeshDataX.FillToTriangleData_UsesIndicesOffset" methodname="FillToTriangleData_UsesIndicesOffset" classname="TestUIMeshDataX" runstate="Runnable" seed="1848217722" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.002339" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_010" />
+          </properties>
+        </test-case>
+        <test-case id="1357" name="FillVertex_WritesSharedGeometryWithTextureAndFlags" fullname="TestUIMeshDataX.FillVertex_WritesSharedGeometryWithTextureAndFlags" methodname="FillVertex_WritesSharedGeometryWithTextureAndFlags" classname="TestUIMeshDataX" runstate="Runnable" seed="606616716" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.004769" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_023" />
+          </properties>
+        </test-case>
+        <test-case id="1362" name="FillWithMatrix_IdentityEqualsFill" fullname="TestUIMeshDataX.FillWithMatrix_IdentityEqualsFill" methodname="FillWithMatrix_IdentityEqualsFill" classname="TestUIMeshDataX" runstate="Runnable" seed="1228519495" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.002069" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_011" />
+          </properties>
+        </test-case>
+        <test-case id="1363" name="FillWithMatrix_TRSEqual" fullname="TestUIMeshDataX.FillWithMatrix_TRSEqual" methodname="FillWithMatrix_TRSEqual" classname="TestUIMeshDataX" runstate="Runnable" seed="569855840" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.003741" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_012" />
+          </properties>
+        </test-case>
+        <test-case id="1354" name="SlimFill_PreservesColorSentinelAndOffsetGeometryForBothMethods" fullname="TestUIMeshDataX.SlimFill_PreservesColorSentinelAndOffsetGeometryForBothMethods" methodname="SlimFill_PreservesColorSentinelAndOffsetGeometryForBothMethods" classname="TestUIMeshDataX" runstate="Runnable" seed="1899181311" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.006076" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_029" />
+          </properties>
+        </test-case>
+        <test-case id="1355" name="SlimFill_WarmedPreallocatedOutputs_AllocateNoManagedMemory" fullname="TestUIMeshDataX.SlimFill_WarmedPreallocatedOutputs_AllocateNoManagedMemory" methodname="SlimFill_WarmedPreallocatedOutputs_AllocateNoManagedMemory" classname="TestUIMeshDataX" runstate="Runnable" seed="1752777571" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.004848" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_030" />
+          </properties>
+        </test-case>
+        <test-case id="1356" name="WriteSimpleQuad_WritesCanonicalSlimGeometry" fullname="TestUIMeshDataX.WriteSimpleQuad_WritesCanonicalSlimGeometry" methodname="WriteSimpleQuad_WritesCanonicalSlimGeometry" classname="TestUIMeshDataX" runstate="Runnable" seed="2004548679" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.002821" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_026" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1364" name="TestUIPrefabHolderCoverage" fullname="TestUIPrefabHolderCoverage" classname="TestUIPrefabHolderCoverage" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.072595" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1366" name="BuildMesh_DisabledDiagnostics_PreserveOutputAndAllocateNothingWhenWarm" fullname="TestUIPrefabHolderCoverage.BuildMesh_DisabledDiagnostics_PreserveOutputAndAllocateNothingWhenWarm" methodname="BuildMesh_DisabledDiagnostics_PreserveOutputAndAllocateNothingWhenWarm" classname="TestUIPrefabHolderCoverage" runstate="Runnable" seed="1328457339" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.042806" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_021" />
+          </properties>
+        </test-case>
+        <test-case id="1368" name="BuildMesh_InitializesDataHolderAndRefreshesGeneratedMeshes" fullname="TestUIPrefabHolderCoverage.BuildMesh_InitializesDataHolderAndRefreshesGeneratedMeshes" methodname="BuildMesh_InitializesDataHolderAndRefreshesGeneratedMeshes" classname="TestUIPrefabHolderCoverage" runstate="Runnable" seed="510236266" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.004130" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_015" />
+          </properties>
+        </test-case>
+        <test-case id="1365" name="BuildMesh_StagesAggregateAndRespectNestedTimingBounds" fullname="TestUIPrefabHolderCoverage.BuildMesh_StagesAggregateAndRespectNestedTimingBounds" methodname="BuildMesh_StagesAggregateAndRespectNestedTimingBounds" classname="TestUIPrefabHolderCoverage" runstate="Runnable" seed="404675428" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.019535" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_020" />
+          </properties>
+        </test-case>
+        <test-case id="1369" name="NullSafeSetters_DoNotThrowBeforeBuildMesh" fullname="TestUIPrefabHolderCoverage.NullSafeSetters_DoNotThrowBeforeBuildMesh" methodname="NullSafeSetters_DoNotThrowBeforeBuildMesh" classname="TestUIPrefabHolderCoverage" runstate="Runnable" seed="1480518664" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.001547" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_016" />
+          </properties>
+        </test-case>
+        <test-case id="1367" name="UseSlim_CreatesExpectedHolderType_AndCanSwitch" fullname="TestUIPrefabHolderCoverage.UseSlim_CreatesExpectedHolderType_AndCanSwitch" methodname="UseSlim_CreatesExpectedHolderType_AndCanSwitch" classname="TestUIPrefabHolderCoverage" runstate="Runnable" seed="1498674420" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.001169" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_014" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1370" name="TestUIPrefabRegistration" fullname="TestUIPrefabRegistration" classname="TestUIPrefabRegistration" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.004375" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1371" name="MultiInstance_TextIndependent" fullname="TestUIPrefabRegistration.MultiInstance_TextIndependent" methodname="MultiInstance_TextIndependent" classname="TestUIPrefabRegistration" runstate="Runnable" seed="1912088675" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.002212" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PREF_013" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1372" name="TestUIText" fullname="TestUIText" classname="TestUIText" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.032054" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1373" name="DoGenerate_FillsMeshDataWithTextFlag" fullname="TestUIText.DoGenerate_FillsMeshDataWithTextFlag" methodname="DoGenerate_FillsMeshDataWithTextFlag" classname="TestUIText" runstate="Runnable" seed="1219710619" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.023347" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UI_001" />
+          </properties>
+        </test-case>
+        <test-case id="1374" name="DoGenerate_WithRootChild_AppliesRelativeTransform" fullname="TestUIText.DoGenerate_WithRootChild_AppliesRelativeTransform" methodname="DoGenerate_WithRootChild_AppliesRelativeTransform" classname="TestUIText" runstate="Runnable" seed="692778082" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.006642" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UI_002" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1375" name="TestUITMPText" fullname="TestUITMPText" classname="TestUITMPText" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.178736" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1379" name="BindTmpSdf_CopiesAtlasAndOutlineProperties" fullname="TestUITMPText.BindTmpSdf_CopiesAtlasAndOutlineProperties" methodname="BindTmpSdf_CopiesAtlasAndOutlineProperties" classname="TestUITMPText" runstate="Runnable" seed="970977192" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.004050" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UI_006" />
+          </properties>
+        </test-case>
+        <test-case id="1376" name="DoGenerate_FillsMeshDataFromTMP" fullname="TestUITMPText.DoGenerate_FillsMeshDataFromTMP" methodname="DoGenerate_FillsMeshDataFromTMP" classname="TestUITMPText" runstate="Runnable" seed="394653061" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.165470" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UI_003" />
+          </properties>
+        </test-case>
+        <test-case id="1377" name="DoGenerate_WithRootChild_AppliesRelativeTransform" fullname="TestUITMPText.DoGenerate_WithRootChild_AppliesRelativeTransform" methodname="DoGenerate_WithRootChild_AppliesRelativeTransform" classname="TestUITMPText" runstate="Runnable" seed="1857751898" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.003807" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UI_004" />
+          </properties>
+        </test-case>
+        <test-case id="1378" name="TextProperty_UpdatesTMPText" fullname="TestUITMPText.TextProperty_UpdatesTMPText" methodname="TextProperty_UpdatesTMPText" classname="TestUITMPText" runstate="Runnable" seed="2003463702" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.002019" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UI_005" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1380" name="TestUnsafeFastCopy" fullname="TestUnsafeFastCopy" classname="TestUnsafeFastCopy" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.007084" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1383" name="CopyColor32_EquivalentToArrayCopy" fullname="TestUnsafeFastCopy.CopyColor32_EquivalentToArrayCopy" methodname="CopyColor32_EquivalentToArrayCopy" classname="TestUnsafeFastCopy" runstate="Runnable" seed="411386089" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.001670" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_015" />
+          </properties>
+        </test-case>
+        <test-case id="1382" name="CopyVec4_DestIndex_ShiftsWritePosition" fullname="TestUnsafeFastCopy.CopyVec4_DestIndex_ShiftsWritePosition" methodname="CopyVec4_DestIndex_ShiftsWritePosition" classname="TestUnsafeFastCopy" runstate="Runnable" seed="1308237935" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.001209" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_016" />
+          </properties>
+        </test-case>
+        <test-case id="1381" name="CopyVec4_EquivalentToArrayCopy" fullname="TestUnsafeFastCopy.CopyVec4_EquivalentToArrayCopy" methodname="CopyVec4_EquivalentToArrayCopy" classname="TestUnsafeFastCopy" runstate="Runnable" seed="1229401563" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.001056" asserts="0">
+          <properties>
+            <property name="Category" value="UT_UTIL_017" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1384" name="TestVertexHelperUtils" fullname="TestVertexHelperUtils" classname="TestVertexHelperUtils" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.293309" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1386" name="CopyIndices_RejectsNullAndInsufficientDestination" fullname="TestVertexHelperUtils.CopyIndices_RejectsNullAndInsufficientDestination" methodname="CopyIndices_RejectsNullAndInsufficientDestination" classname="TestVertexHelperUtils" runstate="Runnable" seed="1270682763" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.002641" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_020" />
+          </properties>
+        </test-case>
+        <test-case id="1385" name="CopyIndices_WritesTopologyWithDestinationAndVertexOffsets" fullname="TestVertexHelperUtils.CopyIndices_WritesTopologyWithDestinationAndVertexOffsets" methodname="CopyIndices_WritesTopologyWithDestinationAndVertexOffsets" classname="TestVertexHelperUtils" runstate="Runnable" seed="1876809002" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.000730" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_019" />
+          </properties>
+        </test-case>
+        <test-case id="1389" name="FillData2_PreservesIndexedTopologyAndVertexChannels" fullname="TestVertexHelperUtils.FillData2_PreservesIndexedTopologyAndVertexChannels" methodname="FillData2_PreservesIndexedTopologyAndVertexChannels" classname="TestVertexHelperUtils" runstate="Runnable" seed="1132566549" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.002276" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_016" />
+          </properties>
+        </test-case>
+        <test-case id="1387" name="FillData2_WritesTextureIndexAndFlags" fullname="TestVertexHelperUtils.FillData2_WritesTextureIndexAndFlags" methodname="FillData2_WritesTextureIndexAndFlags" classname="TestVertexHelperUtils" runstate="Runnable" seed="1940959156" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.000749" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_013" />
+          </properties>
+        </test-case>
+        <test-case id="1390" name="FillData2And3_AfterWarmup_DoNotAllocateManagedMemory" fullname="TestVertexHelperUtils.FillData2And3_AfterWarmup_DoNotAllocateManagedMemory" methodname="FillData2And3_AfterWarmup_DoNotAllocateManagedMemory" classname="TestVertexHelperUtils" runstate="Runnable" seed="1476374323" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.110524" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_017" />
+          </properties>
+          <output><![CDATA[VertexHelper extraction: iterations=10000, FillData2Ticks=63479, FillData2AllocationEvents=0, FillData3Ticks=55769, FillData3AllocationEvents=0
+]]></output>
+        </test-case>
+        <test-case id="1388" name="FillData3_IndicesIncludeVertexOffset" fullname="TestVertexHelperUtils.FillData3_IndicesIncludeVertexOffset" methodname="FillData3_IndicesIncludeVertexOffset" classname="TestVertexHelperUtils" runstate="Runnable" seed="1628266480" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.000890" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_014" />
+          </properties>
+        </test-case>
+        <test-case id="1391" name="PublicExtraction_Benchmark_ReportsMedianAndTailCosts" fullname="TestVertexHelperUtils.PublicExtraction_Benchmark_ReportsMedianAndTailCosts" methodname="PublicExtraction_Benchmark_ReportsMedianAndTailCosts" classname="TestVertexHelperUtils" runstate="Runnable" seed="1878134511" result="Passed" start-time="2026-10-25 14:11:05Z" end-time="2026-10-25 14:11:05Z" duration="0.171799" asserts="0">
+          <properties>
+            <property name="Category" value="UT_MESH_018" />
+          </properties>
+          <output><![CDATA[PERF-01 environment=Unity 2022.3.53f1, fixture=4 vertices/6 indices, warmup=32, samples=21, iterationsPerSample=500, frequency=10000000
+PERF-01 FillData2 us/call min=0.519, median=0.529, p95=0.780, max=1.060
+PERF-01 FillData3 us/call min=0.506, median=0.531, p95=0.878, max=1.185
+PERF-01 VertexChannels us/call min=0.261, median=0.262, p95=0.299, max=0.480
+PERF-01 Indices us/call min=10.043, median=10.696, p95=11.749, max=12.577
+PERF-04 calibratedAllocationEvents FillData2=0, FillData3=0
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -8,6 +8,7 @@ using UnityEngine;
 public class MergeBatcher
 {
     private readonly int _maxSlots;
+    private readonly bool _preserveOrder;
     private readonly List<RenderBatch> batches = new List<RenderBatch>();
     private readonly List<RenderBatch> batchPool = new List<RenderBatch>();
     private readonly HashSet<int> slotScratch = new HashSet<int>();
@@ -20,9 +21,11 @@ public class MergeBatcher
     public int PlanCacheHits { get; private set; }
     public int PlanCacheMisses { get; private set; }
 
-    public MergeBatcher(int maxSlots)
+    public MergeBatcher(int maxSlots, bool preserveOrder = false)
     {
         _maxSlots = maxSlots;
+        _preserveOrder = preserveOrder;
+        if (preserveOrder && maxSlots < 1) throw new System.ArgumentOutOfRangeException(nameof(maxSlots));
     }
 
     /// <summary>
@@ -43,6 +46,8 @@ public class MergeBatcher
 
         LastPlanCacheHit = false;
         PlanCacheMisses++;
+        // A failed new plan must never make the previous cache match partially reset batches.
+        hasPlanCache = false;
         batches.Clear();
 
         for (int h = 0; h < holders.Count; h++)
@@ -50,9 +55,11 @@ public class MergeBatcher
             var holder = holders[h];
             slotScratch.Clear();
             CollectSlots(holder, slotScratch);
+            if (_preserveOrder && slotScratch.Count > _maxSlots)
+                throw new System.InvalidOperationException("A holder exceeds the ordered batch texture capacity.");
             bool placed = false;
 
-            for (int b = 0; b < batches.Count; b++)
+            for (int b = _preserveOrder ? System.Math.Max(0, batches.Count - 1) : 0; b < batches.Count; b++)
             {
                 var batch = batches[b];
                 if (batch.TryAdd(holder, slotScratch, _maxSlots))

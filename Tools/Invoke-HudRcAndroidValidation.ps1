@@ -10,6 +10,7 @@ param(
     [switch]$ProfileQuadWrites,
     [switch]$DisableBuildMeshDiagnostics,
     [switch]$GenerationBatch,
+    [ValidateSet('Legacy','SingleBucket','SameFrame','Rotating')][string]$BucketStrategy = 'Legacy',
     [switch]$SpriteBacked,
     [switch]$ForceUguiFallback,
     [ValidateRange(1, 4096)][int]$HolderCount = 256,
@@ -48,6 +49,7 @@ if ($Action -eq 'Build') {
     if ($ProfileQuadWrites) { $args += '-hudRcProfileQuadWrites' }
     if ($DisableBuildMeshDiagnostics) { $args += '-hudRcDisableBuildMeshDiagnostics' }
     if ($GenerationBatch) { $args += '-hudRcGenerationBatch' }
+    if ($BucketStrategy -ne 'Legacy') { $args += @('-hudRcBucketStrategy', $BucketStrategy) }
     if ($SpriteBacked) { $args += '-hudRcSpriteBacked' }
     if ($ForceUguiFallback) { $args += '-hudRcForceUguiFallback' }
     $process = Start-Process -FilePath $UnityExe -ArgumentList $args -WindowStyle Hidden -PassThru

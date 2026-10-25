@@ -4,6 +4,7 @@ using System.Diagnostics;
 using UIData;
 using UnityEngine;
 using Unity.Profiling;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Builds and draws one or more meshes from prefab holders through MergeBatcher.
@@ -31,15 +32,28 @@ public sealed class HolderBatchRenderer : IDisposable
     public int PlanCacheHits => batcher.PlanCacheHits;
     public int PlanCacheMisses => batcher.PlanCacheMisses;
 
-    public HolderBatchRenderer(int maxSlots, PerfProbe probe = null)
+    public HolderBatchRenderer(int maxSlots, PerfProbe probe = null, bool preserveOrder = false)
     {
-        batcher = new MergeBatcher(maxSlots);
+        batcher = new MergeBatcher(maxSlots, preserveOrder);
         this.probe = probe ?? new PerfProbe();
     }
 
     public int BatchCount => batchCount;
     public PerfProbe Probe => probe;
     public Mesh GetBatchMesh(int index) => index >= 0 && index < batchCount ? meshes[index] : null;
+    public int OwnedMeshCount => meshes.Length;
+    public int OwnedMaterialCount => materials.Length;
+
+    /// <summary>Unity-reported owned mesh/material bytes; excludes managed scratch buffers. Query outside timed updates.</summary>
+    public long GetOwnedObjectBytes()
+    {
+        long bytes = 0;
+        for (int i = 0; i < meshes.Length; i++)
+            if (meshes[i] != null) bytes += UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(meshes[i]);
+        for (int i = 0; i < materials.Length; i++)
+            if (materials[i] != null) bytes += UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(materials[i]);
+        return bytes;
+    }
 
     public void Rebuild(
         IReadOnlyList<IUIPrefabHolder> holders,
@@ -133,6 +147,16 @@ public sealed class HolderBatchRenderer : IDisposable
         return batchCount;
     }
 
+    /// <summary>Appends draws in plan order to a caller-owned command buffer.</summary>
+    public int RecordDraws(CommandBuffer commands, Matrix4x4 matrix, int shaderPass = 0)
+    {
+        if (commands == null) throw new ArgumentNullException(nameof(commands));
+        if (shaderPass < 0) throw new ArgumentOutOfRangeException(nameof(shaderPass));
+        for (int i = 0; i < batchCount; i++)
+            commands.DrawMesh(meshes[i], matrix, materials[i], 0, shaderPass);
+        return batchCount;
+    }
+
     public void Dispose()
     {
         DestroyObjects(meshes);
@@ -148,17 +172,21 @@ public sealed class HolderBatchRenderer : IDisposable
 
     private void EnsureBatchArrays(int needed, Func<Material> createMaterial)
     {
-        if (meshes.Length >= needed && materials.Length >= needed) return;
-
-        var newMeshes = new Mesh[needed];
-        var newMaterials = new Material[needed];
+        if (meshes.Length < needed || materials.Length < needed)
+        {
+            var newMeshes = new Mesh[needed];
+            var newMaterials = new Material[needed];
+            Array.Copy(meshes, newMeshes, meshes.Length);
+            Array.Copy(materials, newMaterials, materials.Length);
+            // Install before allocation so Dispose/retry can handle partial construction.
+            meshes = newMeshes;
+            materials = newMaterials;
+        }
         for (int i = 0; i < needed; i++)
         {
-            newMeshes[i] = i < meshes.Length ? meshes[i] : new Mesh();
-            newMaterials[i] = i < materials.Length ? materials[i] : createMaterial();
+            if (meshes[i] == null) meshes[i] = new Mesh();
+            if (materials[i] == null) materials[i] = createMaterial();
         }
-        meshes = newMeshes;
-        materials = newMaterials;
     }
 
     private static void ApplySlotRemap(List<Vector4> uvs, IReadOnlyDictionary<int, int> localSlotMap)

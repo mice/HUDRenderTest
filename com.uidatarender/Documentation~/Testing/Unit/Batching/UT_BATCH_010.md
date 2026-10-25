@@ -2,7 +2,7 @@
 testId: UT_BATCH_010
 module: Batching
 testType: EditMode
-target: MergeBatcher
+target: Holder batching and scheduling
 testFile: Tests/EditMode/TestHolderBatchRenderer.cs
 testMethod: Plan_WarmAndColdPartitionsMatch_AndCollectionChangesInvalidate
 status: active
