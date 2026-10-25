@@ -1,0 +1,16 @@
+{
+  "builds": [
+    {
+      "variant": "stages-on",
+      "sha256": "55A00DED6BBD41F88CAD3C15F6DF07D88338389244F622F7866209D5A9852BCD",
+      "sourceFingerprint": "6D26E5C212DAF4DA4A07F734874E80F35F9296B8159B81A48F887B6A46439C41",
+      "sourceManifest": "stages-sources.sha256"
+    },
+    {
+      "variant": "stages-off",
+      "sha256": "5D11C498FFF70E3351D6779E84FFDE7719562573C5594B361F7C593DD4DEB28C",
+      "sourceFingerprint": "6D26E5C212DAF4DA4A07F734874E80F35F9296B8159B81A48F887B6A46439C41",
+      "sourceManifest": "stages-sources.sha256"
+    }
+  ]
+}

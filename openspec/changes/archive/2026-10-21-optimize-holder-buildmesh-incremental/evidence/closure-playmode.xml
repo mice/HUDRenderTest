@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="28" result="Passed" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:27Z" duration="1.1951179">
+  <test-suite type="TestSuite" id="1000" name="HUDRenderTest" fullname="HUDRenderTest" runstate="Runnable" testcasecount="28" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:27Z" duration="1.195118" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1042" name="Tests.PlayMode.dll" fullname="D:/UnityPackages/HUDRenderPackage/HUDRenderTestSample/Library/ScriptAssemblies/Tests.PlayMode.dll" runstate="Runnable" testcasecount="28" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:27Z" duration="1.180260" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24360" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+      </properties>
+      <test-suite type="TestFixture" id="1001" name="TestBurstMergeJobs" fullname="TestBurstMergeJobs" classname="TestBurstMergeJobs" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.098182" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1002" name="BurstMerge_EquivalentToSoAMerge" fullname="TestBurstMergeJobs.BurstMerge_EquivalentToSoAMerge" methodname="BurstMerge_EquivalentToSoAMerge" classname="TestBurstMergeJobs" runstate="Runnable" seed="799383781" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.067179" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_JOB_001" />
+          </properties>
+        </test-case>
+        <test-case id="1003" name="BurstMerge_UsesWhiteWhenSourceColorsAreEmpty" fullname="TestBurstMergeJobs.BurstMerge_UsesWhiteWhenSourceColorsAreEmpty" methodname="BurstMerge_UsesWhiteWhenSourceColorsAreEmpty" classname="TestBurstMergeJobs" runstate="Runnable" seed="371440534" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.005275" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_JOB_002" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1004" name="TestDynamicSwapRunner" fullname="TestDynamicSwapRunner" classname="TestDynamicSwapRunner" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.084710" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1006" name="BatchMergeBatcherRender_Button_Starts_DynamicSwapSequence" fullname="TestDynamicSwapRunner.BatchMergeBatcherRender_Button_Starts_DynamicSwapSequence" methodname="BatchMergeBatcherRender_Button_Starts_DynamicSwapSequence" classname="TestDynamicSwapRunner" runstate="Runnable" seed="958120900" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.054930" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_001" />
+          </properties>
+          <output><![CDATA[[DynamicSwapRunner] Started: warmup=0, swaps=2, interval=1, tag=button_dynamic_2swaps
+[DynamicSwapRunner] Completed: swaps=2, csv=D:\UnityPackages\HUDRenderPackage\HUDRenderTestSample\Logs\PerfProbe\perf_button_dynamic_2swaps_20261020154926.csv
+]]></output>
+        </test-case>
+        <test-case id="1010" name="CycleDrawSelection_ReportsAvailableTargets_WhenNameMissing" fullname="TestDynamicSwapRunner.CycleDrawSelection_ReportsAvailableTargets_WhenNameMissing" methodname="CycleDrawSelection_ReportsAvailableTargets_WhenNameMissing" classname="TestDynamicSwapRunner" runstate="Runnable" seed="1243609370" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.014602" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PERF_002" />
+          </properties>
+        </test-case>
+        <test-case id="1009" name="CycleDrawSelection_UsesTargetName_WhenConfigured" fullname="TestDynamicSwapRunner.CycleDrawSelection_UsesTargetName_WhenConfigured" methodname="CycleDrawSelection_UsesTargetName_WhenConfigured" classname="TestDynamicSwapRunner" runstate="Runnable" seed="1496145464" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.001823" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PERF_003" />
+          </properties>
+        </test-case>
+        <test-case id="1008" name="CycleSelection_ReportsHelpfulError_WhenInstanceOutOfRange" fullname="TestDynamicSwapRunner.CycleSelection_ReportsHelpfulError_WhenInstanceOutOfRange" methodname="CycleSelection_ReportsHelpfulError_WhenInstanceOutOfRange" classname="TestDynamicSwapRunner" runstate="Runnable" seed="1530830232" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.001788" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PERF_004" />
+          </properties>
+        </test-case>
+        <test-case id="1007" name="CycleSelection_UsesPrefabAndInstance_WhenConfigured" fullname="TestDynamicSwapRunner.CycleSelection_UsesPrefabAndInstance_WhenConfigured" methodname="CycleSelection_UsesPrefabAndInstance_WhenConfigured" classname="TestDynamicSwapRunner" runstate="Runnable" seed="272779677" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.000944" asserts="0">
+          <properties>
+            <property name="Category" value="UT_PERF_005" />
+          </properties>
+        </test-case>
+        <test-case id="1005" name="Runner_Cycles_Target_And_Flushes_Csv" fullname="TestDynamicSwapRunner.Runner_Cycles_Target_And_Flushes_Csv" methodname="Runner_Cycles_Target_And_Flushes_Csv" classname="TestDynamicSwapRunner" runstate="Runnable" seed="446830131" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.006716" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_006" />
+          </properties>
+          <output><![CDATA[[DynamicSwapRunner] Started: warmup=1, swaps=3, interval=1, tag=dynamic_case_3swaps
+[DynamicSwapRunner] Completed: swaps=3, csv=D:\UnityPackages\HUDRenderPackage\HUDRenderTestSample\Logs\PerfProbe\perf_dynamic_case_3swaps_20261020154926.csv
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1011" name="TestEightSlotPerfRunner" fullname="TestEightSlotPerfRunner" classname="TestEightSlotPerfRunner" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.029365" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1014" name="BatchMergeBatcherRender_Button_Starts_Comparison" fullname="TestEightSlotPerfRunner.BatchMergeBatcherRender_Button_Starts_Comparison" methodname="BatchMergeBatcherRender_Button_Starts_Comparison" classname="TestEightSlotPerfRunner" runstate="Runnable" seed="1750449306" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.010791" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_007" />
+          </properties>
+        </test-case>
+        <test-case id="1012" name="Runner_Flushes_ThreeSlot_And_EightSlot_Csvs" fullname="TestEightSlotPerfRunner.Runner_Flushes_ThreeSlot_And_EightSlot_Csvs" methodname="Runner_Flushes_ThreeSlot_And_EightSlot_Csvs" classname="TestEightSlotPerfRunner" runstate="Runnable" seed="1349709337" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.009163" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_008" />
+          </properties>
+        </test-case>
+        <test-case id="1013" name="Runner_Restores_Target_State_On_Completion" fullname="TestEightSlotPerfRunner.Runner_Restores_Target_State_On_Completion" methodname="Runner_Restores_Target_State_On_Completion" classname="TestEightSlotPerfRunner" runstate="Runnable" seed="1610679766" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.007302" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_009" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1015" name="TestHudRcPerformanceRunner" fullname="TestHudRcPerformanceRunner" classname="TestHudRcPerformanceRunner" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.527605" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1017" name="DedicatedScene_HasBindings_AndProducesRealGeometry" fullname="TestHudRcPerformanceRunner.DedicatedScene_HasBindings_AndProducesRealGeometry" methodname="DedicatedScene_HasBindings_AndProducesRealGeometry" classname="TestHudRcPerformanceRunner" runstate="Runnable" seed="894818602" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.127782" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_012" />
+          </properties>
+        </test-case>
+        <test-case id="1018" name="Modes_ReplayWorkload_ThroughBothMeshPaths" fullname="TestHudRcPerformanceRunner.Modes_ReplayWorkload_ThroughBothMeshPaths" methodname="Modes_ReplayWorkload_ThroughBothMeshPaths" classname="TestHudRcPerformanceRunner" runstate="Runnable" seed="1979886505" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.056578" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_013" />
+          </properties>
+        </test-case>
+        <test-case id="1020" name="QuadWriteReport_ExportsAvailability_AndCountsThroughBothPaths" fullname="TestHudRcPerformanceRunner.QuadWriteReport_ExportsAvailability_AndCountsThroughBothPaths" methodname="QuadWriteReport_ExportsAvailability_AndCountsThroughBothPaths" classname="TestHudRcPerformanceRunner" runstate="Runnable" seed="548353684" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.177888" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_016" />
+          </properties>
+        </test-case>
+        <test-case id="1021" name="Report_PreservesConfiguration_AndSeparatesBurstRefreshFrames" fullname="TestHudRcPerformanceRunner.Report_PreservesConfiguration_AndSeparatesBurstRefreshFrames" methodname="Report_PreservesConfiguration_AndSeparatesBurstRefreshFrames" classname="TestHudRcPerformanceRunner" runstate="Runnable" seed="1579907723" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.040595" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_015" />
+          </properties>
+        </test-case>
+        <test-case id="1019" name="ResetDuringSampling_RestoresSettings_AndCleansObjects" fullname="TestHudRcPerformanceRunner.ResetDuringSampling_RestoresSettings_AndCleansObjects" methodname="ResetDuringSampling_RestoresSettings_AndCleansObjects" classname="TestHudRcPerformanceRunner" runstate="Runnable" seed="2031604119" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.047156" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_014" />
+          </properties>
+        </test-case>
+        <test-case id="1016" name="SpriteComparison_UsesSelectedPath_AndRestoresSwitchAndResources" fullname="TestHudRcPerformanceRunner.SpriteComparison_UsesSelectedPath_AndRestoresSwitchAndResources" methodname="SpriteComparison_UsesSelectedPath_AndRestoresSwitchAndResources" classname="TestHudRcPerformanceRunner" runstate="Runnable" seed="1472334590" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.073178" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_017" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1022" name="TestManagedCodeInJob" fullname="TestManagedCodeInJob" classname="TestManagedCodeInJob" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.012937" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1023" name="Complete_FreesGCHandle" fullname="TestManagedCodeInJob.Complete_FreesGCHandle" methodname="Complete_FreesGCHandle" classname="TestManagedCodeInJob" runstate="Runnable" seed="1788517087" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.007219" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_JOB_003" />
+          </properties>
+        </test-case>
+        <test-case id="1024" name="MultipleSchedule_AllComplete" fullname="TestManagedCodeInJob.MultipleSchedule_AllComplete" methodname="MultipleSchedule_AllComplete" classname="TestManagedCodeInJob" runstate="Runnable" seed="1472062077" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.004189" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_JOB_004" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1025" name="TestMergeJobs" fullname="TestMergeJobs" classname="TestMergeJobs" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.013717" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1026" name="Merge_EquivalentToSingleThread" fullname="TestMergeJobs.Merge_EquivalentToSingleThread" methodname="Merge_EquivalentToSingleThread" classname="TestMergeJobs" runstate="Runnable" seed="1685614233" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:26Z" duration="0.009398" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_JOB_005" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1027" name="TestOverCapacityScene" fullname="TestOverCapacityScene" classname="TestOverCapacityScene" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:27Z" duration="0.182015" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1028" name="BatchMergeBatcherRender_Recreate_ReportsOverCapacity_AndSplitsBatches" fullname="TestOverCapacityScene.BatchMergeBatcherRender_Recreate_ReportsOverCapacity_AndSplitsBatches" methodname="BatchMergeBatcherRender_Recreate_ReportsOverCapacity_AndSplitsBatches" classname="TestOverCapacityScene" runstate="Runnable" seed="2059364276" result="Passed" start-time="2026-10-20 15:49:26Z" end-time="2026-10-20 15:49:27Z" duration="0.180649" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_SCENE_001" />
+          </properties>
+          <output><![CDATA[
+IgnoreFailingMessages:true
+[TextureSlotTable] texture count exceeds per-batch limit (4/3); draw calls will be split by MergeBatcher.
+[TextureSlotTable] texture count exceeds per-batch limit (5/3); draw calls will be split by MergeBatcher.
+[MergeBatcher] split into 2 batches
+
+IgnoreFailingMessages:false
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1029" name="TestPerfBaselineRunner" fullname="TestPerfBaselineRunner" classname="TestPerfBaselineRunner" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.027149" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1031" name="Runner_Fallback_Records_FrameTime_When_SourceMissing" fullname="TestPerfBaselineRunner.Runner_Fallback_Records_FrameTime_When_SourceMissing" methodname="Runner_Fallback_Records_FrameTime_When_SourceMissing" classname="TestPerfBaselineRunner" runstate="Runnable" seed="852125097" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.007138" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_010" />
+          </properties>
+        </test-case>
+        <test-case id="1030" name="Runner_Flushes_SourceProbe_AfterWindow" fullname="TestPerfBaselineRunner.Runner_Flushes_SourceProbe_AfterWindow" methodname="Runner_Flushes_SourceProbe_AfterWindow" classname="TestPerfBaselineRunner" runstate="Runnable" seed="409128765" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.018335" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_PERF_011" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1032" name="TestPerfProbeCsvScene" fullname="TestPerfProbeCsvScene" classname="TestPerfProbeCsvScene" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.011634" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1033" name="BatchMergeBatcherRender_FlushProbe_WritesCsv_AndUpdatesStatus" fullname="TestPerfProbeCsvScene.BatchMergeBatcherRender_FlushProbe_WritesCsv_AndUpdatesStatus" methodname="BatchMergeBatcherRender_FlushProbe_WritesCsv_AndUpdatesStatus" classname="TestPerfProbeCsvScene" runstate="Runnable" seed="961971826" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.010204" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_DIAG_008" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1034" name="TestPerfProbeRuntime" fullname="TestPerfProbeRuntime" classname="TestPerfProbeRuntime" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.027271" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1035" name="ProbeFlush_AfterRuntimeRebuild_WritesCsv" fullname="TestPerfProbeRuntime.ProbeFlush_AfterRuntimeRebuild_WritesCsv" methodname="ProbeFlush_AfterRuntimeRebuild_WritesCsv" classname="TestPerfProbeRuntime" runstate="Runnable" seed="1806540779" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.025759" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_DIAG_009" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1036" name="TestThreeSlotScene" fullname="TestThreeSlotScene" classname="TestThreeSlotScene" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.008449" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1037" name="BatchMergeBatcherRender_Recreate_StaysSingleBatch_AndReportsNoOverCapacity" fullname="TestThreeSlotScene.BatchMergeBatcherRender_Recreate_StaysSingleBatch_AndReportsNoOverCapacity" methodname="BatchMergeBatcherRender_Recreate_StaysSingleBatch_AndReportsNoOverCapacity" classname="TestThreeSlotScene" runstate="Runnable" seed="274780545" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.006788" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_SCENE_002" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1038" name="TestTMPBatchRendering" fullname="TestTMPBatchRendering" classname="TestTMPBatchRendering" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.138347" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1039" name="TMPText_Rebuild_ProducesBatchMesh" fullname="TestTMPBatchRendering.TMPText_Rebuild_ProducesBatchMesh" methodname="TMPText_Rebuild_ProducesBatchMesh" classname="TestTMPBatchRendering" runstate="Runnable" seed="1001039329" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.137096" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_SCENE_004" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1040" name="TestUseSlimLifecycle" fullname="TestUseSlimLifecycle" classname="TestUseSlimLifecycle" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.009222" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1041" name="UseSlim_Switch_ReRegisters" fullname="TestUseSlimLifecycle.UseSlim_Switch_ReRegisters" methodname="UseSlim_Switch_ReRegisters" classname="TestUseSlimLifecycle" runstate="Runnable" seed="1804827674" result="Passed" start-time="2026-10-20 15:49:27Z" end-time="2026-10-20 15:49:27Z" duration="0.007995" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Category" value="UT_SCENE_003" />
+          </properties>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,11 @@
+{
+    "unityVersion": "2022.3.53f1",
+    "iterations": 38400,
+    "pixelAdjustedRectMs": 26.6988,
+    "rectMs": 4.2487,
+    "relativeMatrixMs": 15.1691,
+    "timestampMs": 2.2136,
+    "generateDiagnosticsOnMs": 134.7693,
+    "generateDiagnosticsOffMs": 113.0647,
+    "sink": 1747225.0
+}

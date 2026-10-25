@@ -6,6 +6,16 @@ param(
     [string]$UnityExe = 'C:\Program Files\Unity\Hub\Editor\2022.3.53f1\Editor\Unity.exe',
     [string]$Adb = 'adb',
     [switch]$Development,
+    [switch]$UseSlim,
+    [switch]$ProfileQuadWrites,
+    [switch]$DisableBuildMeshDiagnostics,
+    [switch]$GenerationBatch,
+    [switch]$SpriteBacked,
+    [switch]$ForceUguiFallback,
+    [ValidateRange(1, 4096)][int]$HolderCount = 256,
+    [ValidateRange(2, 10000)][int]$SampleFrames = 180,
+    [ValidateRange(2, 10000)][int]$WarmupFrames = 60,
+    [ValidateRange(-1, 240)][int]$TargetFrameRate = -1,
     [int]$TimeoutSeconds = 900
 )
 
@@ -20,7 +30,8 @@ if ($Action -eq 'Build') {
     $head = (& git -C $repoRoot rev-parse HEAD).Trim()
     if ($LASTEXITCODE -ne 0) { throw 'Cannot identify source commit.' }
     $dirty = @(& git -C $repoRoot status --porcelain).Count -gt 0
-    $sourcePaths = @(& git -C $repoRoot ls-files --cached --others --exclude-standard -- com.uidatarender HUDRenderTestSample/Assets Tools)
+    $sourcePaths = @(& git -C $repoRoot ls-files --cached --others --exclude-standard -- com.uidatarender com.unity.ugui HUDRenderTestSample/Assets HUDRenderTestSample/Packages HUDRenderTestSample/ProjectSettings Tools)
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot inventory source files.' }
     $manifestPath = Join-Path $logDir ('Build-' + (Get-Date -Format 'yyyyMMdd_HHmmss') + '-sources.sha256')
     $manifest = foreach ($relative in ($sourcePaths | Sort-Object -Unique)) {
         $absoluteSource = Join-Path $repoRoot $relative
@@ -31,8 +42,14 @@ if ($Action -eq 'Build') {
     $env:HUD_RC_SOURCE_STATUS = if ($dirty) { 'dirty working tree; see source fingerprint' } else { 'clean' }
     $env:HUD_RC_SOURCE_FINGERPRINT = (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash
     $logPath = Join-Path $logDir ('Build-' + (Get-Date -Format 'yyyyMMdd_HHmmss') + '.log')
-    $args = @('-batchmode','-quit','-projectPath',$projectPath,'-executeMethod','HudRcSceneBuilder.BuildAndroidBatch','-hudRcAndroidOutput',$apkAbsolute,'-logFile',$logPath)
+    $args = @('-batchmode','-quit','-projectPath',$projectPath,'-executeMethod','HudRcSceneBuilder.BuildAndroidBatch','-hudRcAndroidOutput',$apkAbsolute,'-hudRcCount',"$HolderCount",'-hudRcSamples',"$SampleFrames",'-hudRcWarmup',"$WarmupFrames",'-hudRcFrameRate',"$TargetFrameRate",'-logFile',$logPath)
     if ($Development) { $args += '-hudRcDevelopment' }
+    if ($UseSlim) { $args += '-hudRcSlim' }
+    if ($ProfileQuadWrites) { $args += '-hudRcProfileQuadWrites' }
+    if ($DisableBuildMeshDiagnostics) { $args += '-hudRcDisableBuildMeshDiagnostics' }
+    if ($GenerationBatch) { $args += '-hudRcGenerationBatch' }
+    if ($SpriteBacked) { $args += '-hudRcSpriteBacked' }
+    if ($ForceUguiFallback) { $args += '-hudRcForceUguiFallback' }
     $process = Start-Process -FilePath $UnityExe -ArgumentList $args -WindowStyle Hidden -PassThru
     if (-not $process.WaitForExit($TimeoutSeconds * 1000)) { Stop-Process -Id $process.Id -Force; throw "Unity Android build timed out. Log: $logPath" }
     if ($process.ExitCode -ne 0) { throw "Unity Android build failed ($($process.ExitCode)). Log: $logPath" }

@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAtUtc": "2026-10-20T15:37:29.0973291Z",
+  "success": true,
+  "repositoryRoot": "D:\\UnityPackages\\HUDRenderPackage",
+  "packagePath": "D:\\UnityPackages\\HUDRenderPackage\\com.uidatarender",
+  "samplePath": "D:\\UnityPackages\\HUDRenderPackage\\HUDRenderTestSample",
+  "asmdefCount": 7,
+  "checks": [
+    {
+      "name": "required-files",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "sample-output-and-documentation-externalized",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "package-name",
+      "passed": true,
+      "evidence": "com.uidatarender"
+    },
+    {
+      "name": "package-version",
+      "passed": true,
+      "evidence": "0.1.2"
+    },
+    {
+      "name": "package-unity-baseline",
+      "passed": true,
+      "evidence": "2022.3"
+    },
+    {
+      "name": "package-dependency-com.unity.burst",
+      "passed": true,
+      "evidence": "1.8.28 (expected 1.8.28)"
+    },
+    {
+      "name": "package-dependency-com.unity.textmeshpro",
+      "passed": true,
+      "evidence": "3.0.6 (expected 3.0.6)"
+    },
+    {
+      "name": "package-dependency-com.unity.ugui",
+      "passed": true,
+      "evidence": "1.0.0 (expected 1.0.0)"
+    },
+    {
+      "name": "local-upm-link",
+      "passed": true,
+      "evidence": "file:../../com.uidatarender -> D:\\UnityPackages\\HUDRenderPackage\\com.uidatarender"
+    },
+    {
+      "name": "local-upm-link-tracked",
+      "passed": true,
+      "evidence": "com.uidatarender"
+    },
+    {
+      "name": "embedded-lock-directories-exist",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "embedded-lock-directories-tracked",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "sample-package-directories-tracked",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "ugui-resolution",
+      "passed": true,
+      "evidence": "version=file:../../com.unity.ugui; source=local"
+    },
+    {
+      "name": "sample-unity-version",
+      "passed": true,
+      "evidence": "2022.3.53f1"
+    },
+    {
+      "name": "asmdef-unique-names",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "required-asmdefs",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "runtime-asmdefs-test-free",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "package-runtime-sample-independent",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "unity-meta-completeness",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "unity-meta-guid-uniqueness",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "test-governance",
+      "passed": true,
+      "evidence": "D:\\UnityPackages\\HUDRenderPackage\\TestResults\\Validation\\test-governance.json"
+    }
+  ]
+}

@@ -1,0 +1,1143 @@
+{
+  "percentileMethod": "nearest rank ceil(n*p)-1, matching HudRcPerformanceRunner",
+  "runs": [
+    {
+      "order": 1,
+      "variant": "holders128-slim",
+      "metadata": {
+        "variant": "holders128-slim",
+        "order": 1,
+        "device": "791d02af",
+        "startedUtc": "2026-10-20T16:06:09.2516735Z",
+        "apk": "holders128-slim.apk",
+        "apkSha256": "38CB57A821F8E14DD52D3C7EBBAFFF8E07C3D09647640CC8FF9345BB7C64B37D",
+        "originalReport": "/sdcard/Android/data/com.DefaultCompany.HUDRenderTest/files/hud_rc_20261020_160645_995_612efc5c.json",
+        "reportSha256": "C9C66013C839C3299C1D1B89FCE70BCB615E9BD9810ED8FE8E7F280A2358A984",
+        "sourceFingerprint": "2E839767D1B004C791AF6B7C979297E0C236A5B511D42892FE5563EB3FC74DF9",
+        "batteryBefore": [
+          "  status: 5",
+          "  level: 100",
+          "  temperature: 275"
+        ],
+        "batteryAfter": [
+          "  status: 5",
+          "  level: 100",
+          "  temperature: 275"
+        ],
+        "thermalBefore": [
+          "Thermal Status: 0"
+        ],
+        "thermalAfter": [
+          "Thermal Status: 0"
+        ]
+      },
+      "preparedCounts": {
+        "preparedSpriteImages": 0,
+        "preparedFastPathImages": 3
+      },
+      "environment": {
+        "utc": "2026-10-20T16:06:45.9814790Z",
+        "unityVersion": "2022.3.53f1",
+        "os": "Android OS 11 / API-30 (RKQ1.200826.002/V12.5.10.0.RJBCNXM)",
+        "cpu": "ARM64 FP ASIMD AES",
+        "graphics": "Vulkan",
+        "executionMode": "Player",
+        "scriptingBackend": "IL2CPP",
+        "commit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+        "sourceStatus": "dirty working tree; see source fingerprint",
+        "sourceFingerprint": "2E839767D1B004C791AF6B7C979297E0C236A5B511D42892FE5563EB3FC74DF9",
+        "packageVersion": "0.1.2",
+        "quadWriteTimestampFrequency": 10000000
+      },
+      "configuration": {
+        "holderCount": 128,
+        "quadsPerHolder": 3,
+        "partialPercent": 10,
+        "burstEveryFrames": 30,
+        "warmupFrames": 60,
+        "sampleFrames": 600,
+        "seed": 12345,
+        "useSlim": true,
+        "profileQuadWrites": false,
+        "spriteBacked": false,
+        "forceUguiFallback": false,
+        "targetFrameRate": 60
+      },
+      "groups": {
+        "Static": {
+          "count": 600,
+          "generationMs": {
+            "median": 0.0006,
+            "p95": 0.0008,
+            "min": 0.0003,
+            "max": 0.0018
+          },
+          "buildMeshMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mergeMs": {
+            "median": 0.0002,
+            "p95": 0.0004,
+            "min": 0.0001,
+            "max": 0.0005
+          },
+          "mergePlanMs": {
+            "median": 0.0295,
+            "p95": 0.0295,
+            "min": 0.0295,
+            "max": 0.0295
+          },
+          "mergeFillMs": {
+            "median": 0.048900000751018524,
+            "p95": 0.048900000751018524,
+            "min": 0.048900000751018524,
+            "max": 0.048900000751018524
+          },
+          "meshUploadMs": {
+            "median": 0.0421,
+            "p95": 0.0421,
+            "min": 0.0421,
+            "max": 0.0421
+          },
+          "frameIntervalMs": {
+            "median": 16.6904,
+            "p95": 16.9642,
+            "min": 16.1642,
+            "max": 17.1996
+          },
+          "regenerationMs": {
+            "median": 0.0008,
+            "p95": 0.001,
+            "min": 0.0005,
+            "max": 0.002
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.686042,
+            "p95": 16.959636,
+            "min": 16.15625,
+            "max": 17.206406
+          },
+          "holderSelectionMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshSetupMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshSimplePathMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshTransformMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "writeStageFrames": 0
+        },
+        "Partial": {
+          "count": 600,
+          "generationMs": {
+            "median": 0.3845,
+            "p95": 0.4296,
+            "min": 0.1673,
+            "max": 0.7837
+          },
+          "buildMeshMs": {
+            "median": 0.3287,
+            "p95": 0.3662,
+            "min": 0.1425,
+            "max": 0.6855
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 0.25589999999999996,
+            "p95": 0.2902,
+            "min": 0.11,
+            "max": 0.5581999999999998
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.033800000000000004,
+            "p95": 0.0423,
+            "min": 0.013999999999999999,
+            "max": 0.16119999999999998
+          },
+          "mergeMs": {
+            "median": 0.2907,
+            "p95": 0.3243,
+            "min": 0.1323,
+            "max": 0.7018
+          },
+          "mergePlanMs": {
+            "median": 0.0715,
+            "p95": 0.0786,
+            "min": 0.03,
+            "max": 0.151
+          },
+          "mergeFillMs": {
+            "median": 0.11749999970197678,
+            "p95": 0.12280000001192093,
+            "min": 0.048500001430511475,
+            "max": 0.313400000333786
+          },
+          "meshUploadMs": {
+            "median": 0.0785,
+            "p95": 0.0888,
+            "min": 0.0391,
+            "max": 0.3311
+          },
+          "frameIntervalMs": {
+            "median": 16.6903,
+            "p95": 16.9623,
+            "min": 16.101,
+            "max": 17.251
+          },
+          "regenerationMs": {
+            "median": 0.6795,
+            "p95": 0.7526999999999999,
+            "min": 0.2996,
+            "max": 1.1120999999999999
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.687448,
+            "p95": 16.947448,
+            "min": 16.106042,
+            "max": 17.235052
+          },
+          "holderSelectionMs": {
+            "median": 0.0474,
+            "p95": 0.0555,
+            "min": 0.0211,
+            "max": 0.1899
+          },
+          "buildMeshSetupMs": {
+            "median": 0.005999999999999999,
+            "p95": 0.0091,
+            "min": 0.0022,
+            "max": 0.011
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.0121,
+            "p95": 0.012999999999999998,
+            "min": 0.004399999999999999,
+            "max": 0.0418
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.03159999999999999,
+            "p95": 0.03329999999999998,
+            "min": 0.0125,
+            "max": 0.06359999999999998
+          },
+          "buildMeshSimplePathMs": {
+            "median": 0.21719999999999995,
+            "p95": 0.24639999999999998,
+            "min": 0.09270000000000002,
+            "max": 0.4805
+          },
+          "buildMeshTransformMs": {
+            "median": 0.0508,
+            "p95": 0.0564,
+            "min": 0.0207,
+            "max": 0.129
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.08279999999999998,
+            "p95": 0.0954,
+            "min": 0.0379,
+            "max": 0.2889
+          },
+          "writeStageFrames": 0
+        },
+        "Burst-all": {
+          "count": 600,
+          "generationMs": {
+            "median": 0.0011,
+            "p95": 0.0014,
+            "min": 0.0007,
+            "max": 3.501
+          },
+          "buildMeshMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 3.0625
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 2.3281
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.4157999999999998
+          },
+          "mergeMs": {
+            "median": 0.0004,
+            "p95": 0.0007,
+            "min": 0.0001,
+            "max": 0.3875
+          },
+          "mergePlanMs": {
+            "median": 0.072,
+            "p95": 0.0773,
+            "min": 0.0688,
+            "max": 0.1387
+          },
+          "mergeFillMs": {
+            "median": 0.12060000002384186,
+            "p95": 0.14810000360012054,
+            "min": 0.11640000343322754,
+            "max": 0.15690000355243683
+          },
+          "meshUploadMs": {
+            "median": 0.094,
+            "p95": 0.1009,
+            "min": 0.0851,
+            "max": 0.1034
+          },
+          "frameIntervalMs": {
+            "median": 16.6927,
+            "p95": 17.0696,
+            "min": 15.6925,
+            "max": 17.9528
+          },
+          "regenerationMs": {
+            "median": 0.0015,
+            "p95": 0.0018999999999999998,
+            "min": 0.0008,
+            "max": 3.8253
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.690885,
+            "p95": 17.054792,
+            "min": 15.699687,
+            "max": 17.907135
+          },
+          "holderSelectionMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.406
+          },
+          "buildMeshSetupMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.22069999999999995
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.11969999999999992
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.3256
+          },
+          "buildMeshSimplePathMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 2.0006000000000013
+          },
+          "buildMeshTransformMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.47230000000000055
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.7091000000000012
+          },
+          "writeStageFrames": 0
+        },
+        "Burst-refresh": {
+          "count": 20,
+          "generationMs": {
+            "median": 3.3193,
+            "p95": 3.4275,
+            "min": 3.2656,
+            "max": 3.501
+          },
+          "buildMeshMs": {
+            "median": 2.8843,
+            "p95": 2.9885,
+            "min": 2.8289,
+            "max": 3.0625
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 2.2182999999999997,
+            "p95": 2.2781,
+            "min": 2.1723,
+            "max": 2.3281
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.2924,
+            "p95": 0.3284999999999998,
+            "min": 0.27569999999999995,
+            "max": 0.4157999999999998
+          },
+          "mergeMs": {
+            "median": 0.3173,
+            "p95": 0.3653,
+            "min": 0.2942,
+            "max": 0.3875
+          },
+          "mergePlanMs": {
+            "median": 0.072,
+            "p95": 0.0773,
+            "min": 0.0688,
+            "max": 0.1387
+          },
+          "mergeFillMs": {
+            "median": 0.12060000002384186,
+            "p95": 0.14810000360012054,
+            "min": 0.11640000343322754,
+            "max": 0.15690000355243683
+          },
+          "meshUploadMs": {
+            "median": 0.094,
+            "p95": 0.1009,
+            "min": 0.0851,
+            "max": 0.1034
+          },
+          "frameIntervalMs": {
+            "median": 16.7111,
+            "p95": 17.0969,
+            "min": 16.2414,
+            "max": 17.49
+          },
+          "regenerationMs": {
+            "median": 3.6591,
+            "p95": 3.7466999999999997,
+            "min": 3.5781,
+            "max": 3.8253
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.712812,
+            "p95": 17.099844,
+            "min": 16.252448,
+            "max": 17.480833
+          },
+          "holderSelectionMs": {
+            "median": 0.3676,
+            "p95": 0.3944,
+            "min": 0.3598,
+            "max": 0.406
+          },
+          "buildMeshSetupMs": {
+            "median": 0.054600000000000065,
+            "p95": 0.09669999999999969,
+            "min": 0.04590000000000009,
+            "max": 0.22069999999999995
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.1171999999999999,
+            "p95": 0.11919999999999993,
+            "min": 0.11619999999999987,
+            "max": 0.11969999999999992
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.3004999999999998,
+            "p95": 0.3080000000000001,
+            "min": 0.2966,
+            "max": 0.3256
+          },
+          "buildMeshSimplePathMs": {
+            "median": 1.8919000000000012,
+            "p95": 1.953400000000002,
+            "min": 1.8493000000000017,
+            "max": 2.0006000000000013
+          },
+          "buildMeshTransformMs": {
+            "median": 0.45950000000000074,
+            "p95": 0.4695000000000005,
+            "min": 0.45290000000000047,
+            "max": 0.47230000000000055
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.6553000000000008,
+            "p95": 0.6842000000000013,
+            "min": 0.6382000000000008,
+            "max": 0.7091000000000012
+          },
+          "writeStageFrames": 0
+        }
+      },
+      "availableFrames": {
+        "buildMeshWriteAvailable": 0,
+        "mainThreadAvailable": 1800,
+        "frameGcAvailable": 0,
+        "scopedAllocationAvailable": 0
+      }
+    },
+    {
+      "order": 2,
+      "variant": "holders128-slim",
+      "metadata": {
+        "variant": "holders128-slim",
+        "order": 2,
+        "device": "791d02af",
+        "startedUtc": "2026-10-20T16:07:00.4809476Z",
+        "apk": "holders128-slim.apk",
+        "apkSha256": "38CB57A821F8E14DD52D3C7EBBAFFF8E07C3D09647640CC8FF9345BB7C64B37D",
+        "originalReport": "/sdcard/Android/data/com.DefaultCompany.HUDRenderTest/files/hud_rc_20261020_160737_264_832762f1.json",
+        "reportSha256": "9D8394DE9341CCA20E124078BA1AAA6625D8DE41835DA4D6C1D959EB4FB7A9E5",
+        "sourceFingerprint": "2E839767D1B004C791AF6B7C979297E0C236A5B511D42892FE5563EB3FC74DF9",
+        "batteryBefore": [
+          "  status: 5",
+          "  level: 100",
+          "  temperature: 275"
+        ],
+        "batteryAfter": [
+          "  status: 5",
+          "  level: 100",
+          "  temperature: 277"
+        ],
+        "thermalBefore": [
+          "Thermal Status: 0"
+        ],
+        "thermalAfter": [
+          "Thermal Status: 0"
+        ]
+      },
+      "preparedCounts": {
+        "preparedSpriteImages": 0,
+        "preparedFastPathImages": 3
+      },
+      "environment": {
+        "utc": "2026-10-20T16:07:37.2524390Z",
+        "unityVersion": "2022.3.53f1",
+        "os": "Android OS 11 / API-30 (RKQ1.200826.002/V12.5.10.0.RJBCNXM)",
+        "cpu": "ARM64 FP ASIMD AES",
+        "graphics": "Vulkan",
+        "executionMode": "Player",
+        "scriptingBackend": "IL2CPP",
+        "commit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+        "sourceStatus": "dirty working tree; see source fingerprint",
+        "sourceFingerprint": "2E839767D1B004C791AF6B7C979297E0C236A5B511D42892FE5563EB3FC74DF9",
+        "packageVersion": "0.1.2",
+        "quadWriteTimestampFrequency": 10000000
+      },
+      "configuration": {
+        "holderCount": 128,
+        "quadsPerHolder": 3,
+        "partialPercent": 10,
+        "burstEveryFrames": 30,
+        "warmupFrames": 60,
+        "sampleFrames": 600,
+        "seed": 12345,
+        "useSlim": true,
+        "profileQuadWrites": false,
+        "spriteBacked": false,
+        "forceUguiFallback": false,
+        "targetFrameRate": 60
+      },
+      "groups": {
+        "Static": {
+          "count": 600,
+          "generationMs": {
+            "median": 0.0006,
+            "p95": 0.0008,
+            "min": 0.0004,
+            "max": 0.0016
+          },
+          "buildMeshMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mergeMs": {
+            "median": 0.0002,
+            "p95": 0.0003,
+            "min": 0.0001,
+            "max": 0.0005
+          },
+          "mergePlanMs": {
+            "median": 0.0351,
+            "p95": 0.0351,
+            "min": 0.0351,
+            "max": 0.0351
+          },
+          "mergeFillMs": {
+            "median": 0.05999999865889549,
+            "p95": 0.05999999865889549,
+            "min": 0.05999999865889549,
+            "max": 0.05999999865889549
+          },
+          "meshUploadMs": {
+            "median": 0.0498,
+            "p95": 0.0498,
+            "min": 0.0498,
+            "max": 0.0498
+          },
+          "frameIntervalMs": {
+            "median": 16.6872,
+            "p95": 16.9976,
+            "min": 16.1067,
+            "max": 17.2894
+          },
+          "regenerationMs": {
+            "median": 0.0007999999999999999,
+            "p95": 0.001,
+            "min": 0.0006000000000000001,
+            "max": 0.002
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.686041,
+            "p95": 16.995782,
+            "min": 16.107344,
+            "max": 17.282084
+          },
+          "holderSelectionMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshSetupMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshSimplePathMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshTransformMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "writeStageFrames": 0
+        },
+        "Partial": {
+          "count": 600,
+          "generationMs": {
+            "median": 0.3812,
+            "p95": 0.4324,
+            "min": 0.1767,
+            "max": 0.6435
+          },
+          "buildMeshMs": {
+            "median": 0.3256,
+            "p95": 0.3715,
+            "min": 0.1481,
+            "max": 0.5719
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 0.251,
+            "p95": 0.2861,
+            "min": 0.11299999999999999,
+            "max": 0.4955
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.032900000000000006,
+            "p95": 0.04120000000000001,
+            "min": 0.014100000000000001,
+            "max": 0.07440000000000001
+          },
+          "mergeMs": {
+            "median": 0.2882,
+            "p95": 0.3228,
+            "min": 0.1439,
+            "max": 0.6764
+          },
+          "mergePlanMs": {
+            "median": 0.0707,
+            "p95": 0.0775,
+            "min": 0.0324,
+            "max": 0.2321
+          },
+          "mergeFillMs": {
+            "median": 0.11739999800920486,
+            "p95": 0.12319999933242798,
+            "min": 0.04969999939203262,
+            "max": 0.3327000141143799
+          },
+          "meshUploadMs": {
+            "median": 0.0777,
+            "p95": 0.0871,
+            "min": 0.0415,
+            "max": 0.257
+          },
+          "frameIntervalMs": {
+            "median": 16.6941,
+            "p95": 16.9675,
+            "min": 16.1239,
+            "max": 17.5865
+          },
+          "regenerationMs": {
+            "median": 0.6718999999999999,
+            "p95": 0.7595000000000001,
+            "min": 0.3236,
+            "max": 1.1194
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.691614,
+            "p95": 16.942448,
+            "min": 16.120156,
+            "max": 17.578698
+          },
+          "holderSelectionMs": {
+            "median": 0.0469,
+            "p95": 0.055,
+            "min": 0.0223,
+            "max": 0.1806
+          },
+          "buildMeshSetupMs": {
+            "median": 0.0063,
+            "p95": 0.0083,
+            "min": 0.0028999999999999994,
+            "max": 0.032999999999999995
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.0119,
+            "p95": 0.012799999999999999,
+            "min": 0.0045,
+            "max": 0.036
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.031799999999999995,
+            "p95": 0.033299999999999996,
+            "min": 0.013099999999999997,
+            "max": 0.055499999999999966
+          },
+          "buildMeshSimplePathMs": {
+            "median": 0.21319999999999997,
+            "p95": 0.23950000000000002,
+            "min": 0.09479999999999998,
+            "max": 0.4528
+          },
+          "buildMeshTransformMs": {
+            "median": 0.04990000000000001,
+            "p95": 0.05449999999999999,
+            "min": 0.020499999999999994,
+            "max": 0.1991
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.08109999999999999,
+            "p95": 0.09219999999999999,
+            "min": 0.039,
+            "max": 0.2405
+          },
+          "writeStageFrames": 0
+        },
+        "Burst-all": {
+          "count": 600,
+          "generationMs": {
+            "median": 0.0011,
+            "p95": 0.0014,
+            "min": 0.0007,
+            "max": 3.4488
+          },
+          "buildMeshMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 3.0088
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 2.352799999999999
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.33839999999999965
+          },
+          "mergeMs": {
+            "median": 0.0004,
+            "p95": 0.0007,
+            "min": 0.0003,
+            "max": 0.3541
+          },
+          "mergePlanMs": {
+            "median": 0.0712,
+            "p95": 0.0745,
+            "min": 0.069,
+            "max": 0.0749
+          },
+          "mergeFillMs": {
+            "median": 0.12120000272989273,
+            "p95": 0.1242000013589859,
+            "min": 0.11860000342130661,
+            "max": 0.14730000495910645
+          },
+          "meshUploadMs": {
+            "median": 0.0948,
+            "p95": 0.0984,
+            "min": 0.0831,
+            "max": 0.1005
+          },
+          "frameIntervalMs": {
+            "median": 16.6934,
+            "p95": 17.0596,
+            "min": 15.3862,
+            "max": 18.0743
+          },
+          "regenerationMs": {
+            "median": 0.0015,
+            "p95": 0.0018,
+            "min": 0.0011,
+            "max": 3.7713
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.688802,
+            "p95": 17.040573,
+            "min": 15.395677,
+            "max": 18.050156
+          },
+          "holderSelectionMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.3964
+          },
+          "buildMeshSetupMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.05110000000000007
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.12259999999999988
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.32590000000000025
+          },
+          "buildMeshSimplePathMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 2.0263
+          },
+          "buildMeshTransformMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.4890000000000004
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.8089000000000017
+          },
+          "writeStageFrames": 0
+        },
+        "Burst-refresh": {
+          "count": 20,
+          "generationMs": {
+            "median": 3.326,
+            "p95": 3.4472,
+            "min": 3.2755,
+            "max": 3.4488
+          },
+          "buildMeshMs": {
+            "median": 2.8849,
+            "p95": 3.0064,
+            "min": 2.8403,
+            "max": 3.0088
+          },
+          "buildMeshDoGenerateMs": {
+            "median": 2.229099999999998,
+            "p95": 2.3463999999999987,
+            "min": 2.185299999999997,
+            "max": 2.352799999999999
+          },
+          "buildMeshMeshWriteMs": {
+            "median": 0.2918999999999999,
+            "p95": 0.3255999999999997,
+            "min": 0.2835999999999998,
+            "max": 0.33839999999999965
+          },
+          "mergeMs": {
+            "median": 0.3181,
+            "p95": 0.3286,
+            "min": 0.2968,
+            "max": 0.3541
+          },
+          "mergePlanMs": {
+            "median": 0.0712,
+            "p95": 0.0745,
+            "min": 0.069,
+            "max": 0.0749
+          },
+          "mergeFillMs": {
+            "median": 0.12120000272989273,
+            "p95": 0.1242000013589859,
+            "min": 0.11860000342130661,
+            "max": 0.14730000495910645
+          },
+          "meshUploadMs": {
+            "median": 0.0948,
+            "p95": 0.0984,
+            "min": 0.0831,
+            "max": 0.1005
+          },
+          "frameIntervalMs": {
+            "median": 16.7469,
+            "p95": 17.0338,
+            "min": 16.507,
+            "max": 17.0453
+          },
+          "regenerationMs": {
+            "median": 3.651,
+            "p95": 3.7664,
+            "min": 3.5936,
+            "max": 3.7713
+          },
+          "buildMeshUguiFallbackMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "mainThreadMs": {
+            "median": 16.744479,
+            "p95": 17.017708,
+            "min": 16.509635,
+            "max": 17.037656
+          },
+          "holderSelectionMs": {
+            "median": 0.3687,
+            "p95": 0.3771,
+            "min": 0.3618,
+            "max": 0.3964
+          },
+          "buildMeshSetupMs": {
+            "median": 0.048100000000000094,
+            "p95": 0.051100000000000034,
+            "min": 0.04610000000000009,
+            "max": 0.05110000000000007
+          },
+          "buildMeshDataInitMs": {
+            "median": 0.1178999999999999,
+            "p95": 0.1190999999999999,
+            "min": 0.1161999999999999,
+            "max": 0.12259999999999988
+          },
+          "buildMeshDispatchMs": {
+            "median": 0.30029999999999996,
+            "p95": 0.3197000000000001,
+            "min": 0.29690000000000016,
+            "max": 0.32590000000000025
+          },
+          "buildMeshSimplePathMs": {
+            "median": 1.8966000000000007,
+            "p95": 1.9399000000000004,
+            "min": 1.861399999999999,
+            "max": 2.0263
+          },
+          "buildMeshTransformMs": {
+            "median": 0.4576000000000006,
+            "p95": 0.4702999999999997,
+            "min": 0.44670000000000065,
+            "max": 0.4890000000000004
+          },
+          "buildMeshSpriteDataMs": {
+            "median": 0.0,
+            "p95": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "buildMeshDrawingDimensionsMs": {
+            "median": 0.6577000000000013,
+            "p95": 0.6873000000000014,
+            "min": 0.6406000000000013,
+            "max": 0.8089000000000017
+          },
+          "writeStageFrames": 0
+        }
+      },
+      "availableFrames": {
+        "buildMeshWriteAvailable": 0,
+        "mainThreadAvailable": 1800,
+        "frameGcAvailable": 0,
+        "scopedAllocationAvailable": 0
+      }
+    }
+  ],
+  "validatedFrames": 3600,
+  "sourceFingerprints": [
+    "2E839767D1B004C791AF6B7C979297E0C236A5B511D42892FE5563EB3FC74DF9"
+  ]
+}

@@ -29,7 +29,7 @@ Both measured loops allocate zero managed allocation events after warm-up; timin
 The test passes and records comparable CPU measurements for the old and portable implementations.
 
 ## Latest Run Result
-Passed: 119/119 EditMode (2026-09-27); GC.Alloc positive control (4096-byte array) observed, zero target allocation events, recorder saturation checked. CPU median/p95: FillData2 5.025/6.423 us; FillData3 6.083/7.529 us. Evidence: openspec/changes/validate-hud-rc-performance/evidence/hud-rc-evidence.zip.
+Passed: 119/119 EditMode (2026-09-27); GC.Alloc positive control (4096-byte array) observed, zero target allocation events, recorder saturation checked. CPU median/p95: FillData2 5.025/6.423 us; FillData3 6.083/7.529 us. Evidence: openspec/changes/archive/2026-10-21-validate-hud-rc-performance/evidence/hud-rc-evidence.zip.
 
 ### Previous record
 Unknown until the next Unity Test Runner execution.

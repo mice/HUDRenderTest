@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+  "sourceStatus": "dirty working tree; not an RC",
+  "unity": "2022.3.53f1",
+  "tests": [
+    {
+      "artifact": "baseline-editmode.xml",
+      "total": 144,
+      "passed": 143,
+      "failed": 1,
+      "result": "Failed(Child)",
+      "sha256": "666E5848D80FB75035E34AF3D2B5E22627BBE81C66E55B133E73F4232A3450AB"
+    },
+    {
+      "artifact": "editmode-results.xml",
+      "total": 144,
+      "passed": 144,
+      "failed": 0,
+      "result": "Passed",
+      "sha256": "89077DBBAAEE6455AFE9EE2806E39FAFB2913D02CE7E7B69A467378876C1F132"
+    },
+    {
+      "artifact": "playmode-results.xml",
+      "total": 27,
+      "passed": 27,
+      "failed": 0,
+      "result": "Passed",
+      "sha256": "E9CB7EA5DDC67D71B39BF4AE06765CA34BD9F8E7C172C0F6235AABCCF1CA9088"
+    }
+  ],
+  "governance": "171/171 passed",
+  "layout": "passed",
+  "hashedSources": [
+    {
+      "path": "com.uidatarender/Runtime/UIDataRender/Mesh/UIMeshDataX.cs",
+      "sha256": "97FF2135614635AA65D0F4A8986CFEA78F09A2B31BA7F074AA2AC3DF06F97FAB"
+    },
+    {
+      "path": "com.uidatarender/Tests/EditMode/TestUIMeshDataX.cs",
+      "sha256": "3AED8E8A7C9A0CC94E5FE9DBE30ACD70DA45FB5699E3B17482BAB8313DE4841F"
+    },
+    {
+      "path": "HUDRenderTestSample/Assets/Scripts/HOT/HudRcPerformanceRunner.cs",
+      "sha256": "81F6CCC44FF30749BAF7963EBC5A5D420DA28229DE83DA5B3406319A7BA45EE2"
+    },
+    {
+      "path": "HUDRenderTestSample/Packages/manifest.json",
+      "sha256": "41F0F45E70E443D06A6454DC304B80CE3FB8D1C576E5FB057E414CAD8A04F0F0"
+    }
+  ],
+  "allocation": "Baseline 2048 events per method; fixed zero observed in the same 256-call warmed Editor regression. Positive control required.",
+  "coverage": "not run",
+  "jenkins": "not run"
+}

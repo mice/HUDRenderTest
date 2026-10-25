@@ -6,6 +6,119 @@ using UnityEngine.UI;
 
 public class TestUIMeshData
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_027.md
+    [Test]
+    [Category("UT_MESH_027")]
+    public void QuadDiagnostics_RequireBothSwitches_AndPreserveBothMeshOutputs()
+    {
+        bool previousEnabled = BuildMeshDiagnostics.Enabled;
+        bool previousQuad = BuildMeshDiagnostics.ProfileSimpleQuadWrites;
+        var drawing = new Vector4(-2, -1, 2, 1);
+        var uv = new Vector4(.1f, .2f, .8f, .9f);
+        var color = new Color32(10, 20, 30, 40);
+        try
+        {
+            foreach (IUIData data in new IUIData[] { new UIMeshData(), new UIMeshDataX() })
+            using (data)
+            {
+                data.TextureIndex = 3;
+                BuildMeshDiagnostics.Enabled = false;
+                data.WriteSimpleQuad(drawing, uv, color);
+                var expectedVertices = new List<Vector3>();
+                var expectedUvs = new List<Vector4>();
+                var expectedColors = new List<Color32>();
+                var expectedIndices = new List<int>();
+                data.FillToDrawData(expectedVertices, expectedUvs, expectedColors, expectedIndices, Vector3.zero);
+                // Enabled -> disabled transitions must clear the previous measurement.
+                foreach (int switches in new[] { 3, 1, 3, 2, 0 })
+                {
+                    BuildMeshDiagnostics.Enabled = (switches & 1) != 0;
+                    BuildMeshDiagnostics.ProfileSimpleQuadWrites = (switches & 2) != 0;
+                    data.WriteSimpleQuad(drawing, uv, color);
+                    var timing = ((ISimpleQuadWriteStageSource)data).LastSimpleQuadWriteTimings;
+                    Assert.AreEqual(switches == 3 ? 1 : 0, timing.RecordedWrites);
+                    if (switches != 3) Assert.AreEqual(default(SimpleQuadWriteTimings), timing);
+                    else
+                    {
+                        // Zero is a legitimate timer-resolution result; validity comes from the count.
+                        Assert.GreaterOrEqual(timing.StorageMs, 0);
+                        Assert.GreaterOrEqual(timing.VertexMs, 0);
+                        Assert.GreaterOrEqual(timing.UvMs, 0);
+                        Assert.GreaterOrEqual(timing.ColorMs, 0);
+                        Assert.GreaterOrEqual(timing.IndexMs, 0);
+                    }
+                    var vertices = new List<Vector3>();
+                    var uvs = new List<Vector4>();
+                    var colors = new List<Color32>();
+                    var indices = new List<int>();
+                    data.FillToDrawData(vertices, uvs, colors, indices, Vector3.zero);
+                    CollectionAssert.AreEqual(expectedVertices, vertices);
+                    CollectionAssert.AreEqual(expectedUvs, uvs);
+                    CollectionAssert.AreEqual(expectedColors, colors);
+                    CollectionAssert.AreEqual(expectedIndices, indices);
+                }
+            }
+        }
+        finally
+        {
+            BuildMeshDiagnostics.Enabled = previousEnabled;
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = previousQuad;
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_028.md
+    [Test]
+    [Category("UT_MESH_028")]
+    public void QuadDiagnostics_WarmedWrites_AllocateNoManagedMemory()
+    {
+        bool previousEnabled = BuildMeshDiagnostics.Enabled;
+        bool previousQuad = BuildMeshDiagnostics.ProfileSimpleQuadWrites;
+        var drawing = new Vector4(-2, -1, 2, 1);
+        var uv = new Vector4(0, 0, 1, 1);
+        var color = new Color32(10, 20, 30, 40);
+        try
+        {
+            using (var managed = new UIMeshData())
+            using (var slim = new UIMeshDataX())
+            {
+                foreach (int switches in new[] { 0, 1, 3 })
+                {
+                    BuildMeshDiagnostics.Enabled = (switches & 1) != 0;
+                    BuildMeshDiagnostics.ProfileSimpleQuadWrites = (switches & 2) != 0;
+                    for (int i = 0; i < 32; i++)
+                    {
+                        managed.WriteSimpleQuad(drawing, uv, color);
+                        slim.WriteSimpleQuad(drawing, uv, color);
+                    }
+                    using (var recorder = Unity.Profiling.ProfilerRecorder.StartNew(
+                        Unity.Profiling.ProfilerCategory.Internal, "GC.Alloc", 4096,
+                        Unity.Profiling.ProfilerRecorderOptions.CollectOnlyOnCurrentThread))
+                    {
+                        var control = new byte[4096];
+                        System.GC.KeepAlive(control);
+                        recorder.Stop();
+                        Assert.IsTrue(recorder.Valid);
+                        Assert.Greater(recorder.Count, 0, "Positive allocation control must be observed.");
+                        recorder.Reset();
+                        recorder.Start();
+                        for (int i = 0; i < 256; i++)
+                        {
+                            managed.WriteSimpleQuad(drawing, uv, color);
+                            slim.WriteSimpleQuad(drawing, uv, color);
+                        }
+                        recorder.Stop();
+                        Assert.AreEqual(0, recorder.Count, "Warmed writes must not allocate with either timing mode.");
+                    }
+                }
+            }
+        }
+        finally
+        {
+            BuildMeshDiagnostics.Enabled = previousEnabled;
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = previousQuad;
+        }
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_025.md
     [Test]
     [Category("UT_MESH_025")]

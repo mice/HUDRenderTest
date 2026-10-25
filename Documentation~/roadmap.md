@@ -1,6 +1,6 @@
 # HUDRenderPackage Roadmap
 
-> 当前路线图唯一入口。更新时间：2026-09-27。状态以仓库当前结构、现有测试记录和发布证据为准；`Documentation~/Legacy/` 下的计划与审计文件属于历史资料，活动任务以本文和 [todo.md](todo.md) 为准。
+> 当前路线图唯一入口。更新时间：2026-10-25。状态以仓库当前结构、现有测试记录和发布证据为准；`Documentation~/Legacy/` 下的计划与审计文件属于历史资料，活动任务以本文和 [todo.md](todo.md) 为准。
 
 ## 项目定位
 
@@ -8,12 +8,14 @@
 
 ## 当前基线
 
-- **包结构**：`com.uidatarender` 是独立 UPM 包；Sample 通过 `file:../../com.uidatarender` 引用它，依赖闭包使用 stock UGUI、Burst 和 TextMeshPro。
+- **包结构**：`com.uidatarender` 是 UPM 交付包，Sample 通过 `file:../../com.uidatarender` 引用；当前 Sample 使用仓库内定制 UGUI，Runtime 已调用其 `CopyIndices`。与 stock UGUI 独立分发规格的对齐由 `VERIFY-02` 跟踪，不能沿用迁移时的兼容结论。
 - **核心渲染**：公共 `VertexHelper` 提取、`UIMeshData`/`UIMeshDataX`、几何池、`TextureSlotTable`、`MergeBatcher`、`HolderBatchRenderer`、材质绑定和纹理超容量分批已经落地。
 - **观测与 Job**：`PerfProbe` 已接入 Fill/Merge/Draw 路径并支持 CSV；Burst SoA 路径已有输出等价测试，旧的托管 Job 路径仍保留。
 - **TMP**：`UITMPText` 已进入现有批渲染链路，基础 SDF/描边材质路径和 Sample 场景已存在；多材质、fallback atlas、sprite 与高级 TMP 效果仍有限制。
-- **验证**：最近交付证据记录了 EditMode 118/118、PlayMode 22/22、`UIDataRender` 行覆盖率 81.5% 和 clean-checkout 验证通过。后续真实 CI 由 Jenkins 执行；当前尚未记录绑定候选提交的 Jenkins run。
+- **验证**：2026-10-20 收尾本地 EditMode 147/147、PlayMode 28/28、包布局及治理 175/175 通过；Sprite direct/fallback 四轮 7,200 帧及 CSV 校验通过，见 [共同测试记录](../openspec/changes/archive/2026-10-21-optimize-holder-buildmesh-incremental/evidence/closure-validation.json)和 [Sprite 对照](../openspec/changes/archive/2026-10-21-optimize-uiimage-simple-mesh/evidence/android-results.md)。2026-10-21 已完成 128-holder 两轮 3,600 帧测量，整体全量刷新 p95 为 3.7467 / 3.7664 ms，见 [128-holder 基线](../openspec/changes/add-holder-bucket-scheduling/evidence/holders128-results.md)；没有新增覆盖率、clean-checkout 或 Jenkins 结果，81.5% 仍为历史记录。
 - **包版本**：`com.uidatarender/package.json` 当前为 `0.1.2`；`com.uidatarender/CHANGELOG.md` 的 `0.1.2` 仍为 Unreleased，预期 tag 为 `v0.1.2`，实际发布尚未核实。
+
+2026-10-25 增量验证：查询复用候选已通过 EditMode 150/150、PlayMode 29/29、治理 179/179。Mi 10 四轮 36,000 帧对照中，128-holder 全量刷新候选 p95 为 1.2971 / 1.2310 ms，满足局部 1.5 ms p95 目标；峰值 1.5241 ms，未宣称硬最大值或 RC 整体验收通过。见 [结果与边界](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。
 
 ## 里程碑
 
@@ -118,9 +120,17 @@
 
 **变更后整体复核（2026-09-27）**：用户决定移除 `CI-01` 的 GitHub Actions 一次性任务后，重新读取 `todo.md` 全文。当前活动队列为 11 项：`PERF-04`、`GOV-002`、`GOV-004`、`VERIFY-01`、`PERF-02`、`PERF-03`、`JOB-01`、`TMP-01..03`、`MAINT-01`。`CI-01` 已在本节点归档为废止项，未来 Jenkins 候选验证由 `GOV-004` 承接；没有其他完成项或失去节点归属的条目。
 
-**PERF-04 中间验收（2026-09-27）**：专用场景、普通/Slim 双路径的 64/256 HUD 三模式实测和 26/26 PlayMode 已完成；见 [完整记录与原始证据](../openspec/changes/validate-hud-rc-performance/evidence/hud-scene-results.md)。场景运行于 Editor PlayMode/Mono/D3D11，scoped 字节计数器不可用，因此状态调整为 `inconclusive/environment-limited`，不能直接认定产品性能未达标。已用独立 GC.Alloc 正向校准补齐 extraction 零分配证据，119/119 EditMode。PERF-04 保留活动队列，下一步先做目标 Player/设备复测；只有环境有效且仍超出参考门槛时才进入预算例外流程。
+**PERF-04 中间验收（2026-09-27）**：专用场景、普通/Slim 双路径的 64/256 HUD 三模式实测和 26/26 PlayMode 已完成；见 [完整记录与原始证据](../openspec/changes/archive/2026-10-21-validate-hud-rc-performance/evidence/hud-scene-results.md)。场景运行于 Editor PlayMode/Mono/D3D11，scoped 字节计数器不可用，因此状态调整为 `inconclusive/environment-limited`，不能直接认定产品性能未达标。已用独立 GC.Alloc 正向校准补齐 extraction 零分配证据，119/119 EditMode。PERF-04 保留活动队列，下一步先做目标 Player/设备复测；只有环境有效且仍超出参考门槛时才进入预算例外流程。
 
 **v0.1.2 治理范围**：版本元数据、文档唯一入口、TODO 生命周期、历史发布映射和验证记录。实际创建 tag、推送和发布需要单独授权；本节点不声称包已发布。
+
+**Change 整理及归档（2026-10-20）**：完整复核 11 个活动 TODO 后增加 `VERIFY-02`（UGUI 分发契约），队列共 12 项；GOV-002 / GOV-004 保持阻塞，M3、M4 条目继续原节点。经用户确认，已同步 [治理主规格](../openspec/specs/package-release-governance/spec.md)和 [null texture cache 主规格](../openspec/specs/ui-image-null-texture-cache/spec.md)，分别归档 [治理 change](../openspec/changes/archive/2026-10-20-establish-package-governance/evidence.md)（15/15）和 [null texture cache](../openspec/changes/archive/2026-10-20-optimize-uiimage-null-texture/evidence.md)（4/4），后者原始 JSON 已补存并核对哈希。活动 change 剩 6 项；其验收缺口见 [审查记录](change-review-2026-10-20.md)。本轮没有关闭任何活动 TODO；治理归档不表示 M5 完成或发布通过。PERF-04 下一步修复 quad 子阶段默认零值并完成 Managed/Slim 对照；阶段诊断工作合并组织，历史证据分别保留。
+
+**Profiling 同步归档（2026-10-20）**：BuildMesh 阶段合计、混合目标、关闭诊断输出等价与 warm allocation 验证已补齐，EditMode 142/142、PlayMode 27/27、治理 169/169 通过；14,400 帧真机阶段边界和 137 个 Runtime/runner 源码哈希核对通过。已创建 [BuildMesh 主规格](../openspec/specs/buildmesh-stage-profiling/spec.md)及 [quad write 主规格](../openspec/specs/simple-quad-write-profiling/spec.md)，共 3 条需求、9 个场景，并分别归档 [BuildMesh change](../openspec/changes/archive/2026-10-20-profile-buildmesh-stages/evidence.md)（8/8）与 [quad change](../openspec/changes/archive/2026-10-20-profile-simple-quad-write/evidence.md)（5/5），历史证据各自保留。活动 change 剩 4 项。细分计时默认继续关闭，下一步定位 Slim merge-fill 差异。整体复核后 12 项活动 TODO 均继续保留；未关闭 PERF-04，也不将本次工作树验证视为 RC/发布验收。
+
+**Slim fill 修复（2026-10-20）**：新 change [optimize-slim-fill-color-check](../openspec/changes/archive/2026-10-21-optimize-slim-fill-color-check/evidence.md) 已完成 5/5，待同步归档；当前活动 change 共 5 项。颜色判断装箱由生成 IL2CPP 和先失败后通过的分配回归确认；两个 Fill 的预热分配事件由各 2,048 降至 0。四轮 Mi 10 中 Partial merge-fill median 降至 `0.2277–0.2293 ms`，Partial regeneration 下降 56.1–59.7%，Burst regeneration 下降 23.3–26.6%。源码/报告/APK 哈希和原始数据已保存；设备分配计数器不可用，不能据此宣称全应用零 GC。12 项活动 TODO 仍保持开放，M3/M5 不关闭，版本保持 0.1.2 Unreleased。
+
+**现有 change 收尾归档（2026-10-21）**：新增 UT_BATCH_009/010、UT_UIIMAGE_008、UT_PERF_017 后，缓存输出/失效及 Sprite 路径验证缺口关闭。4 个优化分别以 5/5、5/5、6/6、9/9 完成归档；总体验收保留 10/12，以未验收阶段交付归档。五份主规格共 16 条需求、30 个场景已同步。用户确认目标未满足并转入分桶探索，原 12 项 TODO 继续活动，M3/M5、PERF-04 不因归档关闭。新 change 当前仅探索和 128-holder 基线测量，无分桶实现、提交、tag 或发布。
 
 **发布规则**：`package.json` 是包版本唯一来源；候选使用递增且不可复用的 `0.1.2-rc.N` / `v0.1.2-rc.N`，每个候选绑定精确提交和验证证据。CI 不因 tag 推送自动视为通过；正式 `v0.1.2` 只能在 RC 验收完成并获得用户明确确认后发布。
 
@@ -131,7 +141,7 @@
 
 ## 优先级顺序
 
-1. **P0**：公共 UGUI CPU 回归、Jenkins 真实 CI run、当前覆盖率/治理复核。
+1. **P0**：旧 change 已收尾归档，保持整体性能未验收。[128-holder 生成优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)已满足同步整体刷新 p95 ≤ 1.5 ms 的局部目标，Burst/SIMD 原型后置至 JOB-01。该优化已归档并同步主规格；[分桶设计](../openspec/changes/add-holder-bucket-scheduling/design.md)已完成（4/10），下一步实施 2.1 显式状态队列与公平调度，再推进 2×128 跨帧轮转；用户已接受后一桶额外一帧延迟。继续跟踪设备分配环境、VERIFY-02 独立分发、PERF-04 预算、覆盖率及精确候选 Jenkins。
 2. **P1**：8 槽 GPU 证据和统一性能场景，确定默认槽数与 Job 路径选择。
 3. **P2**：TMP 高级材质/资源能力、低风险代码清理和可选 UI 能力扩展。
 

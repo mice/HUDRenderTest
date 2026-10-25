@@ -6,8 +6,8 @@ target: UIMeshData
 testFile: Tests/EditMode/TestUIMeshData.cs
 testMethod: TransformVertex_MultiplyPoint3x4MatchesLegacy_AndReportsCost
 status: active
-lastRun: "2026-09-27"
-lastResult: passed
+lastRun: ""
+lastResult: unknown
 ---
 
 # UT_MESH_024

@@ -1,0 +1,26 @@
+{
+  "baseCommit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+  "sourceStatus": "dirty working tree; not RC",
+  "unity": "2022.3.53f1",
+  "backend": "IL2CPP",
+  "architecture": "ARM64",
+  "buildOptions": "None (Release)",
+  "builds": [
+    {
+      "variant": "sprite-fallback",
+      "path": "Builds/HudRc/Xiaomi10/sprite-fallback.apk",
+      "sha256": "FABCA03BB5861A96040D3015F90E9425035A7F1077EDDB642417C55DA1F81DB5",
+      "bytes": 14529907,
+      "sourceFingerprint": "FE92EA68130DEEBBDDA772399C97D40DAB4C4CA14AA02C543A43A2B1F9B0C88C",
+      "sourceManifest": "sprite-sources.sha256"
+    },
+    {
+      "variant": "sprite-direct",
+      "path": "Builds/HudRc/Xiaomi10/sprite-direct.apk",
+      "sha256": "A389879E1903DDE53B8E4AF7B32CB312C65C070878F3683F02FBA519AF87FF7C",
+      "bytes": 14529908,
+      "sourceFingerprint": "FE92EA68130DEEBBDDA772399C97D40DAB4C4CA14AA02C543A43A2B1F9B0C88C",
+      "sourceManifest": "sprite-sources.sha256"
+    }
+  ]
+}

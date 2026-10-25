@@ -96,19 +96,26 @@ public class UIMeshDataX : IUIData, ISimpleQuadWriteStageSource
     public void FillToDrawData(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Vector3 localPosition)
     {
         var offset = vertList_.Count;
-        var white = (Color32)Color.white;
 
         for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
         {
             vertList_.Add(geometry.vertex[i] + localPosition);
             uvs_.Add(geometry.uvs[i]);
-            colors_.Add(geometry.colors[i].Equals(default(Color32)) ? white : geometry.colors[i]);
+            colors_.Add(GetOutputColor(geometry.colors[i]));
         }
 
         for (int i = mesh.IndicesOffset; i < mesh.IndicesOffset + mesh.IndicesCount; i++)
         {
             triangles_.Add(geometry.indices[i] - mesh.VertexOffset + offset);
         }
+    }
+
+    private static Color32 GetOutputColor(Color32 color)
+    {
+        // Preserve the legacy all-zero sentinel without boxing through ValueType.Equals.
+        return color.r == 0 && color.g == 0 && color.b == 0 && color.a == 0
+            ? new Color32(255, 255, 255, 255)
+            : color;
     }
 
     /// <summary>
@@ -131,13 +138,12 @@ public class UIMeshDataX : IUIData, ISimpleQuadWriteStageSource
     public void FillWithMatrix(List<Vector3> vertList_, List<Vector4> uvs_, List<Color32> colors_, List<int> triangles_, Matrix4x4 mtx)
     {
         var offset = vertList_.Count;
-        var white = (Color32)Color.white;
 
         for (int i = mesh.VertexOffset; i < mesh.VertexOffset + mesh.VertexCount; i++)
         {
             vertList_.Add(mtx.MultiplyPoint(geometry.vertex[i]));
             uvs_.Add(geometry.uvs[i]);
-            colors_.Add(geometry.colors[i].Equals(default(Color32)) ? white : geometry.colors[i]);
+            colors_.Add(GetOutputColor(geometry.colors[i]));
         }
 
         for (int i = mesh.IndicesOffset; i < mesh.IndicesOffset + mesh.IndicesCount; i++)
@@ -182,12 +188,20 @@ public class UIMeshDataX : IUIData, ISimpleQuadWriteStageSource
 
     public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color)
     {
+        lastSimpleQuadWriteTimings.Clear();
+        bool profile = BuildMeshDiagnostics.Enabled && BuildMeshDiagnostics.ProfileSimpleQuadWrites;
+        long stageStart = profile ? Stopwatch.GetTimestamp() : 0;
         using (SimpleQuadStorageMarker.Auto())
         {
             if (mesh.Index == -1)
                 mesh = geometry.Alloc(4, 6);
             else if (mesh.VertexCount != 4 || mesh.IndicesCount != 6)
                 geometry.ReAlloc(4, 6, ref mesh);
+        }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.StorageMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
         }
 
         int v = mesh.VertexOffset;
@@ -199,6 +213,11 @@ public class UIMeshDataX : IUIData, ISimpleQuadWriteStageSource
             geometry.vertex[v + 2] = new Vector3(drawing.z, drawing.w, 0f);
             geometry.vertex[v + 3] = new Vector3(drawing.z, drawing.y, 0f);
         }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.VertexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
+        }
         using (SimpleQuadUvMarker.Auto())
         {
             geometry.uvs[v] = new Vector4(outerUv.x, outerUv.y, TextureIndex, 0f);
@@ -206,14 +225,29 @@ public class UIMeshDataX : IUIData, ISimpleQuadWriteStageSource
             geometry.uvs[v + 2] = new Vector4(outerUv.z, outerUv.w, TextureIndex, 0f);
             geometry.uvs[v + 3] = new Vector4(outerUv.z, outerUv.y, TextureIndex, 0f);
         }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.UvMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
+        }
         using (SimpleQuadColorMarker.Auto())
         {
             for (int i = 0; i < 4; i++) geometry.colors[v + i] = color;
+        }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.ColorMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
         }
         using (SimpleQuadIndexMarker.Auto())
         {
             geometry.indices[t] = v; geometry.indices[t + 1] = v + 1; geometry.indices[t + 2] = v + 2;
             geometry.indices[t + 3] = v + 2; geometry.indices[t + 4] = v + 3; geometry.indices[t + 5] = v;
+        }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.IndexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            lastSimpleQuadWriteTimings.RecordedWrites = 1;
         }
         mesh.VertexCount = 4;
         mesh.IndicesCount = 6;

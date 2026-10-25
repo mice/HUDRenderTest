@@ -10,6 +10,125 @@ using UnityEditor.SceneManagement;
 
 public class TestHudRcPerformanceRunner
 {
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_018.md
+    [UnityTest]
+    [Category("UT_PERF_018")]
+    public IEnumerator StageDiagnosticsOff_PreservesWorkload_ReportsUnavailable_AndRestoresSettings()
+    {
+        Create();
+        bool originalEnabled = BuildMeshDiagnostics.Enabled;
+        bool originalQuad = BuildMeshDiagnostics.ProfileSimpleQuadWrites;
+        try
+        {
+            runner.BeginRun();
+            yield return Complete();
+            var baseline = runner.CreateReport();
+            runner.ResetRun();
+            BuildMeshDiagnostics.Enabled = true;
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = true;
+            runner.configuration.disableBuildMeshDiagnostics = true;
+            runner.configuration.useGenerationBatch = true;
+            runner.configuration.profileQuadWrites = true;
+            runner.BeginRun();
+            Assert.IsFalse(BuildMeshDiagnostics.Enabled);
+            Assert.IsFalse(BuildMeshDiagnostics.ProfileSimpleQuadWrites);
+            runner.configuration.disableBuildMeshDiagnostics = false;
+            yield return Complete();
+            var candidate = runner.CreateReport();
+            Assert.IsTrue(candidate.configuration.disableBuildMeshDiagnostics, "Run uses a configuration snapshot.");
+            Assert.IsTrue(BuildMeshDiagnostics.Enabled);
+            Assert.IsTrue(BuildMeshDiagnostics.ProfileSimpleQuadWrites);
+            Assert.AreEqual(baseline.frames.Length, candidate.frames.Length);
+            for (int i = 0; i < candidate.frames.Length; i++)
+            {
+                var a = baseline.frames[i];
+                var b = candidate.frames[i];
+                Assert.AreEqual(a.updatedHolders, b.updatedHolders);
+                Assert.AreEqual(a.selectionChecksum, b.selectionChecksum);
+                Assert.AreEqual(a.vertices, b.vertices);
+                Assert.AreEqual(a.indices, b.indices);
+                Assert.AreEqual(a.batches, b.batches);
+                Assert.AreEqual(b.updatedHolders > 0 ? 2 : 0, b.generationBatchCount);
+                Assert.AreEqual(0, a.generationBatchCount);
+                Assert.IsFalse(b.buildMeshStagesAvailable);
+                Assert.IsFalse(b.buildMeshWriteAvailable);
+                Assert.AreEqual(-1, b.buildMeshMs);
+                Assert.AreEqual(-1, b.holderSelectionMs);
+                Assert.AreEqual(-1, b.buildMeshDoGenerateMs);
+                Assert.AreEqual(-1, b.buildMeshDrawingDimensionsMs);
+                Assert.AreEqual(-1, b.buildMeshWriteVertexMs);
+                Assert.GreaterOrEqual(b.generationMs, 0);
+                Assert.GreaterOrEqual(b.mergeMs, 0);
+            }
+            runner.ExportReport();
+            var csv = File.ReadAllLines(Path.ChangeExtension(runner.LastReportPath, ".csv"));
+            StringAssert.Contains("build_mesh_stages_available", csv[0]);
+            StringAssert.Contains(",unavailable,unavailable,unavailable,", csv[1]);
+            File.Delete(runner.LastReportPath);
+            File.Delete(Path.ChangeExtension(runner.LastReportPath, ".csv"));
+            runner.BeginRun();
+            runner.ResetRun();
+            Assert.IsTrue(BuildMeshDiagnostics.Enabled, "Cancellation restores settings too.");
+        }
+        finally
+        {
+            runner.ResetRun();
+            BuildMeshDiagnostics.Enabled = originalEnabled;
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = originalQuad;
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_017.md
+    [UnityTest]
+    [Category("UT_PERF_017")]
+    public IEnumerator SpriteComparison_UsesSelectedPath_AndRestoresSwitchAndResources()
+    {
+        Create();
+        bool original = UIImage.EnableSimpleMeshFastPath;
+        try
+        {
+            foreach (bool slim in new[] { false, true })
+            foreach (bool fallback in new[] { false, true })
+            {
+                UIImage.EnableSimpleMeshFastPath = fallback;
+                runner.configuration.useSlim = slim;
+                runner.configuration.spriteBacked = true;
+                runner.configuration.forceUguiFallback = fallback;
+                runner.BeginRun();
+                var images = root.GetComponentsInChildren<UIImage>(true);
+                Assert.AreEqual(2, images.Length);
+                var sprite = images[0].sprite;
+                Assert.IsNotNull(sprite);
+                foreach (var image in images)
+                    Assert.AreEqual(!fallback, image.LastGenerationUsedSimpleMeshFastPath);
+                runner.configuration.forceUguiFallback = !fallback;
+                yield return Complete();
+                var report = runner.CreateReport();
+                Assert.IsTrue(report.configuration.spriteBacked);
+                Assert.AreEqual(fallback, report.configuration.forceUguiFallback);
+                Assert.AreEqual(2, report.preparedSpriteImages);
+                Assert.AreEqual(fallback ? 0 : 2, report.preparedFastPathImages);
+                Assert.AreEqual(fallback, UIImage.EnableSimpleMeshFastPath, "Completion restores the pre-run switch.");
+                foreach (var frame in report.frames)
+                {
+                    Assert.AreEqual(64, frame.vertices);
+                    Assert.AreEqual(96, frame.indices);
+                    if (frame.updatedHolders == 0) continue;
+                    Assert.AreEqual(0, fallback ? frame.buildMeshSimplePathMs : frame.buildMeshUguiFallbackMs);
+                }
+                runner.ResetRun();
+                yield return null;
+                Assert.IsTrue(sprite == null, "Owned workload sprite must be destroyed.");
+                Assert.AreEqual(0, root.GetComponentsInChildren<UIImage>(true).Length);
+            }
+        }
+        finally
+        {
+            runner.ResetRun();
+            UIImage.EnableSimpleMeshFastPath = original;
+        }
+    }
+
     private GameObject root;
     private GameObject cameraObject;
     private HudRcPerformanceRunner runner;
@@ -125,8 +244,11 @@ public class TestHudRcPerformanceRunner
     {
         float scale = Time.timeScale;
         int sync = QualitySettings.vSyncCount, rate = Application.targetFrameRate;
+        bool diagnostics = BuildMeshDiagnostics.Enabled, quad = BuildMeshDiagnostics.ProfileSimpleQuadWrites;
         try
         {
+            BuildMeshDiagnostics.Enabled = false;
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = true;
             Time.timeScale = .5f;
             QualitySettings.vSyncCount = 1;
             Application.targetFrameRate = 37;
@@ -137,6 +259,8 @@ public class TestHudRcPerformanceRunner
             Assert.AreEqual(.5f, Time.timeScale);
             Assert.AreEqual(1, QualitySettings.vSyncCount);
             Assert.AreEqual(37, Application.targetFrameRate);
+            Assert.IsFalse(BuildMeshDiagnostics.Enabled);
+            Assert.IsTrue(BuildMeshDiagnostics.ProfileSimpleQuadWrites);
             Assert.AreEqual(0, runner.LiveHolderCount);
             Assert.AreEqual(0, runner.SampleCount);
             yield return null;
@@ -146,6 +270,8 @@ public class TestHudRcPerformanceRunner
             Assert.AreEqual(.5f, Time.timeScale);
             Assert.AreEqual(1, QualitySettings.vSyncCount);
             Assert.AreEqual(37, Application.targetFrameRate);
+            Assert.IsFalse(BuildMeshDiagnostics.Enabled);
+            Assert.IsTrue(BuildMeshDiagnostics.ProfileSimpleQuadWrites);
         }
         finally
         {
@@ -153,6 +279,77 @@ public class TestHudRcPerformanceRunner
             Time.timeScale = scale;
             QualitySettings.vSyncCount = sync;
             Application.targetFrameRate = rate;
+            BuildMeshDiagnostics.Enabled = diagnostics;
+            BuildMeshDiagnostics.ProfileSimpleQuadWrites = quad;
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_016.md
+    [UnityTest]
+    [Category("UT_PERF_016")]
+    public IEnumerator QuadWriteReport_ExportsAvailability_AndCountsThroughBothPaths()
+    {
+        Create();
+        foreach (bool slim in new[] { false, true })
+        foreach (bool enabled in new[] { false, true })
+        {
+            runner.ResetRun();
+            runner.configuration.useSlim = slim;
+            runner.configuration.profileQuadWrites = enabled;
+            runner.BeginRun();
+            runner.configuration.profileQuadWrites = !enabled;
+            yield return Complete();
+            string path = null;
+            try
+            {
+                runner.ExportReport();
+                path = runner.LastReportPath;
+                var report = JsonUtility.FromJson<HudRcPerformanceRunner.Report>(File.ReadAllText(path));
+                Assert.AreEqual("hud-rc-v2", report.schema);
+                Assert.AreEqual(enabled, report.configuration.profileQuadWrites);
+                Assert.AreEqual(slim, report.configuration.useSlim);
+                Assert.Greater(report.quadWriteTimestampFrequency, 0);
+                var rows = File.ReadAllLines(Path.ChangeExtension(path, ".csv"));
+                var header = rows[0].Split(',');
+                int storageColumn = System.Array.IndexOf(header, "build_mesh_write_storage_ms");
+                int countColumn = System.Array.IndexOf(header, "build_mesh_write_samples");
+                int availableColumn = System.Array.IndexOf(header, "build_mesh_write_available");
+                Assert.GreaterOrEqual(storageColumn, 0);
+                Assert.GreaterOrEqual(countColumn, 0);
+                Assert.GreaterOrEqual(availableColumn, 0);
+                for (int i = 0; i < report.frames.Length; i++)
+                {
+                    var sample = report.frames[i];
+                    bool available = enabled && sample.updatedHolders > 0;
+                    Assert.AreEqual(available, sample.buildMeshWriteAvailable);
+                    Assert.AreEqual(enabled ? sample.updatedHolders * 2 : 0, sample.buildMeshWriteSamples);
+                    var row = rows[i + 1].Split(',');
+                    Assert.AreEqual(header.Length, row.Length);
+                    Assert.AreEqual(sample.buildMeshWriteSamples.ToString(), row[countColumn]);
+                    Assert.AreEqual(available.ToString(), row[availableColumn]);
+                    var stages = new[] { sample.buildMeshWriteStorageMs, sample.buildMeshWriteVertexMs,
+                        sample.buildMeshWriteUvMs, sample.buildMeshWriteColorMs, sample.buildMeshWriteIndexMs };
+                    for (int stage = 0; stage < stages.Length; stage++)
+                    {
+                        if (available)
+                        {
+                            Assert.GreaterOrEqual(stages[stage], 0);
+                            Assert.That(double.Parse(row[storageColumn + stage],
+                                System.Globalization.CultureInfo.InvariantCulture),
+                                Is.EqualTo(stages[stage]).Within(1e-12));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(-1, stages[stage]);
+                            Assert.AreEqual("unavailable", row[storageColumn + stage]);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (path != null) { File.Delete(path); File.Delete(Path.ChangeExtension(path, ".csv")); }
+            }
         }
     }
 

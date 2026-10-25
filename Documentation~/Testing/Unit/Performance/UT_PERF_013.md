@@ -28,7 +28,7 @@ See the named method; timing values are reported, not asserted against machine-d
 The test passes; resources/settings are restored and observed workload matches report metadata.
 
 ## Latest Run Result
-Passed in PlayMode-20260927_153137_078.xml (26/26 suite). Evidence: openspec/changes/validate-hud-rc-performance/evidence/hud-rc-evidence.zip.
+Passed in PlayMode-20260927_153137_078.xml (26/26 suite). Evidence: openspec/changes/archive/2026-10-21-validate-hud-rc-performance/evidence/hud-rc-evidence.zip.
 
 ## Notes
 Traceability: validate-hud-rc-performance / dedicated scene, measurement attribution and reset requirements.

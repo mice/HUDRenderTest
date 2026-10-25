@@ -251,12 +251,20 @@ public class UIMeshData : IUIData, ISimpleQuadWriteStageSource
 
     public void WriteSimpleQuad(Vector4 drawing, Vector4 outerUv, Color32 color)
     {
+        lastSimpleQuadWriteTimings.Clear();
+        bool profile = BuildMeshDiagnostics.Enabled && BuildMeshDiagnostics.ProfileSimpleQuadWrites;
+        long stageStart = profile ? Stopwatch.GetTimestamp() : 0;
         using (SimpleQuadStorageMarker.Auto())
         {
             if (vertList == null || vertList.Length != 4) vertList = new Vector3[4];
             if (uvs == null || uvs.Length != 4) uvs = new Vector4[4];
             if (colors == null || colors.Length != 4) colors = new Color32[4];
             if (triangles == null || triangles.Length != 6) triangles = new int[6];
+        }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.StorageMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
         }
 
         using (SimpleQuadVertexMarker.Auto())
@@ -266,6 +274,11 @@ public class UIMeshData : IUIData, ISimpleQuadWriteStageSource
             vertList[2] = new Vector3(drawing.z, drawing.w, 0f);
             vertList[3] = new Vector3(drawing.z, drawing.y, 0f);
         }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.VertexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
+        }
         using (SimpleQuadUvMarker.Auto())
         {
             uvs[0] = new Vector4(outerUv.x, outerUv.y, TextureIndex, 0f);
@@ -273,14 +286,29 @@ public class UIMeshData : IUIData, ISimpleQuadWriteStageSource
             uvs[2] = new Vector4(outerUv.z, outerUv.w, TextureIndex, 0f);
             uvs[3] = new Vector4(outerUv.z, outerUv.y, TextureIndex, 0f);
         }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.UvMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
+        }
         using (SimpleQuadColorMarker.Auto())
         {
             for (int i = 0; i < colors.Length; i++) colors[i] = color;
+        }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.ColorMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            stageStart = Stopwatch.GetTimestamp();
         }
         using (SimpleQuadIndexMarker.Auto())
         {
             triangles[0] = 0; triangles[1] = 1; triangles[2] = 2;
             triangles[3] = 2; triangles[4] = 3; triangles[5] = 0;
+        }
+        if (profile)
+        {
+            lastSimpleQuadWriteTimings.IndexMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - stageStart);
+            lastSimpleQuadWriteTimings.RecordedWrites = 1;
         }
         mesh.VertexCount = 4;
         mesh.IndicesCount = 6;

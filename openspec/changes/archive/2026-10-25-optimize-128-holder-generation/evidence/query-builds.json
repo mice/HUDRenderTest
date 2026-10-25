@@ -1,0 +1,16 @@
+{
+  "builds": [
+    {
+      "variant": "query-live",
+      "sha256": "C1EED00766A31207449C544BA026AAB33B9031D0AD7143C86ACC8308DD488DCC",
+      "sourceFingerprint": "D0F4E64471CB76132051873BDF08BF169376D3CB9EBBDCAF88E4095C836ADD11",
+      "sourceManifest": "query-sources.sha256"
+    },
+    {
+      "variant": "query-batch",
+      "sha256": "46080A4B1A96D1D3404054D69031576F786BB0D83FA4D0558376C83CABA96577",
+      "sourceFingerprint": "D0F4E64471CB76132051873BDF08BF169376D3CB9EBBDCAF88E4095C836ADD11",
+      "sourceManifest": "query-sources.sha256"
+    }
+  ]
+}

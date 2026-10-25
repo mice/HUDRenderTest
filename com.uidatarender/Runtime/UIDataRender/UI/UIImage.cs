@@ -39,6 +39,66 @@ public class UIImage :Image,IUIDrawTarget
     private Vector2 cachedSpriteSize;
     private int cachedTextureVersion = -1;
     private int cachedTextureIndex;
+    private bool _generationBatchActive;
+    private uint _generationBatchVersion;
+    private Transform _generationBatchRoot;
+    private Transform _generationBatchTransform;
+    private bool _generationBatchIsChild;
+    private Canvas _generationBatchCanvas;
+    private Matrix4x4 _generationBatchRootInverse;
+
+    /// <summary>
+    /// Reuses hierarchy queries for repeated explicit generation. Until disposal, the caller
+    /// must keep the parent/Canvas hierarchy and root transform unchanged. Image dimensions,
+    /// Sprite, color and child transforms are still read on every generation. Start a new
+    /// batch after hierarchy/root changes; ordinary DoGenerate calls need no scope.
+    /// </summary>
+    public GenerationBatch BeginGenerationBatch(Transform root)
+    {
+        if (root == null) throw new System.ArgumentNullException(nameof(root));
+        if (_generationBatchActive) throw new System.InvalidOperationException("An image generation batch is already active.");
+        _generationBatchRoot = root;
+        _generationBatchTransform = transform;
+        _generationBatchIsChild = root != _generationBatchTransform && _generationBatchTransform.IsChildOf(root);
+        _generationBatchCanvas = canvas;
+        _generationBatchRootInverse = root.worldToLocalMatrix;
+        _generationBatchVersion++;
+        _generationBatchActive = true;
+        return new GenerationBatch(this, _generationBatchVersion);
+    }
+
+    public readonly struct GenerationBatch : System.IDisposable
+    {
+        private readonly UIImage _image;
+        private readonly uint _version;
+
+        internal GenerationBatch(UIImage image, uint version)
+        {
+            _image = image;
+            _version = version;
+        }
+
+        public void Dispose()
+        {
+            if (ReferenceEquals(_image, null) || _image._generationBatchVersion != _version) return;
+            _image._generationBatchActive = false;
+            _image._generationBatchRoot = null;
+            _image._generationBatchTransform = null;
+            _image._generationBatchCanvas = null;
+        }
+    }
+
+    private bool UsesGenerationBatch => _generationBatchActive && tmp_root == _generationBatchRoot;
+
+    private Rect GetGenerationPixelAdjustedRect()
+    {
+        if (!UsesGenerationBatch) return GetPixelAdjustedRect();
+        var sourceCanvas = _generationBatchCanvas;
+        if (!sourceCanvas || sourceCanvas.renderMode == RenderMode.WorldSpace ||
+            sourceCanvas.scaleFactor == 0f || !sourceCanvas.pixelPerfect)
+            return rectTransform.rect;
+        return RectTransformUtility.PixelAdjustRect(rectTransform, sourceCanvas);
+    }
     [ContextMenu("ReCreate")]
     private void _UpdateGeom()
     {
@@ -49,11 +109,8 @@ public class UIImage :Image,IUIDrawTarget
 
     public void DoGenerate(IUIData meshData,Transform root = null)
     {
-        if (BuildMeshDiagnostics.Enabled)
-        {
-            lastGenerationStageTimings.Clear();
-            LastSimpleQuadWriteTimings = new SimpleQuadWriteTimings();
-        }
+        lastGenerationStageTimings.Clear();
+        LastSimpleQuadWriteTimings = new SimpleQuadWriteTimings();
         using (GenerateMarker.Auto())
         {
             _isGenerating = true;
@@ -122,11 +179,11 @@ public class UIImage :Image,IUIDrawTarget
     {
         if (sprite == null)
         {
-            var pixelRect = GetPixelAdjustedRect();
+            var pixelRect = GetGenerationPixelAdjustedRect();
             return new Vector4(pixelRect.x, pixelRect.y, pixelRect.x + pixelRect.width, pixelRect.y + pixelRect.height);
         }
         UpdateSpriteCache();
-        var rect = GetPixelAdjustedRect();
+        var rect = GetGenerationPixelAdjustedRect();
         var spriteWidth = Mathf.RoundToInt(cachedSpriteSize.x);
         var spriteHeight = Mathf.RoundToInt(cachedSpriteSize.y);
         return new Vector4(
@@ -224,14 +281,16 @@ public class UIImage :Image,IUIDrawTarget
         long transformStart = BuildMeshDiagnostics.Enabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         using (TransformCheckMarker.Auto())
         {
-            var current = transform;
-            bool isChild = false;
-            if (tmp_root != null && tmp_root != current)
-                isChild = current.IsChildOf(tmp_root);
+            bool usesBatch = UsesGenerationBatch;
+            var current = usesBatch ? _generationBatchTransform : transform;
+            bool isChild = usesBatch ? _generationBatchIsChild :
+                tmp_root != null && tmp_root != current && current.IsChildOf(tmp_root);
             if (!isChild)
                 return;
 
-            var matrix = Utility.CalcMatrix(tmp_root, current);
+            var matrix = usesBatch
+                ? _generationBatchRootInverse * current.localToWorldMatrix
+                : Utility.CalcMatrix(tmp_root, current);
             meshData.TransformVertex(matrix);
         }
         if (BuildMeshDiagnostics.Enabled)

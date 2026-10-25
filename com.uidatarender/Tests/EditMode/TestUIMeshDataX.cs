@@ -5,6 +5,108 @@ using UnityEngine.UI;
 
 public class TestUIMeshDataX
 {
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_029.md
+    [Test]
+    [Category("UT_MESH_029")]
+    public void SlimFill_PreservesColorSentinelAndOffsetGeometryForBothMethods()
+    {
+        using (var prefix = new UIMeshDataX())
+        using (var data = new UIMeshDataX { TextureIndex = 7 })
+        {
+            prefix.WriteSimpleQuad(new Vector4(-1, -1, 1, 1), Vector4.zero, Color.white);
+            data.WriteSimpleQuad(new Vector4(-2, -3, 4, 5), new Vector4(.1f, .2f, .8f, .9f), Color.white);
+            Assert.Greater(data.mesh.VertexOffset, 0);
+            Assert.Greater(data.mesh.IndicesOffset, 0);
+            var cases = new[] { default(Color32), new Color32(1, 0, 0, 0), new Color32(0, 1, 0, 0),
+                new Color32(0, 0, 1, 0), new Color32(0, 0, 0, 1), new Color32(0, 0, 0, 255),
+                new Color32(11, 22, 33, 0), new Color32(11, 22, 33, 44), new Color32(255, 255, 255, 255) };
+            var translation = new Vector3(3, -4, 2);
+            var matrix = Matrix4x4.TRS(new Vector3(2, 3, 4), Quaternion.Euler(10, 20, 30), new Vector3(2, 3, 1));
+            foreach (var color in cases)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    int index = data.mesh.VertexOffset + i;
+                    UIMeshDataX.geometry.colors[index] = color;
+                    var uv = UIMeshDataX.geometry.uvs[index];
+                    uv.w = 9;
+                    UIMeshDataX.geometry.uvs[index] = uv;
+                }
+                foreach (bool withMatrix in new[] { false, true })
+                {
+                    var output = new MeshLists();
+                    Seed(output.Verts, output.Uvs, output.Colors, output.Triangles);
+                    if (withMatrix) data.FillWithMatrix(output.Verts, output.Uvs, output.Colors, output.Triangles, matrix);
+                    else data.FillToDrawData(output.Verts, output.Uvs, output.Colors, output.Triangles, translation);
+                    Assert.AreEqual(5, output.Verts.Count);
+                    Assert.AreEqual(5, output.Uvs.Count);
+                    Assert.AreEqual(5, output.Colors.Count);
+                    Assert.AreEqual(Color.black, (Color)output.Colors[0]);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int index = data.mesh.VertexOffset + i;
+                        var expectedPosition = withMatrix ? matrix.MultiplyPoint(UIMeshDataX.geometry.vertex[index])
+                            : UIMeshDataX.geometry.vertex[index] + translation;
+                        Assert.LessOrEqual(Vector3.Distance(expectedPosition, output.Verts[i + 1]), 1e-5f);
+                        Assert.AreEqual(UIMeshDataX.geometry.uvs[index], output.Uvs[i + 1]);
+                        // Legacy semantics: transparent black is a sentinel; transparent colored values are not.
+                        var expectedColor = color.Equals(default(Color32)) ? (Color32)Color.white : color;
+                        Assert.AreEqual(expectedColor, output.Colors[i + 1]);
+                        Assert.AreEqual(color, UIMeshDataX.geometry.colors[index], "Filling must not mutate source colors.");
+                    }
+                    CollectionAssert.AreEqual(new[] { 0, 1, 2, 3, 3, 4, 1 }, output.Triangles);
+                }
+            }
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_030.md
+    [Test]
+    [Category("UT_MESH_030")]
+    public void SlimFill_WarmedPreallocatedOutputs_AllocateNoManagedMemory()
+    {
+        using (var data = new UIMeshDataX())
+        {
+            data.WriteSimpleQuad(new Vector4(-2, -1, 2, 1), Vector4.zero, new Color32(1, 2, 3, 4));
+            UIMeshDataX.geometry.colors[data.mesh.VertexOffset] = default(Color32);
+            var output = new MeshLists();
+            output.Verts.Capacity = output.Uvs.Capacity = output.Colors.Capacity = 4;
+            output.Triangles.Capacity = 6;
+            var counts = new int[2];
+            for (int mode = 0; mode < 2; mode++)
+            {
+                for (int i = 0; i < 64; i++) FillAndClear(data, output, mode);
+                using (var recorder = Unity.Profiling.ProfilerRecorder.StartNew(
+                    Unity.Profiling.ProfilerCategory.Internal, "GC.Alloc", 4096,
+                    Unity.Profiling.ProfilerRecorderOptions.CollectOnlyOnCurrentThread))
+                {
+                    var control = new byte[4096];
+                    System.GC.KeepAlive(control);
+                    recorder.Stop();
+                    Assert.IsTrue(recorder.Valid);
+                    Assert.Greater(recorder.Count, 0, "Positive allocation control must be visible.");
+                    recorder.Reset();
+                    recorder.Start();
+                    for (int i = 0; i < 256; i++) FillAndClear(data, output, mode);
+                    recorder.Stop();
+                    counts[mode] = recorder.Count;
+                }
+            }
+            Assert.That(counts, Is.All.EqualTo(0),
+                $"Allocation samples: FillToDrawData={counts[0]}, FillWithMatrix={counts[1]}.");
+        }
+    }
+
+    private static void FillAndClear(UIMeshDataX data, MeshLists output, int mode)
+    {
+        output.Verts.Clear();
+        output.Uvs.Clear();
+        output.Colors.Clear();
+        output.Triangles.Clear();
+        if (mode == 0) data.FillToDrawData(output.Verts, output.Uvs, output.Colors, output.Triangles, Vector3.one);
+        else data.FillWithMatrix(output.Verts, output.Uvs, output.Colors, output.Triangles, Matrix4x4.identity);
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_026.md
     [Test]
     [Category("UT_MESH_026")]

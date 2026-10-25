@@ -1,0 +1,18 @@
+{
+  "baseCommit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+  "sourceStatus": "dirty working tree; not RC",
+  "unity": "2022.3.53f1",
+  "backend": "IL2CPP",
+  "architecture": "ARM64",
+  "buildOptions": "None (Release)",
+  "builds": [
+    {
+      "variant": "holders128-slim",
+      "path": "Builds/HudRc/Xiaomi10/holders128-slim.apk",
+      "sha256": "38CB57A821F8E14DD52D3C7EBBAFFF8E07C3D09647640CC8FF9345BB7C64B37D",
+      "bytes": 14529897,
+      "sourceFingerprint": "2E839767D1B004C791AF6B7C979297E0C236A5B511D42892FE5563EB3FC74DF9",
+      "sourceManifest": "holders128-sources.sha256"
+    }
+  ]
+}

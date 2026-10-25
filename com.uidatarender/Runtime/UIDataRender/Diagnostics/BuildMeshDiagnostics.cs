@@ -3,6 +3,8 @@ using System.Diagnostics;
 public static class BuildMeshDiagnostics
 {
     public static bool Enabled;
+    // Separate opt-in: timestamp reads can dominate these very small writes.
+    public static bool ProfileSimpleQuadWrites;
 
     public static double Milliseconds(long ticks) => ticks * 1000.0 / Stopwatch.Frequency;
 }
@@ -44,6 +46,7 @@ public interface IBuildMeshStageSource
 
 public struct SimpleQuadWriteTimings
 {
+    public int RecordedWrites;
     public double StorageMs;
     public double VertexMs;
     public double UvMs;
@@ -52,7 +55,18 @@ public struct SimpleQuadWriteTimings
 
     public void Clear()
     {
+        RecordedWrites = 0;
         StorageMs = VertexMs = UvMs = ColorMs = IndexMs = 0;
+    }
+
+    public void Add(SimpleQuadWriteTimings other)
+    {
+        RecordedWrites += other.RecordedWrites;
+        StorageMs += other.StorageMs;
+        VertexMs += other.VertexMs;
+        UvMs += other.UvMs;
+        ColorMs += other.ColorMs;
+        IndexMs += other.IndexMs;
     }
 }
 

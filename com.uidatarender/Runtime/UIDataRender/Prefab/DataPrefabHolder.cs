@@ -55,6 +55,7 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
     public void BuildMesh(IUIDrawTarget[] draws)
     {
         var timings = new BuildMeshStageTimings();
+        LastBuildMeshTimings = timings;
         long stageStart = BuildMeshDiagnostics.Enabled ? Stopwatch.GetTimestamp() : 0;
         using (HolderSetupMarker.Auto())
         {
@@ -91,11 +92,7 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
                     timings.SimpleSpriteDataMs += imageTimings.SimpleSpriteDataMs;
                     timings.SimpleDrawingDimensionsMs += imageTimings.SimpleDrawingDimensionsMs;
                     timings.SimpleMeshWriteMs += imageTimings.SimpleMeshWriteMs;
-                    timings.SimpleQuadWrite.StorageMs += image.LastSimpleQuadWriteTimings.StorageMs;
-                    timings.SimpleQuadWrite.VertexMs += image.LastSimpleQuadWriteTimings.VertexMs;
-                    timings.SimpleQuadWrite.UvMs += image.LastSimpleQuadWriteTimings.UvMs;
-                    timings.SimpleQuadWrite.ColorMs += image.LastSimpleQuadWriteTimings.ColorMs;
-                    timings.SimpleQuadWrite.IndexMs += image.LastSimpleQuadWriteTimings.IndexMs;
+                    timings.SimpleQuadWrite.Add(image.LastSimpleQuadWriteTimings);
                     timings.UguiFallbackMs += imageTimings.UguiFallbackMs;
                     timings.TransformMs += imageTimings.TransformMs;
                 }

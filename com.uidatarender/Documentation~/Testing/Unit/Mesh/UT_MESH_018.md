@@ -31,7 +31,7 @@ The public API path may spend CPU in vertex channel population or scratch Mesh i
 The test passes and emits reproducible PERF-01 evidence without changing the indexed mesh or UV metadata contract.
 
 ## Latest Run Result
-Passed: 119/119 EditMode (2026-09-27); GC.Alloc positive control (4096-byte array) observed, zero target allocation events, recorder saturation checked. CPU median/p95: FillData2 5.025/6.423 us; FillData3 6.083/7.529 us. Evidence: openspec/changes/validate-hud-rc-performance/evidence/hud-rc-evidence.zip.
+Passed: 119/119 EditMode (2026-09-27); GC.Alloc positive control (4096-byte array) observed, zero target allocation events, recorder saturation checked. CPU median/p95: FillData2 5.025/6.423 us; FillData3 6.083/7.529 us. Evidence: openspec/changes/archive/2026-10-21-validate-hud-rc-performance/evidence/hud-rc-evidence.zip.
 
 ### Previous record
 Passed in `Tools/Invoke-LocalValidation.ps1 -SkipPlayMode`: 119/119 EditMode tests. Unity 2022.3.53f1 reported `FillData2` median 5.380 us/call (p95 7.759), `FillData3` median 6.327 us/call (p95 9.182), and 0 B warm-up allocation for both paths.

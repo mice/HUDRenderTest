@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-20",
+  "commit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+  "sourceStatus": "dirty working tree",
+  "sourceFingerprint": "31F163F85D75E1A5B1630F1759146E13F893F60BDBCC6973F6C58C0C7A45A8E7",
+  "unity": "2022.3.53f1",
+  "buildOptions": "None (Release)",
+  "backend": "IL2CPP",
+  "architecture": "ARM64",
+  "package": "com.DefaultCompany.HUDRenderTest",
+  "sampleFrames": 600,
+  "warmupFrames": 60,
+  "targetFrameRate": 60,
+  "builds": [
+    {
+      "variant": "managed-off",
+      "path": "Builds/HudRc/Xiaomi10/quad-v2-managed-off.apk",
+      "sha256": "39CD2A226C791272DA5AEDDDB27CC774E5AEE87753C6675491D82841F5A8A152",
+      "bytes": 14495026
+    },
+    {
+      "variant": "managed-on",
+      "path": "Builds/HudRc/Xiaomi10/quad-v2-managed-on.apk",
+      "sha256": "B90609451464FA6ACC7BAE6B84AFE3707B014791BDECFE3EF02A31841D7CB92B",
+      "bytes": 14495024
+    },
+    {
+      "variant": "slim-off",
+      "path": "Builds/HudRc/Xiaomi10/quad-v2-slim-off.apk",
+      "sha256": "C5AB4973918C5EFCA72547FBC9D21549E2D1C849FE49E24869D369AA909E0FC1",
+      "bytes": 14495028
+    },
+    {
+      "variant": "slim-on",
+      "path": "Builds/HudRc/Xiaomi10/quad-v2-slim-on.apk",
+      "sha256": "938D1B851F5CD795AA0FFC5612112CF9539642A230C17C9110939D4EE1871727",
+      "bytes": 14495028
+    }
+  ],
+  "note": "First build used normal Gradle environment. Remaining three used a temporary GRADLE_USER_HOME with shared cached dependencies and offline init script; global proxy settings were not modified."
+}

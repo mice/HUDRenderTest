@@ -1,0 +1,40 @@
+{
+  "baseCommit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+  "sourceStatus": "dirty working tree; not an RC",
+  "unity": "2022.3.53f1",
+  "backend": "IL2CPP",
+  "architecture": "ARM64",
+  "buildOptions": "None (Release)",
+  "builds": [
+    {
+      "variant": "slim-baseline",
+      "path": "Builds/HudRc/Xiaomi10/slim-fill-slim-baseline.apk",
+      "sha256": "C5AB4973918C5EFCA72547FBC9D21549E2D1C849FE49E24869D369AA909E0FC1",
+      "bytes": 14495028,
+      "sourceFingerprint": "31F163F85D75E1A5B1630F1759146E13F893F60BDBCC6973F6C58C0C7A45A8E7",
+      "sourceManifest": "baseline-sources.sha256"
+    },
+    {
+      "variant": "slim-fixed",
+      "path": "Builds/HudRc/Xiaomi10/slim-fill-slim-fixed.apk",
+      "sha256": "AD0D9EBE1AFE01F7C6E179F05E0228AE675F51CE483A6D336EA78CFE285D5A1E",
+      "bytes": 14496144,
+      "sourceFingerprint": "C1D60C20FA519E8CFA1F4F227AF04FF99B0BBA25E18BBBB9D82BCF47C2B654B4",
+      "sourceManifest": "fixed-sources.sha256"
+    }
+  ],
+  "changedSources": [
+    "com.uidatarender/CHANGELOG.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Mesh/UT_MESH_027.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Mesh/UT_MESH_028.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Mesh/UT_MESH_029.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Mesh/UT_MESH_030.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Prefab/UT_PREF_020.md",
+    "com.uidatarender/Documentation~/Testing/Unit/Prefab/UT_PREF_021.md",
+    "com.uidatarender/Documentation~/Testing/Unit/README.md",
+    "com.uidatarender/Documentation~/Testing/Unit/UI/UT_UIIMAGE_007.md",
+    "com.uidatarender/Runtime/UIDataRender/Mesh/UIMeshDataX.cs",
+    "com.uidatarender/Tests/EditMode/TestUIMeshDataX.cs",
+    "com.uidatarender/Tests/EditMode/TestUIPrefabHolderCoverage.cs"
+  ]
+}

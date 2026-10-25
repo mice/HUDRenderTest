@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "3a6f553ef3f03ed648aa6130e76ed16a80eb62b3",
+  "sourceStatus": "dirty working tree; tests/specs/docs closure, not RC validation",
+  "unityVersion": "2022.3.53f1",
+  "tests": [
+    {
+      "artifact": "editmode-results-20261020.xml",
+      "total": 142,
+      "passed": 142,
+      "failed": 0,
+      "result": "Passed",
+      "sha256": "D8B8354157D1CA3F4137EBB1B80460714AA2A72CF3675322E986A8A7CF0FB368"
+    },
+    {
+      "artifact": "playmode-results-20261020.xml",
+      "total": 27,
+      "passed": 27,
+      "failed": 0,
+      "result": "Passed",
+      "sha256": "8987D6CCA04ABA6854349E68AB4CC99335EED42097F80D2298F96DB7B9E92DD1"
+    }
+  ],
+  "governance": "169/169 passed",
+  "layout": "passed",
+  "hashedSources": [
+    {
+      "path": "com.uidatarender/Runtime/UIDataRender/Diagnostics/BuildMeshDiagnostics.cs",
+      "sha256": "7CF47D45C5D06D11F0B3EA6BAABB8F27E320D6E3A444F9A0AB8C24D7CA7B09C6"
+    },
+    {
+      "path": "com.uidatarender/Runtime/UIDataRender/Mesh/UIMeshData.cs",
+      "sha256": "09F033862FE3D1139A6D2116D9BC256E340EE9D81FBF649319C5F7D3F9B478E9"
+    },
+    {
+      "path": "com.uidatarender/Runtime/UIDataRender/Mesh/UIMeshDataX.cs",
+      "sha256": "4B99EF6A5E98D85034AF4E3CA4B356E626B1244A69CAC8B75A3C27979A6CCB09"
+    },
+    {
+      "path": "com.uidatarender/Runtime/UIDataRender/Prefab/DataPrefabHolder.cs",
+      "sha256": "5045C8768ECD872A214EA1255BDEAD5B7B332E04F40AE0BE2EBEDB2B889A9C80"
+    },
+    {
+      "path": "com.uidatarender/Runtime/UIDataRender/UI/UIImage.cs",
+      "sha256": "DA645D0DFA83069EF21DDB4BF924595893BD4E13BA4B8DB4CB3DE52AA640BB1A"
+    },
+    {
+      "path": "HUDRenderTestSample/Assets/Scripts/HOT/HudRcPerformanceRunner.cs",
+      "sha256": "81F6CCC44FF30749BAF7963EBC5A5D420DA28229DE83DA5B3406319A7BA45EE2"
+    },
+    {
+      "path": "com.uidatarender/Tests/EditMode/TestUIImage.cs",
+      "sha256": "9B010960B5883A57C3D646832371CA639777946F7726001729570E194F00D687"
+    },
+    {
+      "path": "com.uidatarender/Tests/EditMode/TestUIMeshData.cs",
+      "sha256": "A1639747AA2F63F9088C2C76D2A0D2DD5959032C498B115037FFC86DA4563A04"
+    },
+    {
+      "path": "HUDRenderTestSample/Assets/Tests/PlayMode/TestHudRcPerformanceRunner.cs",
+      "sha256": "B8FDC614DF9334E8DC0909839368570524C975FA7B63E3C0EBA5A09537179C79"
+    },
+    {
+      "path": "com.uidatarender/package.json",
+      "sha256": "FBC4DBB0C7A5C440513834602EF8A5297F5DA07A9CC7781D147AFC681A98999C"
+    },
+    {
+      "path": "HUDRenderTestSample/Packages/manifest.json",
+      "sha256": "41F0F45E70E443D06A6454DC304B80CE3FB8D1C576E5FB057E414CAD8A04F0F0"
+    },
+    {
+      "path": "HUDRenderTestSample/Packages/packages-lock.json",
+      "sha256": "ECB16175333C31C5898DF613F02C7DDF9E5AE91A3F2F2916769912F94E6A4717"
+    },
+    {
+      "path": "com.uidatarender/Tests/EditMode/TestUIPrefabHolderCoverage.cs",
+      "sha256": "FD7CE0A3D45130953440918AC106BCD517765C93D8C949A5712E968B291697E7"
+    }
+  ],
+  "deviceStageAudit": "stage-accounting-audit.json",
+  "coverage": "not run",
+  "jenkins": "not run"
+}

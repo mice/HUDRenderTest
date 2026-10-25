@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-20",
+  "sourceStatus": "dirty working tree; not RC",
+  "tests": [
+    {
+      "file": "closure-editmode.xml",
+      "total": "147",
+      "passed": "147",
+      "failed": "0",
+      "sha256": "00D34B62E8C61B9A58294CF63173B02572E39FC8A74D4DC076B426582266D848"
+    },
+    {
+      "file": "closure-playmode.xml",
+      "total": "28",
+      "passed": "28",
+      "failed": "0",
+      "sha256": "11299ABD5BDA8EE46BEF88D72F660CB8935661C0F78197D847872F70F6342340"
+    }
+  ],
+  "governance": "175/175",
+  "packageLayout": "passed",
+  "coverage": "not rerun",
+  "jenkins": "not run",
+  "hashedSources": [
+    {
+      "path": "com.uidatarender/Tests/EditMode/TestHolderBatchRenderer.cs",
+      "sha256": "8D6BE69FA063D26A42ABDBC8D76E16997D4B4973CE28350C49F42B716E1A96F9"
+    },
+    {
+      "path": "com.uidatarender/Tests/EditMode/TestUIImage.cs",
+      "sha256": "9D065E56B14AB6C5430E1052117561363E35C38AB2E03BC80E935598FF18ECF1"
+    },
+    {
+      "path": "HUDRenderTestSample/Assets/Tests/PlayMode/TestHudRcPerformanceRunner.cs",
+      "sha256": "D091F14B8606037B7EEBDC18E27AF0A220FA13118B8E94BE21EB1D761475A3FD"
+    },
+    {
+      "path": "HUDRenderTestSample/Assets/Scripts/HOT/HudRcPerformanceRunner.cs",
+      "sha256": "C90B03915BB428B5BCE9B2DD8AE78243EE239EE70DA7E048D23AFF91976A25C9"
+    },
+    {
+      "path": "HUDRenderTestSample/Assets/Editor/HudRcSceneBuilder.cs",
+      "sha256": "9F4D9A98077E2A65B8C612E22F491AF26BEF23076A84C40927BEDC0B69490351"
+    },
+    {
+      "path": "Tools/Invoke-HudRcAndroidValidation.ps1",
+      "sha256": "9643360E5B6B106B3A7B6FB4F99228101EBBDC0F81813A6480A078A0ACF80858"
+    }
+  ]
+}

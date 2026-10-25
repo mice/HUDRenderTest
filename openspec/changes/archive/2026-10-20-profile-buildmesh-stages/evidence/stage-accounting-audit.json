@@ -1,0 +1,9 @@
+{
+  "reports": 8,
+  "frames": 14400,
+  "refreshFrames": 4960,
+  "accounting": "passed",
+  "runtimeSourceHashChecks": 137,
+  "archiveSha256": "9D5055FB4F9C0991F0AD4B4940907955E289F1215548312B1DC19E257327265B",
+  "limitations": "Nested stage containment only; no speed thresholds or release/zero-GC acceptance."
+}
