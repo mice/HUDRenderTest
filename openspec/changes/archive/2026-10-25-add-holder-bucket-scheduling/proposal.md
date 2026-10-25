@@ -28,8 +28,8 @@
 
 接入点是 `HolderBatchRenderer` 外层的显式状态调度器、`MergeBatcher` 的可选连续分批模式、Sample HUD camera 提交及配置/报告。初版范围 1..256 holders、固定容量 128；不改变现有同步 API 和默认 first-fit 分批。接口、原子发布、资源寿命与排序方案见 [设计](design.md)。实现保持 opt-in，不引入 Job/GPU 并行或新的依赖。
 
-旧结果与承接边界见 [已归档总体验收交接](../archive/2026-10-21-validate-hud-rc-performance/evidence/closure-handoff-2026-10-20.md)。
+旧结果与承接边界见 [已归档总体验收交接](../2026-10-21-validate-hud-rc-performance/evidence/closure-handoff-2026-10-20.md)。
 
-优先级更新（2026-10-21）：先推进 [128-holder 生成优化](../archive/2026-10-25-optimize-128-holder-generation/proposal.md)，同步整体更新 p95 ≤ 1.5 ms 为工作目标。本分桶 change 保留为后续计划，未实施调度功能。
+优先级更新（2026-10-21）：先推进 [128-holder 生成优化](../2026-10-25-optimize-128-holder-generation/proposal.md)，同步整体更新 p95 ≤ 1.5 ms 为工作目标。本分桶 change 保留为后续计划，未实施调度功能。
 
 2026-10-25：128-holder 优化已归档，分桶设计完成。任务 10/10 已完成；轮转达到局部 1.5 ms p95 目标，见 [结果与限制](evidence/bucket-results.md)。

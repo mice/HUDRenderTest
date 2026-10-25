@@ -18,7 +18,7 @@ Local regression: **161/161 EditMode**, **31/31 graphical PlayMode**, zero skips
 | Actual production shader pixels across holder 128/129, changed bounds, single/multiple texture batches, publication revision refresh, camera command attachment/disposal | UT_PERF_019 |
 | Real shared UIImage templates in three-strategy workload; matched request versions/frames, final geometry hashes, bounded drain, second refresh frame included, export parity | UT_PERF_020 |
 
-Package tests: [TestHolderBucketScheduler.cs](../../../../com.uidatarender/Tests/EditMode/TestHolderBucketScheduler.cs). Sample tests: [TestHolderBucketRendering.cs](../../../../HUDRenderTestSample/Assets/Tests/PlayMode/TestHolderBucketRendering.cs), [TestHudRcPerformanceRunner.cs](../../../../HUDRenderTestSample/Assets/Tests/PlayMode/TestHudRcPerformanceRunner.cs).
+Package tests: [TestHolderBucketScheduler.cs](../../../../../com.uidatarender/Tests/EditMode/TestHolderBucketScheduler.cs). Sample tests: [TestHolderBucketRendering.cs](../../../../../HUDRenderTestSample/Assets/Tests/PlayMode/TestHolderBucketRendering.cs), [TestHudRcPerformanceRunner.cs](../../../../../HUDRenderTestSample/Assets/Tests/PlayMode/TestHudRcPerformanceRunner.cs).
 
 The allocation assertion covers the warmed scheduler fixture on the Editor main thread. It does not establish whole-application or Android zero-GC acceptance. A two-frame rotation permits one extra frame of visible latency and coalesces intermediate values; it does not guarantee that every intermediate state was displayed.
 

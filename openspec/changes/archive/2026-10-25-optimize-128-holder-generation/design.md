@@ -1,6 +1,6 @@
 ## Context
 
-用户优先要求优化 128-holder 整体更新到 1.5 ms，并询问 Burst/SIMD 可行性。[两轮基线](../../add-holder-bucket-scheduling/evidence/holders128-results.md)使用 Mi 10、Release IL2CPP ARM64、Slim、128×3 无 Sprite Simple Image；每轮 1,800 帧，含 20 次全量刷新。整体 p95 为 3.7467 / 3.7664 ms；生成中位数 3.3193 / 3.3260 ms，合并 0.3173 / 0.3181 ms。达到目标需整体减少约 60%。
+用户优先要求优化 128-holder 整体更新到 1.5 ms，并询问 Burst/SIMD 可行性。[两轮基线](../2026-10-25-add-holder-bucket-scheduling/evidence/holders128-results.md)使用 Mi 10、Release IL2CPP ARM64、Slim、128×3 无 Sprite Simple Image；每轮 1,800 帧，含 20 次全量刷新。整体 p95 为 3.7467 / 3.7664 ms；生成中位数 3.3193 / 3.3260 ms，合并 0.3173 / 0.3181 ms。达到目标需整体减少约 60%。
 
 `Runtime/UIDataRender/Jobs/MergeJobs.Burst.cs` 的 `BurstMergeJob` 只合并已生成的数据；`ManagedCodeInJob` 则执行托管任务，不能视为 Burst 生成路径。测试模式名 `Burst` 表示周期性全量刷新，不证明执行了 Burst 编译代码。
 
@@ -14,7 +14,7 @@
 
 **Non-Goals:**
 
-- 本 change 不实现两帧分桶；该计划见 [分桶探索](../../add-holder-bucket-scheduling/design.md)。
+- 本 change 不实现两帧分桶；该计划见 [分桶探索](../2026-10-25-add-holder-bucket-scheduling/design.md)。
 - 不把 128-holder 的 1.5 ms 目标当成原 RC 全矩阵验收通过或预算例外。
 - 不承诺任意 UGUI/TMP 类型可直接进入 Burst。
 

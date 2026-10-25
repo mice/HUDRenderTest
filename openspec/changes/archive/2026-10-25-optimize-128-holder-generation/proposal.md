@@ -24,4 +24,4 @@ Mi 10 上 128 个 holder 同步全量更新的两轮 p95 为 3.7467 / 3.7664 ms�
 
 预计涉及 `UIImage`、`DataPrefabHolder`、mesh data、批量生成入口及 Sample 性能驱动；Burst/Collections 使用仓库现有依赖。具体实现由热点实验决定，不预先承诺重写公共 API 或将托管 Unity 对象放入 Job。
 
-基线与来源见 [128-holder 实测](../../add-holder-bucket-scheduling/evidence/holders128-results.md)。2026-10-25 已实现可关闭的诊断计时和显式批量查询复用候选，通过本地回归；四轮真机对照已通过，查询复用的两轮 p95 为 1.2971 / 1.2310 ms。尚未实现 Burst 生成；它已后置到 JOB-01，诊断开销下降与查询复用收益分别记录。
+基线与来源见 [128-holder 实测](../2026-10-25-add-holder-bucket-scheduling/evidence/holders128-results.md)。2026-10-25 已实现可关闭的诊断计时和显式批量查询复用候选，通过本地回归；四轮真机对照已通过，查询复用的两轮 p95 为 1.2971 / 1.2310 ms。尚未实现 Burst 生成；它已后置到 JOB-01，诊断开销下降与查询复用收益分别记录。

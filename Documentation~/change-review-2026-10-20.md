@@ -104,7 +104,7 @@ Mi 10 旧/新/新/旧四轮、7,200 帧和 CSV 校验通过，只有一个 Runti
 
 用户要求先收尾旧 change，后继续优化。缓存新增 UT_BATCH_009/010，Sprite 新增 UT_UIIMAGE_008/UT_PERF_017；147/147 EditMode、28/28 PlayMode、175/175 治理通过。Sprite direct/fallback 四轮 7,200 帧证据补齐，没有可靠整体速度收益。五份主规格已同步，旧五项均位于 `openspec/changes/archive/2026-10-21-*`。
 
-四个优化 change 按完成归档；`validate-hud-rc-performance` 保留 10/12，按未验收阶段交付归档。用户明确“确实未通过”，要求新开分桶 change，并接受两帧轮转、后一桶额外一帧延迟；这不是预算例外。环境和候选门槛继续由 PERF-04/M5 承接。当前唯一新 change 是 [add-holder-bucket-scheduling](../openspec/changes/add-holder-bucket-scheduling/proposal.md)，先按用户要求实测 128 个 holder 的同帧整体更新成本，再收敛设计。
+四个优化 change 按完成归档；`validate-hud-rc-performance` 保留 10/12，按未验收阶段交付归档。用户明确“确实未通过”，要求新开分桶 change，并接受两帧轮转、后一桶额外一帧延迟；这不是预算例外。环境和候选门槛继续由 PERF-04/M5 承接。当前唯一新 change 是 [add-holder-bucket-scheduling](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/proposal.md)，先按用户要求实测 128 个 holder 的同帧整体更新成本，再收敛设计。
 
 ## 2026-10-21 优先级更新
 
@@ -114,4 +114,4 @@ Mi 10 旧/新/新/旧四轮、7,200 帧和 CSV 校验通过，只有一个 Runti
 
 显式查询复用已通过 150/150 EditMode、29/29 PlayMode 和 179/179 治理校验。Mi 10 ABBA 四轮共 36,000 帧，每轮 100 次全量刷新；候选 p95 1.2971 / 1.2310 ms，原路径 1.9776 / 1.9853 ms，满足局部 1.5 ms p95 目标。峰值 1.5241 ms 已记录；仍不代表原 RC 矩阵、真机 GC 或发布通过。
 
-[生成优化 change](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/tasks.md)已按实测决定完成 9/9：Burst/Job 原型及 ARM64 SIMD 检查移交 JOB-01，未实施，不以勾选冒充实现。该 change 已于 2026-10-25 归档，5 条需求、8 个场景同步至主规格 `hud-128-generation-performance`。分桶设计已完成，进度 4/10；下一步为 2.1 状态快照与公平调度实现。原子发布、透明排序及结构/资源屏障见 [分桶设计](../openspec/changes/add-holder-bucket-scheduling/design.md)。见 [完整证据](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。
+[生成优化 change](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/tasks.md)已按实测决定完成 9/9：Burst/Job 原型及 ARM64 SIMD 检查移交 JOB-01，未实施，不以勾选冒充实现。该 change 已于 2026-10-25 归档，5 条需求、8 个场景同步至主规格 `hud-128-generation-performance`。分桶设计已完成，进度 4/10；下一步为 2.1 状态快照与公平调度实现。原子发布、透明排序及结构/资源屏障见 [分桶设计](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/design.md)。见 [完整证据](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。

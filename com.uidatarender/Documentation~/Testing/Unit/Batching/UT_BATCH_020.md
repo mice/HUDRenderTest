@@ -28,7 +28,7 @@ Old output and pending requests survive failure; successful recovery publishes c
 Atomic publication and epoch ownership hold across failures.
 
 ## Latest Run Result
-2026-10-25: passed; full regression 161/161 EditMode and 31/31 graphical PlayMode. Evidence: openspec/changes/add-holder-bucket-scheduling/evidence/local-validation.json.
+2026-10-25: passed; full regression 161/161 EditMode and 31/31 graphical PlayMode. Evidence: openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/local-validation.json.
 
 ## Notes
-SourceEvidence: openspec/changes/add-holder-bucket-scheduling/specs/holder-bucket-scheduling/spec.md
+SourceEvidence: openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/specs/holder-bucket-scheduling/spec.md

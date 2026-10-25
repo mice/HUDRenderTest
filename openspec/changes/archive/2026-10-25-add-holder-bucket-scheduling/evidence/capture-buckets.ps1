@@ -1,6 +1,6 @@
 param([string]$Device = '791d02af', [int]$FirstRun = 1, [int]$LastRun = 7)
 $ErrorActionPreference = 'Stop'
-$repo = (Resolve-Path (Join-Path $PSScriptRoot '../../../..')).Path
+$repo = (Resolve-Path (Join-Path $PSScriptRoot '../../../../..')).Path
 $package = 'com.DefaultCompany.HUDRenderTest'
 $remoteDirectory = "/sdcard/Android/data/$package/files"
 $outputDirectory = Join-Path $repo 'Builds/HudRc/Xiaomi10/bucket-reports'

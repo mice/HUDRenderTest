@@ -1,6 +1,6 @@
 ## Context
 
-状态：**分桶实现、本地验证及同源真机对照完成（10/10）**。用户接受 256 holders / 128 容量 / 两帧轮转及后一桶额外一帧延迟。当前 128-holder 同步查询复用的 Mi 10 p95 为 1.2971 / 1.2310 ms；证据见 [优化归档](../archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。这是局部结果，不能外推为双桶已达标。历史带分段诊断的 7 ms / 3.75 ms 数据不再用作新方案的生产耗时基线。
+状态：**分桶实现、本地验证及同源真机对照完成（10/10）**。用户接受 256 holders / 128 容量 / 两帧轮转及后一桶额外一帧延迟。当前 128-holder 同步查询复用的 Mi 10 p95 为 1.2971 / 1.2310 ms；证据见 [优化归档](../2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。这是局部结果，不能外推为双桶已达标。历史带分段诊断的 7 ms / 3.75 ms 数据不再用作新方案的生产耗时基线。
 
 代码依据：`DataPrefabHolder.BuildMesh` 执行生成；`PrefabHolderExt.SetWidth/SetSprite/SetText` 立即生成；`HolderBatchRenderer.Rebuild` 填充/上传全部纹理 batches；`MergeBatcher.Plan` 使用 first-fit，会将后续 holder 放回早先 batch；`HolderNotifier` 只处理纹理槽变化，`HolderLifecycle` 的 HashSet 不提供绘制顺序。`HolderBatchRenderer.Rebuild` 会逐个 Clear/上传 mesh，故异常后不能假定原输出仍完整。
 

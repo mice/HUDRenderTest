@@ -22,6 +22,6 @@ Current mode: complete (10/10). Local validation: 161/161 EditMode, 31/31 graphi
 
 2026-10-21 prioritization: the user set the 128-holder whole-update target to 1.5 ms and requested optimization first. Bucket implementation remains planned/deferred; acceptance of its one-frame delay remains valid. Baseline evidence: [128-holder results](evidence/holders128-results.md).
 
-优先级更新（2026-10-21）：先推进 [128-holder 生成优化](../archive/2026-10-25-optimize-128-holder-generation/proposal.md)，同步整体更新 p95 ≤ 1.5 ms 为工作目标。本分桶 change 保留为后续计划，未实施调度功能。
+优先级更新（2026-10-21）：先推进 [128-holder 生成优化](../2026-10-25-optimize-128-holder-generation/proposal.md)，同步整体更新 p95 ≤ 1.5 ms 为工作目标。本分桶 change 保留为后续计划，未实施调度功能。
 
 2026-10-25：128-holder 查询复用的 p95 已达到 1.2971 / 1.2310 ms，优化 change 已归档。1.4 状态/API/失效和排序设计已完成，见 [实施设计](design.md)。任务已完成 10/10；双桶轮转两次 update CPU p95 为 1.3555 / 1.3413 ms，局部 1.5 ms p95 目标通过；原 RC 预算和设备计数器要求不变。
