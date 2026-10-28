@@ -37,5 +37,8 @@ Packages/*
 !/HUDRenderTestSample/Packages/manifest.json
 !/HUDRenderTestSample/Packages/packages-lock.json
 /Builds
-/HUDRenderTestSample/Packages/packages-lock.json
 /.codex
+
+# Raw validation evidence and generated coverage snapshots stay local.
+/openspec/changes/**/evidence/
+/com.uidatarender/Documentation~/Testing/Coverage/baseline-*.md

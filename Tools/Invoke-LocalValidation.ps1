@@ -5,6 +5,7 @@ param(
     [switch]$SkipEditMode,
     [switch]$SkipPlayMode,
     [switch]$SkipStructure,
+    [switch]$WithGraphics,
     [switch]$WithCoverage,
     [double]$CoverageThreshold = -1
 )
@@ -16,7 +17,18 @@ function Remove-PathIfExists {
     param([string]$Path)
 
     if (Test-Path -LiteralPath $Path) {
-        Remove-Item -LiteralPath $Path -Recurse -Force
+        $resolvedTarget = [System.IO.Path]::GetFullPath($Path)
+        $allowedRoots = @($repositoryRoot, $ProjectPath)
+        $withinAllowedRoot = $false
+        foreach ($allowedRoot in $allowedRoots) {
+            $rootPrefix = [System.IO.Path]::GetFullPath($allowedRoot).TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
+            if ($resolvedTarget.StartsWith($rootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+                $withinAllowedRoot = $true
+                break
+            }
+        }
+        if (-not $withinAllowedRoot) { throw "Refusing to remove validation output outside the repository or selected project: $resolvedTarget" }
+        Remove-Item -LiteralPath $resolvedTarget -Recurse -Force
     }
 }
 
@@ -48,7 +60,10 @@ function Invoke-UnityTestRun {
     Remove-PathIfExists -Path $LogPath
 
     Write-Host "==> $Name"
-    $process = Start-Process -FilePath $script:UnityExe -ArgumentList $Arguments -PassThru -Wait -NoNewWindow
+    $process = Start-Process -FilePath $script:UnityExe -ArgumentList $Arguments -PassThru -WindowStyle Hidden
+    # Start-Process -Wait also waits for descendants such as the shared licensing client.
+    # Wait for this test Editor only; licensing may remain in use by another project.
+    $process.WaitForExit()
     $exitCode = $process.ExitCode
 
     $lockMessage = Get-UnityLockMessage -LogPath $LogPath
@@ -160,7 +175,6 @@ if (-not $SkipPlayMode) {
     $playLogPath = Join-Path $logsPath "PlayMode_TestsPlayMode.log"
     $playArgs = @(
         "-batchmode",
-        "-nographics",
         "-projectPath", $ProjectPath,
         "-runTests",
         "-testPlatform", "PlayMode",
@@ -168,6 +182,8 @@ if (-not $SkipPlayMode) {
         "-testResults", $playResultPath,
         "-logFile", $playLogPath
     )
+    if ($WithGraphics) { $playArgs += "-force-d3d11" }
+    else { $playArgs += "-nographics" }
 
     if ($WithCoverage) {
         $playArgs += @(

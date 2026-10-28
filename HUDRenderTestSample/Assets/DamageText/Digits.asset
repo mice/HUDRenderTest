@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebee6a742499446d826584c8bfc75bd4, type: 3}
+  m_Name: Digits
+  m_EditorClassIdentifier: 
+  _texture: {fileID: 2800000, guid: b1d91e9e0a4dd5548bb06f735fb132cd, type: 3}
+  _referencePixelSize: 24
+  _contentVersion: sample-5x7-v1
+  _textureContentHash: 3A5CC44FB2FA95C379B48F19F48E04102E8D86072020ADB6C2A6D2593291E6EE
+  _digits:
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.015625
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.109375
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.203125
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.296875
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.390625
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.484375
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.578125
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.671875
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.765625
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  - Available: 1
+    Uv:
+      serializedVersion: 2
+      x: 0.859375
+      y: 0.15625
+      width: 0.05859375
+      height: 0.65625
+    Size: {x: 15, y: 21}
+    Bearing: {x: 0, y: 0}
+    Advance: 17
+  _revision: 1

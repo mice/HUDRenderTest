@@ -1,0 +1,792 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 287f56c39f67467b8d7bfc028a5a5c1b, type: 3}
+  m_Name: Static128_8
+  m_EditorClassIdentifier:
+  Version: comparison-clips-v1
+  Seed: 12345
+  Duration: 2
+  Events:
+  - EventId: 1
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -7.8749995, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 74
+  - EventId: 2
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -6.825, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 145
+  - EventId: 3
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -5.7749996, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 216
+  - EventId: 4
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -4.725, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 287
+  - EventId: 5
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -3.6749997, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 358
+  - EventId: 6
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -2.625, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 429
+  - EventId: 7
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -1.5749999, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 500
+  - EventId: 8
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -0.525, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 571
+  - EventId: 9
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 0.525, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 642
+  - EventId: 10
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 1.5749999, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 713
+  - EventId: 11
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 2.625, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 784
+  - EventId: 12
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 3.6749997, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 855
+  - EventId: 13
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 4.725, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 926
+  - EventId: 14
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 5.7749996, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 997
+  - EventId: 15
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 6.825, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1068
+  - EventId: 16
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 7.8749995, y: -3.0749998, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1139
+  - EventId: 17
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -7.8749995, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1210
+  - EventId: 18
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -6.825, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1281
+  - EventId: 19
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -5.7749996, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1352
+  - EventId: 20
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -4.725, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1423
+  - EventId: 21
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -3.6749997, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1494
+  - EventId: 22
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -2.625, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1565
+  - EventId: 23
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -1.5749999, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1636
+  - EventId: 24
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -0.525, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1707
+  - EventId: 25
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 0.525, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1778
+  - EventId: 26
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 1.5749999, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1849
+  - EventId: 27
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 2.625, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1920
+  - EventId: 28
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 3.6749997, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 1991
+  - EventId: 29
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 4.725, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2062
+  - EventId: 30
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 5.7749996, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2133
+  - EventId: 31
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 6.825, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2204
+  - EventId: 32
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 7.8749995, y: -2.425, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2275
+  - EventId: 33
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -7.8749995, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2346
+  - EventId: 34
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -6.825, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2417
+  - EventId: 35
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -5.7749996, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2488
+  - EventId: 36
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -4.725, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2559
+  - EventId: 37
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -3.6749997, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2630
+  - EventId: 38
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -2.625, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2701
+  - EventId: 39
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -1.5749999, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2772
+  - EventId: 40
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -0.525, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2843
+  - EventId: 41
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 0.525, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2914
+  - EventId: 42
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 1.5749999, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 2985
+  - EventId: 43
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 2.625, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3056
+  - EventId: 44
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 3.6749997, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3127
+  - EventId: 45
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 4.725, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3198
+  - EventId: 46
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 5.7749996, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3269
+  - EventId: 47
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 6.825, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3340
+  - EventId: 48
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 7.8749995, y: -1.775, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3411
+  - EventId: 49
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -7.8749995, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3482
+  - EventId: 50
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -6.825, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3553
+  - EventId: 51
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -5.7749996, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3624
+  - EventId: 52
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -4.725, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3695
+  - EventId: 53
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -3.6749997, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3766
+  - EventId: 54
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -2.625, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3837
+  - EventId: 55
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -1.5749999, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3908
+  - EventId: 56
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -0.525, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3979
+  - EventId: 57
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 0.525, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4050
+  - EventId: 58
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 1.5749999, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4121
+  - EventId: 59
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 2.625, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4192
+  - EventId: 60
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 3.6749997, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4263
+  - EventId: 61
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 4.725, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4334
+  - EventId: 62
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 5.7749996, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4405
+  - EventId: 63
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 6.825, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4476
+  - EventId: 64
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 7.8749995, y: -1.125, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4547
+  - EventId: 65
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -7.8749995, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4618
+  - EventId: 66
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -6.825, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4689
+  - EventId: 67
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -5.7749996, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4760
+  - EventId: 68
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -4.725, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4831
+  - EventId: 69
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -3.6749997, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4902
+  - EventId: 70
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -2.625, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 4973
+  - EventId: 71
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -1.5749999, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5044
+  - EventId: 72
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -0.525, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5115
+  - EventId: 73
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 0.525, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5186
+  - EventId: 74
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 1.5749999, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5257
+  - EventId: 75
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 2.625, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5328
+  - EventId: 76
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 3.6749997, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5399
+  - EventId: 77
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 4.725, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5470
+  - EventId: 78
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 5.7749996, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5541
+  - EventId: 79
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 6.825, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5612
+  - EventId: 80
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 7.8749995, y: -0.47500002, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5683
+  - EventId: 81
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -7.8749995, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5754
+  - EventId: 82
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -6.825, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5825
+  - EventId: 83
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -5.7749996, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5896
+  - EventId: 84
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -4.725, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 5967
+  - EventId: 85
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -3.6749997, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6038
+  - EventId: 86
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -2.625, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6109
+  - EventId: 87
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -1.5749999, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6180
+  - EventId: 88
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -0.525, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6251
+  - EventId: 89
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 0.525, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6322
+  - EventId: 90
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 1.5749999, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6393
+  - EventId: 91
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 2.625, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6464
+  - EventId: 92
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 3.6749997, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6535
+  - EventId: 93
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 4.725, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6606
+  - EventId: 94
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 5.7749996, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6677
+  - EventId: 95
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 6.825, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6748
+  - EventId: 96
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 7.8749995, y: 0.17499995, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6819
+  - EventId: 97
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -7.8749995, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6890
+  - EventId: 98
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -6.825, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 6961
+  - EventId: 99
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -5.7749996, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7032
+  - EventId: 100
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -4.725, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7103
+  - EventId: 101
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -3.6749997, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7174
+  - EventId: 102
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -2.625, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7245
+  - EventId: 103
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -1.5749999, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7316
+  - EventId: 104
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -0.525, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7387
+  - EventId: 105
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 0.525, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7458
+  - EventId: 106
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 1.5749999, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7529
+  - EventId: 107
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 2.625, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7600
+  - EventId: 108
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 3.6749997, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7671
+  - EventId: 109
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 4.725, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7742
+  - EventId: 110
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 5.7749996, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7813
+  - EventId: 111
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 6.825, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7884
+  - EventId: 112
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 7.8749995, y: 0.8249999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 7955
+  - EventId: 113
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -7.8749995, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8026
+  - EventId: 114
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -6.825, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8097
+  - EventId: 115
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -5.7749996, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8168
+  - EventId: 116
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -4.725, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8239
+  - EventId: 117
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -3.6749997, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8310
+  - EventId: 118
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: -2.625, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8381
+  - EventId: 119
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: -1.5749999, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8452
+  - EventId: 120
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: -0.525, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8523
+  - EventId: 121
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 0.525, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8594
+  - EventId: 122
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 1.5749999, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8665
+  - EventId: 123
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 2.625, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8736
+  - EventId: 124
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 3.6749997, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8807
+  - EventId: 125
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 4.725, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8878
+  - EventId: 126
+    Amount: 12345678
+    Kind: 2
+    WorldPosition: {x: 5.7749996, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 8949
+  - EventId: 127
+    Amount: 12345678
+    Kind: 0
+    WorldPosition: {x: 6.825, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 9020
+  - EventId: 128
+    Amount: 12345678
+    Kind: 1
+    WorldPosition: {x: 7.8749995, y: 1.4749999, z: 0}
+    SpawnTime: 0
+    RandomSeed: 9091
+  CameraKeys:
+  - Time: 0
+    Position: {x: 0, y: 0, z: -10}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    FieldOfView: 60
+    OrthographicSize: 6.5

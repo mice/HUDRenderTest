@@ -18,8 +18,12 @@ Use C# conventions already present in the project: 4-space indentation, PascalCa
 ## Testing Guidelines
 Use NUnit via Unity Test Framework. Name test files `Test*.cs` and test methods with behavior-focused names such as `Plan_SplitsWhenOver`. Add `[Category("UT_*_NNN")]` and a nearby `TestRecord: Documentation~/Testing/Unit/...` comment for governed tests. Package record references resolve from the package root; Sample record references resolve from the repository root. Test-file paths in records remain relative to their owning package or Sample content root. Prefer EditMode tests for deterministic logic and PlayMode tests for scene, coroutine, Burst/job runtime, or UI integration behavior. Run local validation before submitting changes that touch runtime code.
 
+For future random-number algorithm comparisons, use reproducible comparative sampling rather than strict per-sample validation. This does not change benchmark report integrity or deterministic playback checks.
+
 ## Commit & Pull Request Guidelines
 Recent commits use short, imperative summaries, for example `Add mesh stream toggle probe` and `Close csv diagnostic scene workflow`. Keep commits focused and avoid committing generated Unity output unless it is an intentional asset or setting change. Pull requests should describe the behavior changed, list validation performed, link related issues or test records, and include screenshots or scene notes for visual/UI changes.
+
+Keep raw validation evidence and intermediate artifacts local: do not commit reports, screenshots, logs, capture archives or build output. Commit source, specifications and final conclusion documents; retain source-linked unit-test definitions required by test governance.
 
 ## Agent-Specific Instructions
 Do not overwrite user changes in Unity scenes, prefabs, or generated assets. Check `git status --short` before editing, keep changes scoped, and prefer existing scripts and assembly layout over new tooling.

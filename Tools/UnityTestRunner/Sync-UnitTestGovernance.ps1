@@ -29,6 +29,7 @@ else {
 }
 
 $moduleRules = @(
+    @{ Pattern = "TestDamageText"; Module = "DamageText"; Prefix = "UT_DAMAGE"; Target = "Damage text rendering and playback" },
     @{ Pattern = "TestCalcMatrix"; Module = "Matrix"; Prefix = "UT_MTX"; Target = "Matrix transform math" },
     @{ Pattern = "TestVertexHelperUtils|TestMeshVertexBufferLayout"; Module = "Mesh"; Prefix = "UT_MESH"; Target = "VertexHelperUtils" },
     @{ Pattern = "TestUIMeshData|TestUIMeshDataX|TestMeshSlim"; Module = "Mesh"; Prefix = "UT_MESH"; Target = "UIMeshData" },

@@ -1,6 +1,6 @@
 # HUDRenderPackage Roadmap
 
-> 当前路线图唯一入口。更新时间：2026-10-25。状态以仓库当前结构、现有测试记录和发布证据为准；`Documentation~/Legacy/` 下的计划与审计文件属于历史资料，活动任务以本文和 [todo.md](todo.md) 为准。
+> 当前路线图唯一入口。更新时间：2026-10-28。状态以仓库当前结构、现有测试记录和发布证据为准；`Documentation~/Legacy/` 下的计划与审计文件属于历史资料，活动任务以本文和 [todo.md](todo.md) 为准。
 
 ## 项目定位
 
@@ -12,12 +12,14 @@
 - **核心渲染**：公共 `VertexHelper` 提取、`UIMeshData`/`UIMeshDataX`、几何池、`TextureSlotTable`、`MergeBatcher`、`HolderBatchRenderer`、材质绑定和纹理超容量分批已经落地。
 - **观测与 Job**：`PerfProbe` 已接入 Fill/Merge/Draw 路径并支持 CSV；Burst SoA 路径已有输出等价测试，旧的托管 Job 路径仍保留。
 - **TMP**：`UITMPText` 已进入现有批渲染链路，基础 SDF/描边材质路径和 Sample 场景已存在；多材质、fallback atlas、sprite 与高级 TMP 效果仍有限制。
-- **验证**：2026-10-20 收尾本地 EditMode 147/147、PlayMode 28/28、包布局及治理 175/175 通过；Sprite direct/fallback 四轮 7,200 帧及 CSV 校验通过，见 [共同测试记录](../openspec/changes/archive/2026-10-21-optimize-holder-buildmesh-incremental/evidence/closure-validation.json)和 [Sprite 对照](../openspec/changes/archive/2026-10-21-optimize-uiimage-simple-mesh/evidence/android-results.md)。2026-10-21 已完成 128-holder 两轮 3,600 帧测量，整体全量刷新 p95 为 3.7467 / 3.7664 ms，见 [128-holder 基线](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/holders128-results.md)；没有新增覆盖率、clean-checkout 或 Jenkins 结果，81.5% 仍为历史记录。
+- **验证**：相关源码回归通过 EditMode 190/190、D3D11 PlayMode 61/61、治理 251/251，UIDataRender 行覆盖率 90.0%（3,342/3,713），并完成适用的无 Library 干净快照验证。设备原生计时方法与画面已验证，正式 GPU/完整帧结论仍开放；见 [阶段归档结论](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/archive-record.md)。原始工件仅本地保存。Sprite 和 128-holder 真机数据保留各自负载的历史适用范围；本轮未执行 Jenkins 或 RC 验收。
 - **包版本**：`com.uidatarender/package.json` 当前为 `0.1.2`；`com.uidatarender/CHANGELOG.md` 的 `0.1.2` 仍为 Unreleased，预期 tag 为 `v0.1.2`，实际发布尚未核实。
 
 2026-10-25 增量验证：查询复用候选已通过 EditMode 150/150、PlayMode 29/29、治理 179/179。Mi 10 四轮 36,000 帧对照中，128-holder 全量刷新候选 p95 为 1.2971 / 1.2310 ms，满足局部 1.5 ms p95 目标；峰值 1.5241 ms，未宣称硬最大值或 RC 整体验收通过。见 [结果与边界](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。
 
 2026-10-25 分桶交付：显式状态队列、2×128 公平轮转、front/back 发布和透明顺序已验证。EditMode 161/161、D3D11 PlayMode 31/31、治理 192/192；Mi 10 六轮主对照和旧绘制控制共 63,036 帧，轮转 p95 1.3555 / 1.3413 ms，局部 1.5 ms p95 目标通过。峰值 5.3688 ms，仍保留长尾、两帧总成本和设备 GC 限制。见 [完整证据](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/bucket-results.md)。
+
+2026-10-26 战斗飘字：首期数字事件/固定 atlas/整数布局、GPU 动画、持久桶、确定性播放器及 Sample 已完成；正常回放 48/384/640 事件记录，无拒绝/漏显。后继 A/B 与 FP16 已完成实现、回归及 Mi 10 CPU/精度对照并阶段归档；正式 GPU/完整帧、真实 ECS、URP 和设备预算继续开放，见 DT1/DT2。
 
 ## 里程碑
 
@@ -79,7 +81,7 @@
 
 ### M3：性能与交付证据收口 —— 进行中
 
-**节点 ID**：`M3`；**目标版本**：未分配，性能证据不因 v0.1.2 治理周期而关闭；真实 CI 由 Jenkins 发布流程承接。
+**节点 ID**：`M3`；**目标版本**：未分配，性能证据不因 v0.1.2 治理周期而关闭；当前只推进性能与本地交付证据，CI 实施已移出活动范围。
 
 **TODO lifecycle**：节点入口已建立当前活动项：`VERIFY-01`、`PERF-02`、`PERF-03`、`JOB-01`。`PERF-01` 已归档；`CI-01` 因 CI 执行渠道改为 Jenkins 而废止，已记录在本节点的归档决定中。节点关闭前必须整体复核 `todo.md`，并在本节点下记录每个已归档 ID、验收证据、遗留项及其后续节点；完成项随后从活动 `todo.md` 清理。
 
@@ -87,13 +89,14 @@
 
 `CI-01` 已于 2026-09-27 归档为废止项：原 GitHub Actions 一次性验证任务不再执行，后续真实 CI 验证改由 Jenkins 任务承接。该归档不表示 CI 验证已通过；候选发布仍需记录绑定精确提交的 Jenkins run，并由 `GOV-004` 跟踪。
 
-目标是让已实现的路径拥有可重复、可比较、可审计的性能和 CI 证据。
+**VERIFY-01 验证归档（2026-10-26）**：本次在首期飘字的精确工作树源码清单上执行完整布局、EditMode 185/185、实际 D3D11 PlayMode 39/39、治理 224/224 和 UIDataRender 行覆盖率 89.4% / ≥70% 门禁，满足该项本地复核要求。`VERIFY-01` 已从活动 TODO 清理，证据见 验证汇总（原始工件仅本地保存）。这是 dirty 工作树的本地验证，不替代精确 RC 提交、clean-checkout 或 Jenkins；M3 的 PERF-02、PERF-03、JOB-01 继续开放。
+
+目标是让已实现的路径拥有可重复、可比较、可审计的性能和本地验证证据。
 
 1. 公共 UGUI `VertexHelper` 提取的 CPU 回归已完成复测和决策；`FillData2` 约 4.924–8.285 us、`FillData3` 约 6.038–8.405 us，超过旧路径的 5 us / 30x 参考门槛，但满足当前接受的预算和 0 B warm-up allocation 条件，见已归档 `PERF-01`。
-2. 通过 Jenkins 触发一次真实 CI run，确认 License、结构校验、EditMode、PlayMode、覆盖率门禁和 artifact 上传全部成功。
-3. 用 Unity Profiler 或可用的帧捕获补齐 3 槽与 8 槽 Shader 的 GPU 对照；据此决定是否调整默认纹理槽数。
-4. 建立 UGUI、`UIMeshData`、`UIMeshDataX`、Job 和高并发压力的统一场景/CSV 基线。
-5. 在当前提交上重跑覆盖率与治理同步，确认 70% 门禁和记录数量仍与代码一致。
+2. 用 Unity Profiler 或可用的帧捕获补齐 3 槽与 8 槽 Shader 的 GPU 对照；据此决定是否调整默认纹理槽数。
+3. 建立 UGUI、`UIMeshData`、`UIMeshDataX`、Job 和高并发压力的统一场景/CSV 基线。
+4. 本地覆盖率与治理复核已由 VERIFY-01 在 2026-10-26 完成；后续功能/候选变化仍需相应重跑，精确 RC 验证继续由 M5 承接。
 
 ### M4：TMP 高级能力 —— 计划
 
@@ -113,6 +116,8 @@
 ### M5：稳定维护与发布 —— 持续
 
 **节点 ID**：`M5`；**目标版本**：`v0.1.2` 治理周期；不等同于已发布。
+
+**当前范围调整（2026-10-27）**：按用户要求，将 `GOV-004` 及 Jenkins/候选 CI 执行任务从活动队列和 DT2 验收移除，后续另行安排。此次为移出当前范围，不记录为 CI 已通过。整体复核后活动 TODO 从 12 项减为 11 项（M5 4、M3 3、M4 3、DT2 1），其余条目继续原节点；历史快照保留。正式发布仍按发布规格执行。
 
 **TODO lifecycle**：本周期入口快照为 2026-09-27 的活动 TODO：`PERF-04`、`GOV-001`、`GOV-002`、`GOV-003`、`GOV-004`、`CI-01`、`VERIFY-01`、`PERF-02`、`PERF-03`、`JOB-01`、`TMP-01`、`TMP-02`、`TMP-03`、`MAINT-01`。该快照保留当时的入场状态；随后 `CI-01` 按渠道决策归档为废止项，Jenkins 验证要求由 `GOV-004` 继续跟踪。节点出口必须整体审视 TODO，将已完成或废止治理项记录在本节点后清理，性能和 TMP 未完成项继续保留原节点。
 
@@ -143,9 +148,33 @@
 - 将已确认的性能数据、已知限制和兼容性决策回写到包 README、适配说明和版本变更记录。
 - 对明确的产品需求再评估 Canvas masking、层级排序、9 宫格等当前设计限制；在需求确认前不把它们作为当前交付阻塞项。
 
+### DT1：战斗飘字与确定性播放器 —— 已完成（首期功能范围）
+
+**节点 ID**：`DT1`；**目标版本**：`0.1.2 Unreleased`，发布门禁仍由 M5 承接。
+
+**TODO lifecycle 入场复核（2026-10-26）**：完整读取活动 TODO 的 12 项。`PERF-04`、`GOV-002/004`、`VERIFY-02`、`MAINT-01` 继续 M5，`VERIFY-01`、`PERF-02/03`、`JOB-01` 继续 M3，`TMP-01..03` 继续 M4；历史门禁按原节点处理。新增 `DAMAGE-01` 承接已授权 [add-damage-text-playback](../openspec/changes/archive/2026-10-26-add-damage-text-playback/proposal.md) 的 M1–M3；后继 [渲染对照/FP16](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/proposal.md) 仍为计划。
+
+**完成记录 / 归档 DAMAGE-01（2026-10-26）**：独立事件/布局、固定 atlas、GPU 动画、持久桶和播放器已实现；完整 EditMode 185/185、D3D11 PlayMode 39/39、治理 224/224、布局及 89.4% 行覆盖率门禁通过，新增 32 项测试。使用契约见 [DamageTextPlayback.md](../com.uidatarender/Documentation~/DamageTextPlayback.md)，逐项需求、源码/报告哈希与截图见 实施验收（原始工件仅本地保存）。功能写入 [0.1.2 Unreleased changelog](../com.uidatarender/CHANGELOG.md)，未发布。
+
+**TODO lifecycle 出口整体复核**：重新通读整个队列，`DAMAGE-01` 按以上证据完成并移出活动队列；本地复核同时满足 `VERIFY-01`，在 M3 单独归档。新增 `DAMAGE-02 / DT2` 承接 M4–M5。其余 11 项继续原节点；队列最终 12 项（M5 5、M3 3、M4 3、DT2 1）。GPU/真机性能、FP16、真实 ECS、URP 与业务替换继续开放，不因本节点完成而通过。2026-10-26 按用户要求，将 13 条需求、26 个场景同步到 [数字渲染主规格](../openspec/specs/damage-text-rendering/spec.md)和 [播放器主规格](../openspec/specs/damage-text-playback/spec.md)，并归档至 `2026-10-26-add-damage-text-playback`；后继对照的最新状态见 DT2。
+
+### DT2：数字渲染对照与 FP16 —— 阶段归档（GPU 后续开放）
+
+**节点 ID**：`DT2`；**目标版本**：未分配。`DAMAGE-02` 承接 DT1，完成共享 Quad A / 持久 Mesh B、三模式/两阶段采样、局部 XY FP16、可追溯报告和原生 Vulkan 查询通路。规格已同步到 [渲染对照](../openspec/specs/damage-text-renderer-comparison/spec.md)与 [FP16](../openspec/specs/damage-text-local-fp16/spec.md)；阶段范围和结论见 [归档记录](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/archive-record.md)，功能进入 [0.1.2 Unreleased changelog](../com.uidatarender/CHANGELOG.md)。
+
+**TODO lifecycle 入口复核（2026-10-26）**：当时通读 12 个活动条目，本节点承诺 `DAMAGE-02`。M5 的 PERF-04、GOV-002/004、VERIFY-02、MAINT-01，M3 的 PERF-02/03、JOB-01，M4 的 TMP-01..03 按原节点延续。2026-10-27 用户将 GOV-004 / Jenkins 移出当前范围后，队列为 11 项。
+
+**阶段交付 / 归档 DAMAGE-02（2026-10-28）**：用户明确要求先记录、同步规格和归档，保留 21/22 的实际状态。已完成 13 组 ABBA、52 轮、187,450 帧 CPU/生命周期对照及 32 场景/640 点精度检查。连续生命周期外层 CPU 中位数 A 约 0.092 ms、B32 约 0.173 ms；FP16 相对 B32 增加约 0.0327 ms，Float32 保持默认。已有源码验证为 190/190 EditMode、61/61 D3D11 PlayMode、251/251 治理、90.0% UIDataRender 行覆盖率及适用的干净快照验证。
+
+原生查询完成 1,680 帧校准及 3,600 帧非排名记录诊断；最新 10 组/40 张 A/B、B32/B16 与插桩 off/on 图逐字节一致。设备 thermal status 3 不满足正式门槛，插桩影响 ABBA 和正式 GPU 矩阵尚未执行；`tasks.md` 的 3.1 保持未勾选，GPU/完整帧收益未验证，不记为整个 DT2 已通过。
+
+**TODO lifecycle 出口整体复核**：完整复核活动队列，`DAMAGE-02` 分类为阶段交付归档，未完成的 GPU 验收转入新 ID `DAMAGE-03 / DT2`，状态 `deferred/environment-limited`、目标版本未分配。下一触发条件和验收见 [todo.md](todo.md)；不把未完成门禁归档为通过。其余 10 项继续原节点：M5 的 PERF-04、GOV-002、VERIFY-02、MAINT-01；M3 的 PERF-02/03、JOB-01；M4 的 TMP-01..03。归档后活动队列仍为 11 项，未恢复历史任务。
+
+本轮未重启设备。Jenkins 另行安排；C excluded，D not-integrated，其他 API/URP、真实业务 ECS 与主城全局约 10 次更新/秒继续后续范围。原始工件及旧源码检查点仅本地保存，远端保留源码、主规格和最终结论；未创建 RC/tag/release。
+
 ## 优先级顺序
 
-1. **P0**：[128-holder 优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)已归档，[分桶交付](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/bucket-results.md)已完成 10/10，局部 1.5 ms p95 目标通过。下一步围绕 PERF-04 补齐代表性资源负载和真机分配证据，继续处理原 1 ms 参考、VERIFY-02 独立分发、覆盖率和精确候选 Jenkins。若需要进一步优化，再启动 JOB-01 的 Burst/SIMD 对照。
+1. **P0**：[128-holder 优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)已归档，[分桶交付](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/bucket-results.md)已完成 10/10，局部 1.5 ms p95 目标通过。下一步围绕 PERF-04 补齐代表性资源负载和真机分配证据，继续处理原 1 ms 参考、VERIFY-02 独立分发、覆盖率。若需要进一步优化，再启动 JOB-01 的 Burst/SIMD 对照。
 2. **P1**：8 槽 GPU 证据和统一性能场景，确定默认槽数与 Job 路径选择。
 3. **P2**：TMP 高级材质/资源能力、低风险代码清理和可选 UI 能力扩展。
 
@@ -154,10 +183,9 @@
 ```powershell
 .\Tools\Test-PackageLayout.ps1
 .\Tools\Invoke-LocalValidation.ps1
-.\Tools\Invoke-CleanValidation.ps1 -TestPlatform Both
+.\Tools\Invoke-CleanValidation.ps1 -TestPlatform Both -WithGraphics
 .\Tools\Invoke-LocalValidation.ps1 -WithCoverage -CoverageThreshold 70
 .\Tools\UnityTestRunner\Sync-UnitTestGovernance.ps1 -Scope All
 ```
 
 具体任务、优先级、验收条件和来源见 [todo.md](todo.md)。
-

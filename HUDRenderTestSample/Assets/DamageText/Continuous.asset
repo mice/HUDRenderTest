@@ -1,0 +1,2333 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 287f56c39f67467b8d7bfc028a5a5c1b, type: 3}
+  m_Name: Continuous
+  m_EditorClassIdentifier: 
+  Version: sample-clip-v1
+  Seed: 12345
+  Duration: 9
+  Events:
+  - EventId: 1
+    Amount: 87628878
+    Kind: 0
+    WorldPosition: {x: -4.3352885, y: -0.15053764, z: 0}
+    SpawnTime: 0
+    RandomSeed: 87628868
+  - EventId: 2
+    Amount: 71072477
+    Kind: 1
+    WorldPosition: {x: 2.0674486, y: 0.90029323, z: 0}
+    SpawnTime: 0.02
+    RandomSeed: 71072467
+  - EventId: 3
+    Amount: 32836614
+    Kind: 2
+    WorldPosition: {x: 0.21994135, y: 0.83186704, z: 0}
+    SpawnTime: 0.04
+    RandomSeed: 2332836374
+  - EventId: 4
+    Amount: 26892437
+    Kind: 0
+    WorldPosition: {x: 1.226784, y: -0.1652004, z: 0}
+    SpawnTime: 0.06
+    RandomSeed: 2726892157
+  - EventId: 5
+    Amount: 8547400
+    Kind: 1
+    WorldPosition: {x: -0.6989247, y: -0.59530795, z: 0}
+    SpawnTime: 0.08
+    RandomSeed: 3908547000
+  - EventId: 6
+    Amount: 83019241
+    Kind: 2
+    WorldPosition: {x: -0.7086999, y: 0.21603128, z: 0}
+    SpawnTime: 0.099999994
+    RandomSeed: 483019191
+  - EventId: 7
+    Amount: 29828998
+    Kind: 0
+    WorldPosition: {x: 4.1691103, y: -2.1886609, z: 0}
+    SpawnTime: 0.12
+    RandomSeed: 2129828778
+  - EventId: 8
+    Amount: 55140593
+    Kind: 1
+    WorldPosition: {x: 2.5171065, y: -2.8191593, z: 0}
+    SpawnTime: 0.14
+    RandomSeed: 2355140353
+  - EventId: 9
+    Amount: 60230768
+    Kind: 2
+    WorldPosition: {x: -3.9442816, y: 0.13294233, z: 0}
+    SpawnTime: 0.16
+    RandomSeed: 2560230508
+  - EventId: 10
+    Amount: 64894255
+    Kind: 0
+    WorldPosition: {x: -2.8592374, y: -2.9364614, z: 0}
+    SpawnTime: 0.17999999
+    RandomSeed: 3364893915
+  - EventId: 11
+    Amount: 71173010
+    Kind: 1
+    WorldPosition: {x: -3.7683284, y: -1.7829912, z: 0}
+    SpawnTime: 0.19999999
+    RandomSeed: 171172990
+  - EventId: 12
+    Amount: 94602245
+    Kind: 2
+    WorldPosition: {x: -0.5718475, y: 0.049853373, z: 0}
+    SpawnTime: 0.22
+    RandomSeed: 3194601925
+  - EventId: 13
+    Amount: 48120068
+    Kind: 0
+    WorldPosition: {x: -4.0615835, y: 1.7800586, z: 0}
+    SpawnTime: 0.24
+    RandomSeed: 4148119648
+  - EventId: 14
+    Amount: 16399719
+    Kind: 1
+    WorldPosition: {x: -4.3841643, y: 0.714565, z: 0}
+    SpawnTime: 0.26
+    RandomSeed: 316399679
+  - EventId: 15
+    Amount: 4789192
+    Kind: 2
+    WorldPosition: {x: -3.572825, y: -0.047898337, z: 0}
+    SpawnTime: 0.28
+    RandomSeed: 3004788882
+  - EventId: 16
+    Amount: 76948625
+    Kind: 0
+    WorldPosition: {x: 1.969697, y: -1.1769305, z: 0}
+    SpawnTime: 0.29999998
+    RandomSeed: 1976948425
+  - EventId: 17
+    Amount: 2883912
+    Kind: 1
+    WorldPosition: {x: -1.0508308, y: 1.9853373, z: 0}
+    SpawnTime: 0.32
+    RandomSeed: 1702883732
+  - EventId: 18
+    Amount: 21112967
+    Kind: 2
+    WorldPosition: {x: 4.726295, y: -2.0078201, z: 0}
+    SpawnTime: 0.34
+    RandomSeed: 4121112547
+  - EventId: 19
+    Amount: 44295066
+    Kind: 0
+    WorldPosition: {x: 4.755621, y: -0.55620724, z: 0}
+    SpawnTime: 0.35999998
+    RandomSeed: 1744294886
+  - EventId: 20
+    Amount: 92091303
+    Kind: 1
+    WorldPosition: {x: 0.1319648, y: -0.3900293, z: 0}
+    SpawnTime: 0.38
+    RandomSeed: 4092090893
+  - EventId: 21
+    Amount: 67816374
+    Kind: 2
+    WorldPosition: {x: -4.9217987, y: -2.4672532, z: 0}
+    SpawnTime: 0.39999998
+    RandomSeed: 4267815944
+  - EventId: 22
+    Amount: 50572521
+    Kind: 0
+    WorldPosition: {x: 4.4525905, y: -0.41446725, z: 0}
+    SpawnTime: 0.42
+    RandomSeed: 2850572231
+  - EventId: 23
+    Amount: 16322872
+    Kind: 1
+    WorldPosition: {x: 1.1974585, y: -2.1006842, z: 0}
+    SpawnTime: 0.44
+    RandomSeed: 1816322682
+  - EventId: 24
+    Amount: 47160173
+    Kind: 2
+    WorldPosition: {x: 3.9247313, y: 0.45552298, z: 0}
+    SpawnTime: 0.45999998
+    RandomSeed: 2147159953
+  - EventId: 25
+    Amount: 33880126
+    Kind: 0
+    WorldPosition: {x: 4.3450637, y: 0.597263, z: 0}
+    SpawnTime: 0.48
+    RandomSeed: 1233879996
+  - EventId: 26
+    Amount: 18070185
+    Kind: 1
+    WorldPosition: {x: 4.804497, y: 1.2326491, z: 0}
+    SpawnTime: 0.5
+    RandomSeed: 1818069995
+  - EventId: 27
+    Amount: 472186
+    Kind: 2
+    WorldPosition: {x: -4.2375364, y: -2.4721408, z: 0}
+    SpawnTime: 0.52
+    RandomSeed: 2900471886
+  - EventId: 28
+    Amount: 67024283
+    Kind: 0
+    WorldPosition: {x: 3.3382208, y: -2.3841643, z: 0}
+    SpawnTime: 0.53999996
+    RandomSeed: 667024213
+  - EventId: 29
+    Amount: 81261016
+    Kind: 1
+    WorldPosition: {x: -3.2795699, y: -0.0039100684, z: 0}
+    SpawnTime: 0.56
+    RandomSeed: 381260976
+  - EventId: 30
+    Amount: 62258625
+    Kind: 2
+    WorldPosition: {x: -4.2277613, y: 0.010752688, z: 0}
+    SpawnTime: 0.58
+    RandomSeed: 3662258255
+  - EventId: 31
+    Amount: 38151406
+    Kind: 0
+    WorldPosition: {x: -1.5395894, y: -2.198436, z: 0}
+    SpawnTime: 0.59999996
+    RandomSeed: 1338151266
+  - EventId: 32
+    Amount: 30368099
+    Kind: 1
+    WorldPosition: {x: -1.627566, y: 1.8093841, z: 0}
+    SpawnTime: 0.62
+    RandomSeed: 30368089
+  - EventId: 33
+    Amount: 87140524
+    Kind: 2
+    WorldPosition: {x: 2.2336266, y: -2.5796676, z: 0}
+    SpawnTime: 0.64
+    RandomSeed: 1987140324
+  - EventId: 34
+    Amount: 52747637
+    Kind: 0
+    WorldPosition: {x: -2.6246333, y: 0.56793743, z: 0}
+    SpawnTime: 0.65999997
+    RandomSeed: 1252747507
+  - EventId: 35
+    Amount: 60949168
+    Kind: 1
+    WorldPosition: {x: -0.71847504, y: 1.7214077, z: 0}
+    SpawnTime: 0.68
+    RandomSeed: 2460948918
+  - EventId: 36
+    Amount: 32947777
+    Kind: 2
+    WorldPosition: {x: -0.9628543, y: -0.57087, z: 0}
+    SpawnTime: 0.7
+    RandomSeed: 4132947357
+  - EventId: 37
+    Amount: 66423394
+    Kind: 0
+    WorldPosition: {x: 0.86510265, y: -1.2697947, z: 0}
+    SpawnTime: 0.71999997
+    RandomSeed: 66423384
+  - EventId: 38
+    Amount: 49023531
+    Kind: 1
+    WorldPosition: {x: -0.39589444, y: 1.3890518, z: 0}
+    SpawnTime: 0.74
+    RandomSeed: 3349023191
+  - EventId: 39
+    Amount: 98144716
+    Kind: 2
+    WorldPosition: {x: -1.7741935, y: -2.965787, z: 0}
+    SpawnTime: 0.76
+    RandomSeed: 1298144586
+  - EventId: 40
+    Amount: 79265709
+    Kind: 0
+    WorldPosition: {x: -4.677419, y: -1.1476051, z: 0}
+    SpawnTime: 0.78
+    RandomSeed: 1379265569
+  - EventId: 41
+    Amount: 1642416
+    Kind: 1
+    WorldPosition: {x: 2.6246333, y: 0.15249267, z: 0}
+    SpawnTime: 0.79999995
+    RandomSeed: 4101641996
+  - EventId: 42
+    Amount: 48607467
+    Kind: 2
+    WorldPosition: {x: 2.4584556, y: 1.032258, z: 0}
+    SpawnTime: 0.82
+    RandomSeed: 2348607227
+  - EventId: 43
+    Amount: 65869120
+    Kind: 0
+    WorldPosition: {x: -4.7067447, y: -2.4721408, z: 0}
+    SpawnTime: 0.84
+    RandomSeed: 2865868830
+  - EventId: 44
+    Amount: 21642759
+    Kind: 1
+    WorldPosition: {x: -2.7614858, y: 1.6432062, z: 0}
+    SpawnTime: 0.85999995
+    RandomSeed: 2821642469
+  - EventId: 45
+    Amount: 77552654
+    Kind: 2
+    WorldPosition: {x: -2.4975562, y: -0.4340176, z: 0}
+    SpawnTime: 0.88
+    RandomSeed: 2677552384
+  - EventId: 46
+    Amount: 92561061
+    Kind: 0
+    WorldPosition: {x: -4.0713587, y: -0.6099707, z: 0}
+    SpawnTime: 0.9
+    RandomSeed: 692560991
+  - EventId: 47
+    Amount: 90300610
+    Kind: 1
+    WorldPosition: {x: 0.49364614, y: -0.7663734, z: 0}
+    SpawnTime: 0.91999996
+    RandomSeed: 3990300210
+  - EventId: 48
+    Amount: 96055603
+    Kind: 2
+    WorldPosition: {x: 4.7849464, y: -1.1867057, z: 0}
+    SpawnTime: 0.94
+    RandomSeed: 3296055273
+  - EventId: 49
+    Amount: 63088124
+    Kind: 0
+    WorldPosition: {x: -4.491691, y: -2.2668622, z: 0}
+    SpawnTime: 0.96
+    RandomSeed: 1963087924
+  - EventId: 50
+    Amount: 16771139
+    Kind: 1
+    WorldPosition: {x: 0.0342131, y: -1.0791789, z: 0}
+    SpawnTime: 0.97999996
+    RandomSeed: 3116770819
+  - EventId: 51
+    Amount: 24954396
+    Kind: 2
+    WorldPosition: {x: 3.8172042, y: 1.7116325, z: 0}
+    SpawnTime: 1
+    RandomSeed: 1424954246
+  - EventId: 52
+    Amount: 60815459
+    Kind: 0
+    WorldPosition: {x: -2.0576735, y: -2.8973608, z: 0}
+    SpawnTime: 1.02
+    RandomSeed: 3060815149
+  - EventId: 53
+    Amount: 74128802
+    Kind: 1
+    WorldPosition: {x: -3.3577712, y: -0.4340176, z: 0}
+    SpawnTime: 1.04
+    RandomSeed: 2474128552
+  - EventId: 54
+    Amount: 70283569
+    Kind: 2
+    WorldPosition: {x: 4.765396, y: 0.9247312, z: 0}
+    SpawnTime: 1.06
+    RandomSeed: 3270283239
+  - EventId: 55
+    Amount: 1546722
+    Kind: 0
+    WorldPosition: {x: -4.7458453, y: -0.7174975, z: 0}
+    SpawnTime: 1.0799999
+    RandomSeed: 1901546522
+  - EventId: 56
+    Amount: 84616459
+    Kind: 1
+    WorldPosition: {x: -3.2697947, y: 0.18181819, z: 0}
+    SpawnTime: 1.1
+    RandomSeed: 884616369
+  - EventId: 57
+    Amount: 62589988
+    Kind: 2
+    WorldPosition: {x: 0.9042033, y: 0.35777125, z: 0}
+    SpawnTime: 1.12
+    RandomSeed: 1962589788
+  - EventId: 58
+    Amount: 85633837
+    Kind: 0
+    WorldPosition: {x: 0.112414464, y: 1.775171, z: 0}
+    SpawnTime: 1.14
+    RandomSeed: 2885633547
+  - EventId: 59
+    Amount: 37719764
+    Kind: 1
+    WorldPosition: {x: 4.8338223, y: -2.7262952, z: 0}
+    SpawnTime: 1.16
+    RandomSeed: 2237719534
+  - EventId: 60
+    Amount: 48223985
+    Kind: 2
+    WorldPosition: {x: 1.1485826, y: -0.07722385, z: 0}
+    SpawnTime: 1.18
+    RandomSeed: 3748223605
+  - EventId: 61
+    Amount: 81926650
+    Kind: 0
+    WorldPosition: {x: -1.7155426, y: -2.9511242, z: 0}
+    SpawnTime: 1.1999999
+    RandomSeed: 1681926480
+  - EventId: 62
+    Amount: 75605759
+    Kind: 1
+    WorldPosition: {x: -3.914956, y: -0.8347996, z: 0}
+    SpawnTime: 1.22
+    RandomSeed: 3975605359
+  - EventId: 63
+    Amount: 87945538
+    Kind: 2
+    WorldPosition: {x: 2.5268817, y: -1.6950147, z: 0}
+    SpawnTime: 1.24
+    RandomSeed: 3187945218
+  - EventId: 64
+    Amount: 13556927
+    Kind: 0
+    WorldPosition: {x: 1.1876833, y: -2.3352883, z: 0}
+    SpawnTime: 1.26
+    RandomSeed: 613556857
+  - EventId: 65
+    Amount: 42823088
+    Kind: 1
+    WorldPosition: {x: -1.2072337, y: -0.5268817, z: 0}
+    SpawnTime: 1.28
+    RandomSeed: 2942822788
+  - EventId: 66
+    Amount: 3946675
+    Kind: 2
+    WorldPosition: {x: 2.6930597, y: -1.6265885, z: 0}
+    SpawnTime: 1.3
+    RandomSeed: 1503946515
+  - EventId: 67
+    Amount: 38572790
+    Kind: 0
+    WorldPosition: {x: -1.6568915, y: -1.514174, z: 0}
+    SpawnTime: 1.3199999
+    RandomSeed: 1538572630
+  - EventId: 68
+    Amount: 6498331
+    Kind: 1
+    WorldPosition: {x: -3.1524928, y: 0.45063537, z: 0}
+    SpawnTime: 1.3399999
+    RandomSeed: 3406497981
+  - EventId: 69
+    Amount: 21418582
+    Kind: 2
+    WorldPosition: {x: 2.42913, y: 1.5943304, z: 0}
+    SpawnTime: 1.36
+    RandomSeed: 3421418232
+  - EventId: 70
+    Amount: 56341319
+    Kind: 0
+    WorldPosition: {x: -0.08308896, y: -1.4848485, z: 0}
+    SpawnTime: 1.38
+    RandomSeed: 756341239
+  - EventId: 71
+    Amount: 11012646
+    Kind: 1
+    WorldPosition: {x: 2.2922776, y: -1.3040078, z: 0}
+    SpawnTime: 1.4
+    RandomSeed: 511012586
+  - EventId: 72
+    Amount: 35447029
+    Kind: 2
+    WorldPosition: {x: -1.8621701, y: -2.7458456, z: 0}
+    SpawnTime: 1.42
+    RandomSeed: 1735446849
+  - EventId: 73
+    Amount: 56161832
+    Kind: 0
+    WorldPosition: {x: -0.8162268, y: -2.2277615, z: 0}
+    SpawnTime: 1.4399999
+    RandomSeed: 3756161452
+  - EventId: 74
+    Amount: 7301979
+    Kind: 1
+    WorldPosition: {x: -2.2336266, y: -1.230694, z: 0}
+    SpawnTime: 1.4599999
+    RandomSeed: 3107301659
+  - EventId: 75
+    Amount: 1381806
+    Kind: 2
+    WorldPosition: {x: 4.364614, y: 0.8416422, z: 0}
+    SpawnTime: 1.48
+    RandomSeed: 2301381566
+  - EventId: 76
+    Amount: 63944307
+    Kind: 0
+    WorldPosition: {x: -4.951124, y: 0.28445747, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1063944197
+  - EventId: 77
+    Amount: 83386954
+    Kind: 1
+    WorldPosition: {x: -0.93352884, y: -0.9863148, z: 0}
+    SpawnTime: 1.52
+    RandomSeed: 1683386784
+  - EventId: 78
+    Amount: 36631803
+    Kind: 2
+    WorldPosition: {x: -3.7585533, y: -0.35092863, z: 0}
+    SpawnTime: 1.54
+    RandomSeed: 3736631423
+  - EventId: 79
+    Amount: 93244208
+    Kind: 0
+    WorldPosition: {x: 4.5601172, y: -0.9178886, z: 0}
+    SpawnTime: 1.56
+    RandomSeed: 3493243858
+  - EventId: 80
+    Amount: 96807593
+    Kind: 1
+    WorldPosition: {x: -2.4095798, y: 1.173998, z: 0}
+    SpawnTime: 1.5799999
+    RandomSeed: 1596807433
+  - EventId: 81
+    Amount: 75058492
+    Kind: 2
+    WorldPosition: {x: 2.0772238, y: -0.79569894, z: 0}
+    SpawnTime: 1.5999999
+    RandomSeed: 3575058132
+  - EventId: 82
+    Amount: 73183311
+    Kind: 0
+    WorldPosition: {x: -4.657869, y: -0.75659823, z: 0}
+    SpawnTime: 1.62
+    RandomSeed: 2973183011
+  - EventId: 83
+    Amount: 68931084
+    Kind: 1
+    WorldPosition: {x: 2.878788, y: 1.1055719, z: 0}
+    SpawnTime: 1.64
+    RandomSeed: 2268930854
+  - EventId: 84
+    Amount: 46234579
+    Kind: 2
+    WorldPosition: {x: -4.2473116, y: -2.7262952, z: 0}
+    SpawnTime: 1.66
+    RandomSeed: 3846234189
+  - EventId: 85
+    Amount: 11488096
+    Kind: 0
+    WorldPosition: {x: -1.7937438, y: 1.3841642, z: 0}
+    SpawnTime: 1.68
+    RandomSeed: 2711487816
+  - EventId: 86
+    Amount: 52601495
+    Kind: 1
+    WorldPosition: {x: -4.931574, y: -0.5268817, z: 0}
+    SpawnTime: 1.6999999
+    RandomSeed: 3952601095
+  - EventId: 87
+    Amount: 48854628
+    Kind: 2
+    WorldPosition: {x: -0.6793744, y: -0.64907134, z: 0}
+    SpawnTime: 1.7199999
+    RandomSeed: 1648854458
+  - EventId: 88
+    Amount: 64018981
+    Kind: 0
+    WorldPosition: {x: -0.45454547, y: -2.1104593, z: 0}
+    SpawnTime: 1.74
+    RandomSeed: 3364018641
+  - EventId: 89
+    Amount: 44599140
+    Kind: 1
+    WorldPosition: {x: -2.5366569, y: -1.0351906, z: 0}
+    SpawnTime: 1.76
+    RandomSeed: 3544598780
+  - EventId: 90
+    Amount: 14257245
+    Kind: 2
+    WorldPosition: {x: -4.5796676, y: -2.6676443, z: 0}
+    SpawnTime: 1.78
+    RandomSeed: 414257195
+  - EventId: 91
+    Amount: 51908252
+    Kind: 0
+    WorldPosition: {x: 3.8954058, y: -2.7214077, z: 0}
+    SpawnTime: 1.8
+    RandomSeed: 2651907982
+  - EventId: 92
+    Amount: 24277155
+    Kind: 1
+    WorldPosition: {x: -1.0410557, y: 0.5288367, z: 0}
+    SpawnTime: 1.8199999
+    RandomSeed: 2624276885
+  - EventId: 93
+    Amount: 82348578
+    Kind: 2
+    WorldPosition: {x: -0.15151516, y: -2.9853373, z: 0}
+    SpawnTime: 1.8399999
+    RandomSeed: 482348528
+  - EventId: 94
+    Amount: 85995913
+    Kind: 0
+    WorldPosition: {x: -3.6021504, y: 1.1544477, z: 0}
+    SpawnTime: 1.86
+    RandomSeed: 2485995663
+  - EventId: 95
+    Amount: 18626600
+    Kind: 1
+    WorldPosition: {x: -3.4164224, y: 0.63147604, z: 0}
+    SpawnTime: 1.88
+    RandomSeed: 3818626210
+  - EventId: 96
+    Amount: 95342785
+    Kind: 2
+    WorldPosition: {x: 4.0029325, y: -2.8631475, z: 0}
+    SpawnTime: 1.9
+    RandomSeed: 395342745
+  - EventId: 97
+    Amount: 87301532
+    Kind: 0
+    WorldPosition: {x: -4.6480937, y: -1.5043988, z: 0}
+    SpawnTime: 1.92
+    RandomSeed: 1187301412
+  - EventId: 98
+    Amount: 50165127
+    Kind: 1
+    WorldPosition: {x: -1.9990225, y: 1.8338221, z: 0}
+    SpawnTime: 1.9399999
+    RandomSeed: 3350164787
+  - EventId: 99
+    Amount: 37681974
+    Kind: 2
+    WorldPosition: {x: -2.5953078, y: -1.3675464, z: 0}
+    SpawnTime: 1.9599999
+    RandomSeed: 3137681654
+  - EventId: 100
+    Amount: 17616007
+    Kind: 0
+    WorldPosition: {x: 4.667644, y: 0.39198437, z: 0}
+    SpawnTime: 1.9799999
+    RandomSeed: 1617615837
+  - EventId: 101
+    Amount: 72484072
+    Kind: 1
+    WorldPosition: {x: 3.9931574, y: 0.48973608, z: 0}
+    SpawnTime: 2
+    RandomSeed: 772483992
+  - EventId: 102
+    Amount: 11546265
+    Kind: 2
+    WorldPosition: {x: 0.22971652, y: -0.8983382, z: 0}
+    SpawnTime: 2.02
+    RandomSeed: 1211546135
+  - EventId: 103
+    Amount: 85003526
+    Kind: 0
+    WorldPosition: {x: -3.6510265, y: 0.30400783, z: 0}
+    SpawnTime: 2.04
+    RandomSeed: 3785003146
+  - EventId: 104
+    Amount: 83572491
+    Kind: 1
+    WorldPosition: {x: 0.95307916, y: -0.10166178, z: 0}
+    SpawnTime: 2.06
+    RandomSeed: 1683572321
+  - EventId: 105
+    Amount: 29961376
+    Kind: 2
+    WorldPosition: {x: -4.257087, y: 0.49462366, z: 0}
+    SpawnTime: 2.08
+    RandomSeed: 3329961036
+  - EventId: 106
+    Amount: 82976369
+    Kind: 0
+    WorldPosition: {x: 3.0840664, y: -2.2277615, z: 0}
+    SpawnTime: 2.1
+    RandomSeed: 3082976059
+  - EventId: 107
+    Amount: 88740998
+    Kind: 1
+    WorldPosition: {x: 3.4261975, y: 0.6608016, z: 0}
+    SpawnTime: 2.12
+    RandomSeed: 388740958
+  - EventId: 108
+    Amount: 69106021
+    Kind: 2
+    WorldPosition: {x: 2.8690126, y: -1.5288367, z: 0}
+    SpawnTime: 2.1399999
+    RandomSeed: 3169105701
+  - EventId: 109
+    Amount: 17718194
+    Kind: 0
+    WorldPosition: {x: 0.6304985, y: -2.3792768, z: 0}
+    SpawnTime: 2.1599998
+    RandomSeed: 3617717824
+  - EventId: 110
+    Amount: 2704793
+    Kind: 1
+    WorldPosition: {x: -3.4457479, y: -1.0107527, z: 0}
+    SpawnTime: 2.18
+    RandomSeed: 2402704543
+  - EventId: 111
+    Amount: 16455894
+    Kind: 2
+    WorldPosition: {x: -1.3831867, y: -3, z: 0}
+    SpawnTime: 2.2
+    RandomSeed: 916455794
+  - EventId: 112
+    Amount: 80022959
+    Kind: 0
+    WorldPosition: {x: 0.4056696, y: -1.6119257, z: 0}
+    SpawnTime: 2.22
+    RandomSeed: 3880022569
+  - EventId: 113
+    Amount: 17966376
+    Kind: 1
+    WorldPosition: {x: -1.3636364, y: -1.0987293, z: 0}
+    SpawnTime: 2.24
+    RandomSeed: 1717966196
+  - EventId: 114
+    Amount: 80689821
+    Kind: 2
+    WorldPosition: {x: 0.6598241, y: 1.457478, z: 0}
+    SpawnTime: 2.26
+    RandomSeed: 880689731
+  - EventId: 115
+    Amount: 15697650
+    Kind: 0
+    WorldPosition: {x: 1.9403715, y: 0.12805474, z: 0}
+    SpawnTime: 2.28
+    RandomSeed: 2915697350
+  - EventId: 116
+    Amount: 25442773
+    Kind: 1
+    WorldPosition: {x: 3.572825, y: -2.3841643, z: 0}
+    SpawnTime: 2.3
+    RandomSeed: 3525442413
+  - EventId: 117
+    Amount: 94649750
+    Kind: 2
+    WorldPosition: {x: -0.22971652, y: 0.4848485, z: 0}
+    SpawnTime: 2.32
+    RandomSeed: 4294649320
+  - EventId: 118
+    Amount: 15880241
+    Kind: 0
+    WorldPosition: {x: -4.618768, y: -2.2766373, z: 0}
+    SpawnTime: 2.34
+    RandomSeed: 15880231
+  - EventId: 119
+    Amount: 26670204
+    Kind: 1
+    WorldPosition: {x: 3.387097, y: 0.6119257, z: 0}
+    SpawnTime: 2.36
+    RandomSeed: 2826669914
+  - EventId: 120
+    Amount: 94181115
+    Kind: 2
+    WorldPosition: {x: 2.3607037, y: 1.0909091, z: 0}
+    SpawnTime: 2.3799999
+    RandomSeed: 94181105
+  - EventId: 121
+    Amount: 11400508
+    Kind: 0
+    WorldPosition: {x: 4.032258, y: -1.0840665, z: 0}
+    SpawnTime: 2.3999999
+    RandomSeed: 1511400348
+  - EventId: 122
+    Amount: 69428861
+    Kind: 1
+    WorldPosition: {x: 0.7380254, y: 0.4115347, z: 0}
+    SpawnTime: 2.4199998
+    RandomSeed: 469428811
+  - EventId: 123
+    Amount: 95307530
+    Kind: 2
+    WorldPosition: {x: 2.9569893, y: 0.0400782, z: 0}
+    SpawnTime: 2.44
+    RandomSeed: 2195307310
+  - EventId: 124
+    Amount: 18514757
+    Kind: 0
+    WorldPosition: {x: -3.230694, y: 1.9364613, z: 0}
+    SpawnTime: 2.46
+    RandomSeed: 3918514357
+  - EventId: 125
+    Amount: 34232894
+    Kind: 1
+    WorldPosition: {x: 1.4125122, y: -2.608993, z: 0}
+    SpawnTime: 2.48
+    RandomSeed: 4234232464
+  - EventId: 126
+    Amount: 7882811
+    Kind: 2
+    WorldPosition: {x: -3.289345, y: -1.5288367, z: 0}
+    SpawnTime: 2.5
+    RandomSeed: 1307882671
+  - EventId: 127
+    Amount: 58625240
+    Kind: 0
+    WorldPosition: {x: 0.65004885, y: -2.7360704, z: 0}
+    SpawnTime: 2.52
+    RandomSeed: 1458625090
+  - EventId: 128
+    Amount: 94179145
+    Kind: 1
+    WorldPosition: {x: -3.1915934, y: -2.2717497, z: 0}
+    SpawnTime: 2.54
+    RandomSeed: 3994178745
+  - EventId: 129
+    Amount: 78680650
+    Kind: 2
+    WorldPosition: {x: 1.9208211, y: 1.9902248, z: 0}
+    SpawnTime: 2.56
+    RandomSeed: 3878680260
+  - EventId: 130
+    Amount: 94071971
+    Kind: 0
+    WorldPosition: {x: 3.3186705, y: -1.5728251, z: 0}
+    SpawnTime: 2.58
+    RandomSeed: 794071891
+  - EventId: 131
+    Amount: 12731094
+    Kind: 1
+    WorldPosition: {x: -3.5337243, y: -0.34115347, z: 0}
+    SpawnTime: 2.6
+    RandomSeed: 3112730774
+  - EventId: 132
+    Amount: 87836417
+    Kind: 2
+    WorldPosition: {x: 2.478006, y: 1.7653959, z: 0}
+    SpawnTime: 2.62
+    RandomSeed: 2587836157
+  - EventId: 133
+    Amount: 2695926
+    Kind: 0
+    WorldPosition: {x: -4.4525905, y: -2.0762463, z: 0}
+    SpawnTime: 2.6399999
+    RandomSeed: 1802695736
+  - EventId: 134
+    Amount: 77159629
+    Kind: 1
+    WorldPosition: {x: 0.542522, y: 0.6461388, z: 0}
+    SpawnTime: 2.6599998
+    RandomSeed: 1477159479
+  - EventId: 135
+    Amount: 97942222
+    Kind: 2
+    WorldPosition: {x: 0.41544476, y: -0.6539589, z: 0}
+    SpawnTime: 2.6799998
+    RandomSeed: 4197941802
+  - EventId: 136
+    Amount: 8735701
+    Kind: 0
+    WorldPosition: {x: 3.7683284, y: -0.72238517, z: 0}
+    SpawnTime: 2.7
+    RandomSeed: 3308735361
+  - EventId: 137
+    Amount: 17273870
+    Kind: 1
+    WorldPosition: {x: 2.311828, y: 0.80742913, z: 0}
+    SpawnTime: 2.72
+    RandomSeed: 2817273580
+  - EventId: 138
+    Amount: 32221987
+    Kind: 2
+    WorldPosition: {x: -1.6080157, y: 0.5532747, z: 0}
+    SpawnTime: 2.74
+    RandomSeed: 1932221787
+  - EventId: 139
+    Amount: 58875856
+    Kind: 0
+    WorldPosition: {x: 2.487781, y: -0.51710653, z: 0}
+    SpawnTime: 2.76
+    RandomSeed: 2058875646
+  - EventId: 140
+    Amount: 3803681
+    Kind: 1
+    WorldPosition: {x: 0.6793744, y: -1.2844574, z: 0}
+    SpawnTime: 2.78
+    RandomSeed: 2103803461
+  - EventId: 141
+    Amount: 4508554
+    Kind: 2
+    WorldPosition: {x: 2.194526, y: -2.1104593, z: 0}
+    SpawnTime: 2.8
+    RandomSeed: 1604508384
+  - EventId: 142
+    Amount: 23143007
+    Kind: 0
+    WorldPosition: {x: -3.1329424, y: -0.08699902, z: 0}
+    SpawnTime: 2.82
+    RandomSeed: 1523142847
+  - EventId: 143
+    Amount: 51380396
+    Kind: 1
+    WorldPosition: {x: 2.6832845, y: 0.4848485, z: 0}
+    SpawnTime: 2.84
+    RandomSeed: 4051379986
+  - EventId: 144
+    Amount: 44370931
+    Kind: 2
+    WorldPosition: {x: 3.220919, y: -2.032258, z: 0}
+    SpawnTime: 2.86
+    RandomSeed: 1644370761
+  - EventId: 145
+    Amount: 96462918
+    Kind: 0
+    WorldPosition: {x: -4.804497, y: -0.6783969, z: 0}
+    SpawnTime: 2.8799999
+    RandomSeed: 496462868
+  - EventId: 146
+    Amount: 86675313
+    Kind: 1
+    WorldPosition: {x: -4.032258, y: -1.9345063, z: 0}
+    SpawnTime: 2.8999999
+    RandomSeed: 2686675043
+  - EventId: 147
+    Amount: 77141896
+    Kind: 2
+    WorldPosition: {x: 1.001955, y: 1.2815249, z: 0}
+    SpawnTime: 2.9199998
+    RandomSeed: 2877141606
+  - EventId: 148
+    Amount: 26997845
+    Kind: 0
+    WorldPosition: {x: 1.3831867, y: 0.6412512, z: 0}
+    SpawnTime: 2.9399998
+    RandomSeed: 1926997645
+  - EventId: 149
+    Amount: 52687866
+    Kind: 1
+    WorldPosition: {x: 1.3343109, y: -0.629521, z: 0}
+    SpawnTime: 2.96
+    RandomSeed: 3652687496
+  - EventId: 150
+    Amount: 4227725
+    Kind: 2
+    WorldPosition: {x: -4.305963, y: -1.8172044, z: 0}
+    SpawnTime: 2.98
+    RandomSeed: 604227655
+  - EventId: 151
+    Amount: 59638838
+    Kind: 0
+    WorldPosition: {x: -2.5562072, y: 0.56793743, z: 0}
+    SpawnTime: 3
+    RandomSeed: 559638778
+  - EventId: 152
+    Amount: 88992789
+    Kind: 1
+    WorldPosition: {x: -4.8338223, y: -2.7214077, z: 0}
+    SpawnTime: 3.02
+    RandomSeed: 2588992529
+  - EventId: 153
+    Amount: 67450678
+    Kind: 2
+    WorldPosition: {x: 0.5913978, y: -2.281525, z: 0}
+    SpawnTime: 3.04
+    RandomSeed: 2467450428
+  - EventId: 154
+    Amount: 41294467
+    Kind: 0
+    WorldPosition: {x: -3.9540567, y: -1.4897361, z: 0}
+    SpawnTime: 3.06
+    RandomSeed: 2741294187
+  - EventId: 155
+    Amount: 40086678
+    Kind: 1
+    WorldPosition: {x: 2.0185728, y: -1.9491692, z: 0}
+    SpawnTime: 3.08
+    RandomSeed: 1940086478
+  - EventId: 156
+    Amount: 73344413
+    Kind: 2
+    WorldPosition: {x: 4.5894427, y: 1.6383187, z: 0}
+    SpawnTime: 3.1
+    RandomSeed: 1973344213
+  - EventId: 157
+    Amount: 71217194
+    Kind: 0
+    WorldPosition: {x: 2.9765396, y: 0.6803519, z: 0}
+    SpawnTime: 3.12
+    RandomSeed: 2471216944
+  - EventId: 158
+    Amount: 49087087
+    Kind: 1
+    WorldPosition: {x: -2.9765396, y: -1.3773216, z: 0}
+    SpawnTime: 3.1399999
+    RandomSeed: 1549086927
+  - EventId: 159
+    Amount: 24980986
+    Kind: 2
+    WorldPosition: {x: 4.71652, y: 0.7194526, z: 0}
+    SpawnTime: 3.1599998
+    RandomSeed: 2724980706
+  - EventId: 160
+    Amount: 26370325
+    Kind: 0
+    WorldPosition: {x: -0.37634408, y: 1.9315737, z: 0}
+    SpawnTime: 3.1799998
+    RandomSeed: 526370265
+  - EventId: 161
+    Amount: 30738672
+    Kind: 1
+    WorldPosition: {x: -1.5200391, y: -2.5454545, z: 0}
+    SpawnTime: 3.1999998
+    RandomSeed: 1330738532
+  - EventId: 162
+    Amount: 90348227
+    Kind: 2
+    WorldPosition: {x: -1.3734115, y: 0.67546433, z: 0}
+    SpawnTime: 3.22
+    RandomSeed: 790348147
+  - EventId: 163
+    Amount: 85557552
+    Kind: 0
+    WorldPosition: {x: -4.472141, y: -0.9374389, z: 0}
+    SpawnTime: 3.24
+    RandomSeed: 2485557302
+  - EventId: 164
+    Amount: 5255719
+    Kind: 1
+    WorldPosition: {x: 0.28836754, y: -2.941349, z: 0}
+    SpawnTime: 3.26
+    RandomSeed: 5255709
+  - EventId: 165
+    Amount: 24545546
+    Kind: 2
+    WorldPosition: {x: -2.8885632, y: 1.3939394, z: 0}
+    SpawnTime: 3.28
+    RandomSeed: 424545496
+  - EventId: 166
+    Amount: 51521235
+    Kind: 0
+    WorldPosition: {x: 0.8553275, y: 0.6461388, z: 0}
+    SpawnTime: 3.3
+    RandomSeed: 3751520855
+  - EventId: 167
+    Amount: 68778552
+    Kind: 1
+    WorldPosition: {x: 4.481916, y: -1.6705767, z: 0}
+    SpawnTime: 3.32
+    RandomSeed: 1068778442
+  - EventId: 168
+    Amount: 31300401
+    Kind: 2
+    WorldPosition: {x: -3.4261975, y: -2.1006842, z: 0}
+    SpawnTime: 3.34
+    RandomSeed: 3931300001
+  - EventId: 169
+    Amount: 392638
+    Kind: 0
+    WorldPosition: {x: -1.1290323, y: 1.2228739, z: 0}
+    SpawnTime: 3.36
+    RandomSeed: 400392588
+  - EventId: 170
+    Amount: 26222875
+    Kind: 1
+    WorldPosition: {x: 3.7096775, y: -0.40469208, z: 0}
+    SpawnTime: 3.3799999
+    RandomSeed: 1526222715
+  - EventId: 171
+    Amount: 77711502
+    Kind: 2
+    WorldPosition: {x: 1.5493646, y: -0.18963832, z: 0}
+    SpawnTime: 3.3999999
+    RandomSeed: 2377711262
+  - EventId: 172
+    Amount: 28628335
+    Kind: 0
+    WorldPosition: {x: -1.5102639, y: -1.4897361, z: 0}
+    SpawnTime: 3.4199998
+    RandomSeed: 28628325
+  - EventId: 173
+    Amount: 14425828
+    Kind: 1
+    WorldPosition: {x: 3.7585533, y: -2.682307, z: 0}
+    SpawnTime: 3.4399998
+    RandomSeed: 914425728
+  - EventId: 174
+    Amount: 28708645
+    Kind: 2
+    WorldPosition: {x: -2.8201368, y: -0.08211144, z: 0}
+    SpawnTime: 3.46
+    RandomSeed: 628708575
+  - EventId: 175
+    Amount: 8264966
+    Kind: 0
+    WorldPosition: {x: -3.2600195, y: -2.965787, z: 0}
+    SpawnTime: 3.48
+    RandomSeed: 3308264626
+  - EventId: 176
+    Amount: 51145677
+    Kind: 1
+    WorldPosition: {x: -3.973607, y: -2.5845551, z: 0}
+    SpawnTime: 3.5
+    RandomSeed: 951145577
+  - EventId: 177
+    Amount: 55775934
+    Kind: 2
+    WorldPosition: {x: 1.7644184, y: -2.0420332, z: 0}
+    SpawnTime: 3.52
+    RandomSeed: 55775924
+  - EventId: 178
+    Amount: 20730137
+    Kind: 0
+    WorldPosition: {x: 1.285435, y: 1.5698925, z: 0}
+    SpawnTime: 3.54
+    RandomSeed: 1420729987
+  - EventId: 179
+    Amount: 37566986
+    Kind: 1
+    WorldPosition: {x: 0.06353861, y: -2.941349, z: 0}
+    SpawnTime: 3.56
+    RandomSeed: 2537566726
+  - EventId: 180
+    Amount: 30921303
+    Kind: 2
+    WorldPosition: {x: -0.8064516, y: -1.1622678, z: 0}
+    SpawnTime: 3.58
+    RandomSeed: 1630921133
+  - EventId: 181
+    Amount: 18930516
+    Kind: 0
+    WorldPosition: {x: 2.8983383, y: 0.5434995, z: 0}
+    SpawnTime: 3.6
+    RandomSeed: 2918930216
+  - EventId: 182
+    Amount: 17699495
+    Kind: 1
+    WorldPosition: {x: -3.9931574, y: -1.6510264, z: 0}
+    SpawnTime: 3.62
+    RandomSeed: 3117699175
+  - EventId: 183
+    Amount: 8498646
+    Kind: 2
+    WorldPosition: {x: 1.5102639, y: 1.7116325, z: 0}
+    SpawnTime: 3.6399999
+    RandomSeed: 508498586
+  - EventId: 184
+    Amount: 17743203
+    Kind: 0
+    WorldPosition: {x: -2.0185728, y: -1.0449657, z: 0}
+    SpawnTime: 3.6599998
+    RandomSeed: 417743153
+  - EventId: 185
+    Amount: 15331306
+    Kind: 1
+    WorldPosition: {x: -2.8494623, y: -2.13001, z: 0}
+    SpawnTime: 3.6799998
+    RandomSeed: 2615331036
+  - EventId: 186
+    Amount: 44657095
+    Kind: 2
+    WorldPosition: {x: 1.3636364, y: -0.8739003, z: 0}
+    SpawnTime: 3.6999998
+    RandomSeed: 544657035
+  - EventId: 187
+    Amount: 83346200
+    Kind: 0
+    WorldPosition: {x: 1.0801564, y: -1.1818181, z: 0}
+    SpawnTime: 3.72
+    RandomSeed: 1683346030
+  - EventId: 188
+    Amount: 25089053
+    Kind: 1
+    WorldPosition: {x: 2.3998046, y: -2.85826, z: 0}
+    SpawnTime: 3.74
+    RandomSeed: 325089013
+  - EventId: 189
+    Amount: 68612424
+    Kind: 2
+    WorldPosition: {x: 4.540567, y: -0.62463343, z: 0}
+    SpawnTime: 3.76
+    RandomSeed: 1168612304
+  - EventId: 190
+    Amount: 10796355
+    Kind: 0
+    WorldPosition: {x: -2.6637342, y: -0.8934506, z: 0}
+    SpawnTime: 3.78
+    RandomSeed: 3310796015
+  - EventId: 191
+    Amount: 48503546
+    Kind: 1
+    WorldPosition: {x: -1.226784, y: -1.5092864, z: 0}
+    SpawnTime: 3.8
+    RandomSeed: 1148503426
+  - EventId: 192
+    Amount: 60781023
+    Kind: 2
+    WorldPosition: {x: 2.4389052, y: -2.7605083, z: 0}
+    SpawnTime: 3.82
+    RandomSeed: 2260780793
+  - EventId: 193
+    Amount: 72669072
+    Kind: 0
+    WorldPosition: {x: -4.9608994, y: -2.6041055, z: 0}
+    SpawnTime: 3.84
+    RandomSeed: 1372668932
+  - EventId: 194
+    Amount: 70848327
+    Kind: 1
+    WorldPosition: {x: 3.9442816, y: 1.0615835, z: 0}
+    SpawnTime: 3.86
+    RandomSeed: 1770848147
+  - EventId: 195
+    Amount: 50414102
+    Kind: 2
+    WorldPosition: {x: 4.599218, y: -0.65884656, z: 0}
+    SpawnTime: 3.8799999
+    RandomSeed: 3150413782
+  - EventId: 196
+    Amount: 94336893
+    Kind: 0
+    WorldPosition: {x: -1.9012707, y: -1.2160313, z: 0}
+    SpawnTime: 3.8999999
+    RandomSeed: 3194336573
+  - EventId: 197
+    Amount: 49746100
+    Kind: 1
+    WorldPosition: {x: -1.3245357, y: -1.6070381, z: 0}
+    SpawnTime: 3.9199998
+    RandomSeed: 549746040
+  - EventId: 198
+    Amount: 83886223
+    Kind: 2
+    WorldPosition: {x: 1.1681329, y: 1.6041056, z: 0}
+    SpawnTime: 3.9399998
+    RandomSeed: 2783885943
+  - EventId: 199
+    Amount: 52555032
+    Kind: 0
+    WorldPosition: {x: -1.4613881, y: -0.23851417, z: 0}
+    SpawnTime: 3.9599998
+    RandomSeed: 4252554602
+  - EventId: 200
+    Amount: 1868275
+    Kind: 1
+    WorldPosition: {x: -0.6109482, y: -1.7438905, z: 0}
+    SpawnTime: 3.98
+    RandomSeed: 401868225
+  - EventId: 201
+    Amount: 39606938
+    Kind: 2
+    WorldPosition: {x: -4.5698924, y: -0.7663734, z: 0}
+    SpawnTime: 4
+    RandomSeed: 1039606828
+  - EventId: 202
+    Amount: 55788101
+    Kind: 0
+    WorldPosition: {x: -0.9824047, y: -2.5894427, z: 0}
+    SpawnTime: 4.02
+    RandomSeed: 1655787931
+  - EventId: 203
+    Amount: 26039994
+    Kind: 1
+    WorldPosition: {x: 0.6109482, y: -0.85923755, z: 0}
+    SpawnTime: 4.04
+    RandomSeed: 3726039614
+  - EventId: 204
+    Amount: 3118623
+    Kind: 2
+    WorldPosition: {x: -3.6999023, y: 0.35777125, z: 0}
+    SpawnTime: 4.06
+    RandomSeed: 4003118213
+  - EventId: 205
+    Amount: 84972500
+    Kind: 0
+    WorldPosition: {x: -4.6871943, y: -1.5874878, z: 0}
+    SpawnTime: 4.08
+    RandomSeed: 1784972320
+  - EventId: 206
+    Amount: 38498563
+    Kind: 1
+    WorldPosition: {x: -2.5073314, y: 1.5063539, z: 0}
+    SpawnTime: 4.1
+    RandomSeed: 2538498303
+  - EventId: 207
+    Amount: 80933382
+    Kind: 2
+    WorldPosition: {x: 0.8064516, y: -0.8494624, z: 0}
+    SpawnTime: 4.12
+    RandomSeed: 1780933202
+  - EventId: 208
+    Amount: 49427693
+    Kind: 0
+    WorldPosition: {x: -1.1583577, y: -0.77614856, z: 0}
+    SpawnTime: 4.14
+    RandomSeed: 949427593
+  - EventId: 209
+    Amount: 76677550
+    Kind: 1
+    WorldPosition: {x: -1.6764418, y: -2.6774194, z: 0}
+    SpawnTime: 4.16
+    RandomSeed: 876677460
+  - EventId: 210
+    Amount: 64456665
+    Kind: 2
+    WorldPosition: {x: -3.4066472, y: -0.53176934, z: 0}
+    SpawnTime: 4.18
+    RandomSeed: 3064456355
+  - EventId: 211
+    Amount: 53691366
+    Kind: 0
+    WorldPosition: {x: -0.8748778, y: -0.028347997, z: 0}
+    SpawnTime: 4.2
+    RandomSeed: 3153691046
+  - EventId: 212
+    Amount: 73730623
+    Kind: 1
+    WorldPosition: {x: -2.99609, y: -0.28739002, z: 0}
+    SpawnTime: 4.22
+    RandomSeed: 3673730253
+  - EventId: 213
+    Amount: 41024340
+    Kind: 2
+    WorldPosition: {x: 4.4623656, y: 1.5014663, z: 0}
+    SpawnTime: 4.24
+    RandomSeed: 1341024200
+  - EventId: 214
+    Amount: 2234181
+    Kind: 0
+    WorldPosition: {x: -3.680352, y: 0.7243402, z: 0}
+    SpawnTime: 4.2599998
+    RandomSeed: 1802233991
+  - EventId: 215
+    Amount: 90209508
+    Kind: 1
+    WorldPosition: {x: -4.43304, y: 1.5503421, z: 0}
+    SpawnTime: 4.2799997
+    RandomSeed: 1690209338
+  - EventId: 216
+    Amount: 54798069
+    Kind: 2
+    WorldPosition: {x: 0.79667646, y: -1.3822092, z: 0}
+    SpawnTime: 4.2999997
+    RandomSeed: 4154797649
+  - EventId: 217
+    Amount: 40652226
+    Kind: 0
+    WorldPosition: {x: 3.7194526, y: 1.8680352, z: 0}
+    SpawnTime: 4.3199997
+    RandomSeed: 640652156
+  - EventId: 218
+    Amount: 93815697
+    Kind: 1
+    WorldPosition: {x: -3.3284457, y: -0.23362659, z: 0}
+    SpawnTime: 4.3399997
+    RandomSeed: 2293815467
+  - EventId: 219
+    Amount: 42085820
+    Kind: 2
+    WorldPosition: {x: 0.14173998, y: -0.1603128, z: 0}
+    SpawnTime: 4.36
+    RandomSeed: 4242085390
+  - EventId: 220
+    Amount: 14051413
+    Kind: 0
+    WorldPosition: {x: 0.21016617, y: 0.9540567, z: 0}
+    SpawnTime: 4.38
+    RandomSeed: 3114051093
+  - EventId: 221
+    Amount: 68564210
+    Kind: 1
+    WorldPosition: {x: -3.905181, y: 0.9882698, z: 0}
+    SpawnTime: 4.4
+    RandomSeed: 1268564080
+  - EventId: 222
+    Amount: 92597403
+    Kind: 2
+    WorldPosition: {x: -2.3509285, y: -2.5796676, z: 0}
+    SpawnTime: 4.42
+    RandomSeed: 1392597263
+  - EventId: 223
+    Amount: 43579214
+    Kind: 0
+    WorldPosition: {x: 2.839687, y: -1.9247311, z: 0}
+    SpawnTime: 4.44
+    RandomSeed: 2943578914
+  - EventId: 224
+    Amount: 69159107
+    Kind: 1
+    WorldPosition: {x: -4.755621, y: 1.173998, z: 0}
+    SpawnTime: 4.46
+    RandomSeed: 1669158937
+  - EventId: 225
+    Amount: 79274252
+    Kind: 2
+    WorldPosition: {x: 1.6080157, y: -0.6930596, z: 0}
+    SpawnTime: 4.48
+    RandomSeed: 3579273892
+  - EventId: 226
+    Amount: 34535577
+    Kind: 0
+    WorldPosition: {x: -0.7478006, y: -2.907136, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2234535347
+  - EventId: 227
+    Amount: 79001054
+    Kind: 1
+    WorldPosition: {x: 3.6608016, y: -1.998045, z: 0}
+    SpawnTime: 4.52
+    RandomSeed: 3579000694
+  - EventId: 228
+    Amount: 56168053
+    Kind: 2
+    WorldPosition: {x: -4.090909, y: -0.5659824, z: 0}
+    SpawnTime: 4.54
+    RandomSeed: 2756167773
+  - EventId: 229
+    Amount: 4329314
+    Kind: 0
+    WorldPosition: {x: 0.23949169, y: 1.43304, z: 0}
+    SpawnTime: 4.56
+    RandomSeed: 3204328984
+  - EventId: 230
+    Amount: 54296013
+    Kind: 1
+    WorldPosition: {x: 1.4809384, y: 1.0175953, z: 0}
+    SpawnTime: 4.58
+    RandomSeed: 3054295703
+  - EventId: 231
+    Amount: 75632804
+    Kind: 2
+    WorldPosition: {x: 2.605083, y: 1.1300098, z: 0}
+    SpawnTime: 4.6
+    RandomSeed: 4075632394
+  - EventId: 232
+    Amount: 86182057
+    Kind: 0
+    WorldPosition: {x: 2.204301, y: -2.1495602, z: 0}
+    SpawnTime: 4.62
+    RandomSeed: 1986181857
+  - EventId: 233
+    Amount: 88298804
+    Kind: 1
+    WorldPosition: {x: 1.9990225, y: -2.6627567, z: 0}
+    SpawnTime: 4.64
+    RandomSeed: 3588298444
+  - EventId: 234
+    Amount: 31351749
+    Kind: 2
+    WorldPosition: {x: 4.3352885, y: 1.4965787, z: 0}
+    SpawnTime: 4.66
+    RandomSeed: 31351739
+  - EventId: 235
+    Amount: 14617098
+    Kind: 0
+    WorldPosition: {x: -0.32746822, y: -0.02346041, z: 0}
+    SpawnTime: 4.68
+    RandomSeed: 2914616798
+  - EventId: 236
+    Amount: 15954371
+    Kind: 1
+    WorldPosition: {x: 4.1202345, y: 1.7507331, z: 0}
+    SpawnTime: 4.7
+    RandomSeed: 215954341
+  - EventId: 237
+    Amount: 15453500
+    Kind: 2
+    WorldPosition: {x: -3.123167, y: -1.338221, z: 0}
+    SpawnTime: 4.72
+    RandomSeed: 3715453120
+  - EventId: 238
+    Amount: 75041105
+    Kind: 0
+    WorldPosition: {x: -2.194526, y: -2.8289344, z: 0}
+    SpawnTime: 4.74
+    RandomSeed: 475041055
+  - EventId: 239
+    Amount: 61882850
+    Kind: 1
+    WorldPosition: {x: 4.872923, y: -0.6686217, z: 0}
+    SpawnTime: 4.7599998
+    RandomSeed: 2361882610
+  - EventId: 240
+    Amount: 66019235
+    Kind: 2
+    WorldPosition: {x: 1.6568915, y: 0.89540565, z: 0}
+    SpawnTime: 4.7799997
+    RandomSeed: 2466018985
+  - EventId: 241
+    Amount: 75484272
+    Kind: 0
+    WorldPosition: {x: 4.892473, y: -0.09188661, z: 0}
+    SpawnTime: 4.7999997
+    RandomSeed: 3775483892
+  - EventId: 242
+    Amount: 81662995
+    Kind: 1
+    WorldPosition: {x: 1.9110459, y: -0.7419355, z: 0}
+    SpawnTime: 4.8199997
+    RandomSeed: 781662915
+  - EventId: 243
+    Amount: 59681098
+    Kind: 2
+    WorldPosition: {x: -1.8132943, y: -2.491691, z: 0}
+    SpawnTime: 4.8399997
+    RandomSeed: 2559680838
+  - EventId: 244
+    Amount: 53471543
+    Kind: 0
+    WorldPosition: {x: 4.824047, y: 0.75855327, z: 0}
+    SpawnTime: 4.8599997
+    RandomSeed: 3253471213
+  - EventId: 245
+    Amount: 70869998
+    Kind: 1
+    WorldPosition: {x: -3.9833822, y: -0.25317693, z: 0}
+    SpawnTime: 4.88
+    RandomSeed: 3870869608
+  - EventId: 246
+    Amount: 34556653
+    Kind: 2
+    WorldPosition: {x: -3.3675463, y: -2.198436, z: 0}
+    SpawnTime: 4.9
+    RandomSeed: 634556583
+  - EventId: 247
+    Amount: 72920874
+    Kind: 0
+    WorldPosition: {x: -0.36656892, y: -2.4281526, z: 0}
+    SpawnTime: 4.92
+    RandomSeed: 772920794
+  - EventId: 248
+    Amount: 29922411
+    Kind: 1
+    WorldPosition: {x: 3.6119256, y: -1.230694, z: 0}
+    SpawnTime: 4.94
+    RandomSeed: 2429922161
+  - EventId: 249
+    Amount: 7019246
+    Kind: 2
+    WorldPosition: {x: 0.27859238, y: -2.7898338, z: 0}
+    SpawnTime: 4.96
+    RandomSeed: 2007019036
+  - EventId: 250
+    Amount: 37791073
+    Kind: 0
+    WorldPosition: {x: 1.9892473, y: -2.0811338, z: 0}
+    SpawnTime: 4.98
+    RandomSeed: 1437790923
+  - EventId: 251
+    Amount: 68301234
+    Kind: 1
+    WorldPosition: {x: -0.79667646, y: -1.3870968, z: 0}
+    SpawnTime: 5
+    RandomSeed: 2568300974
+  - EventId: 252
+    Amount: 99610897
+    Kind: 2
+    WorldPosition: {x: -1.9794722, y: 0.56304985, z: 0}
+    SpawnTime: 5.02
+    RandomSeed: 2199610677
+  - EventId: 253
+    Amount: 75020604
+    Kind: 0
+    WorldPosition: {x: -2.3411534, y: -1.998045, z: 0}
+    SpawnTime: 5.04
+    RandomSeed: 2975020304
+  - EventId: 254
+    Amount: 72347177
+    Kind: 1
+    WorldPosition: {x: -2.0381231, y: 1.0713588, z: 0}
+    SpawnTime: 5.06
+    RandomSeed: 2472346927
+  - EventId: 255
+    Amount: 38364484
+    Kind: 2
+    WorldPosition: {x: -3.1036167, y: 1.9853373, z: 0}
+    SpawnTime: 5.08
+    RandomSeed: 1238364354
+  - EventId: 256
+    Amount: 90909647
+    Kind: 0
+    WorldPosition: {x: -1.9403715, y: 1.2130988, z: 0}
+    SpawnTime: 5.1
+    RandomSeed: 1490909497
+  - EventId: 257
+    Amount: 65933228
+    Kind: 1
+    WorldPosition: {x: -1.8328446, y: 0.69501466, z: 0}
+    SpawnTime: 5.12
+    RandomSeed: 3565932868
+  - EventId: 258
+    Amount: 47482147
+    Kind: 2
+    WorldPosition: {x: 4.5698924, y: 1.2717497, z: 0}
+    SpawnTime: 5.14
+    RandomSeed: 747482067
+  - EventId: 259
+    Amount: 15434070
+    Kind: 0
+    WorldPosition: {x: 2.7223852, y: -2.457478, z: 0}
+    SpawnTime: 5.16
+    RandomSeed: 3115433750
+  - EventId: 260
+    Amount: 33236419
+    Kind: 1
+    WorldPosition: {x: 3.7292278, y: 1.5063539, z: 0}
+    SpawnTime: 5.18
+    RandomSeed: 633236349
+  - EventId: 261
+    Amount: 33677726
+    Kind: 2
+    WorldPosition: {x: 1.803519, y: -1.998045, z: 0}
+    SpawnTime: 5.2
+    RandomSeed: 2233677496
+  - EventId: 262
+    Amount: 93707351
+    Kind: 0
+    WorldPosition: {x: 1.7937438, y: 1.3890518, z: 0}
+    SpawnTime: 5.22
+    RandomSeed: 1593707191
+  - EventId: 263
+    Amount: 465728
+    Kind: 1
+    WorldPosition: {x: -3.3382208, y: -0.05767351, z: 0}
+    SpawnTime: 5.24
+    RandomSeed: 1400465578
+  - EventId: 264
+    Amount: 351529
+    Kind: 2
+    WorldPosition: {x: -4.990225, y: -0.8103617, z: 0}
+    SpawnTime: 5.2599998
+    RandomSeed: 300351489
+  - EventId: 265
+    Amount: 92943036
+    Kind: 0
+    WorldPosition: {x: -1.4418378, y: -1.9540567, z: 0}
+    SpawnTime: 5.2799997
+    RandomSeed: 792942956
+  - EventId: 266
+    Amount: 72908341
+    Kind: 1
+    WorldPosition: {x: -0.35679373, y: -0.64907134, z: 0}
+    SpawnTime: 5.2999997
+    RandomSeed: 872908251
+  - EventId: 267
+    Amount: 69065496
+    Kind: 2
+    WorldPosition: {x: -1.2658846, y: -0.18475074, z: 0}
+    SpawnTime: 5.3199997
+    RandomSeed: 4069065086
+  - EventId: 268
+    Amount: 29601607
+    Kind: 0
+    WorldPosition: {x: 1.9305962, y: 0.19648094, z: 0}
+    SpawnTime: 5.3399997
+    RandomSeed: 1229601477
+  - EventId: 269
+    Amount: 72008408
+    Kind: 1
+    WorldPosition: {x: -1.5591397, y: 0.572825, z: 0}
+    SpawnTime: 5.3599997
+    RandomSeed: 1172008288
+  - EventId: 270
+    Amount: 34102469
+    Kind: 2
+    WorldPosition: {x: -1.8817204, y: -0.57575756, z: 0}
+    SpawnTime: 5.38
+    RandomSeed: 3834102079
+  - EventId: 271
+    Amount: 47316208
+    Kind: 0
+    WorldPosition: {x: -1.0703813, y: 0.08406647, z: 0}
+    SpawnTime: 5.4
+    RandomSeed: 3447315858
+  - EventId: 272
+    Amount: 10476613
+    Kind: 1
+    WorldPosition: {x: 4.472141, y: -0.072336264, z: 0}
+    SpawnTime: 5.42
+    RandomSeed: 3710476233
+  - EventId: 273
+    Amount: 14121504
+    Kind: 2
+    WorldPosition: {x: 1.451613, y: -1.7829912, z: 0}
+    SpawnTime: 5.44
+    RandomSeed: 1314121364
+  - EventId: 274
+    Amount: 88169257
+    Kind: 0
+    WorldPosition: {x: -2.7810361, y: -1.5532746, z: 0}
+    SpawnTime: 5.46
+    RandomSeed: 688169187
+  - EventId: 275
+    Amount: 57085282
+    Kind: 1
+    WorldPosition: {x: -2.7517107, y: -2.8240469, z: 0}
+    SpawnTime: 5.48
+    RandomSeed: 3757084902
+  - EventId: 276
+    Amount: 14621211
+    Kind: 2
+    WorldPosition: {x: 2.6344087, y: -0.51710653, z: 0}
+    SpawnTime: 5.5
+    RandomSeed: 2614620941
+  - EventId: 277
+    Amount: 84751256
+    Kind: 0
+    WorldPosition: {x: -2.419355, y: -2.2277615, z: 0}
+    SpawnTime: 5.52
+    RandomSeed: 3984750856
+  - EventId: 278
+    Amount: 37274873
+    Kind: 1
+    WorldPosition: {x: -3.054741, y: -2.9120235, z: 0}
+    SpawnTime: 5.54
+    RandomSeed: 437274823
+  - EventId: 279
+    Amount: 65907136
+    Kind: 2
+    WorldPosition: {x: 3.6999023, y: -2.7116325, z: 0}
+    SpawnTime: 5.56
+    RandomSeed: 665907066
+  - EventId: 280
+    Amount: 82990029
+    Kind: 0
+    WorldPosition: {x: -3.5826, y: 1.916911, z: 0}
+    SpawnTime: 5.58
+    RandomSeed: 582989969
+  - EventId: 281
+    Amount: 76163184
+    Kind: 1
+    WorldPosition: {x: -3.162268, y: 1.4086021, z: 0}
+    SpawnTime: 5.6
+    RandomSeed: 1776163004
+  - EventId: 282
+    Amount: 30132177
+    Kind: 2
+    WorldPosition: {x: -2.7028348, y: 1.1006843, z: 0}
+    SpawnTime: 5.62
+    RandomSeed: 2230131947
+  - EventId: 283
+    Amount: 23822800
+    Kind: 0
+    WorldPosition: {x: -1.7350929, y: -2.3597262, z: 0}
+    SpawnTime: 5.64
+    RandomSeed: 1223822670
+  - EventId: 284
+    Amount: 30029953
+    Kind: 1
+    WorldPosition: {x: -4.1691103, y: -1.5288367, z: 0}
+    SpawnTime: 5.66
+    RandomSeed: 2930029653
+  - EventId: 285
+    Amount: 58764358
+    Kind: 2
+    WorldPosition: {x: -0.7771261, y: -2.0713587, z: 0}
+    SpawnTime: 5.68
+    RandomSeed: 1458764208
+  - EventId: 286
+    Amount: 31334081
+    Kind: 0
+    WorldPosition: {x: -1.7253177, y: -2.4525905, z: 0}
+    SpawnTime: 5.7
+    RandomSeed: 3631333711
+  - EventId: 287
+    Amount: 44592416
+    Kind: 1
+    WorldPosition: {x: 0.9628543, y: -2.3010752, z: 0}
+    SpawnTime: 5.72
+    RandomSeed: 1844592226
+  - EventId: 288
+    Amount: 48191767
+    Kind: 2
+    WorldPosition: {x: 0.8748778, y: -0.13587488, z: 0}
+    SpawnTime: 5.74
+    RandomSeed: 1848191577
+  - EventId: 289
+    Amount: 78537092
+    Kind: 0
+    WorldPosition: {x: 4.73607, y: -0.95210165, z: 0}
+    SpawnTime: 5.7599998
+    RandomSeed: 1578536932
+  - EventId: 290
+    Amount: 37836817
+    Kind: 1
+    WorldPosition: {x: -0.12218964, y: 1.0957967, z: 0}
+    SpawnTime: 5.7799997
+    RandomSeed: 237836787
+  - EventId: 291
+    Amount: 76244094
+    Kind: 2
+    WorldPosition: {x: 1.7839687, y: 0.46529815, z: 0}
+    SpawnTime: 5.7999997
+    RandomSeed: 1976243894
+  - EventId: 292
+    Amount: 19492925
+    Kind: 0
+    WorldPosition: {x: 1.5395894, y: -2.4965787, z: 0}
+    SpawnTime: 5.8199997
+    RandomSeed: 1519492765
+  - EventId: 293
+    Amount: 82395630
+    Kind: 1
+    WorldPosition: {x: 3.3675463, y: 0.6119257, z: 0}
+    SpawnTime: 5.8399997
+    RandomSeed: 1482395480
+  - EventId: 294
+    Amount: 68895537
+    Kind: 2
+    WorldPosition: {x: 2.1065493, y: 0.21603128, z: 0}
+    SpawnTime: 5.8599997
+    RandomSeed: 868895447
+  - EventId: 295
+    Amount: 30632606
+    Kind: 0
+    WorldPosition: {x: 0.72825027, y: -1.3088953, z: 0}
+    SpawnTime: 5.8799996
+    RandomSeed: 3330632266
+  - EventId: 296
+    Amount: 70595219
+    Kind: 1
+    WorldPosition: {x: -2.1749756, y: -0.23851417, z: 0}
+    SpawnTime: 5.9
+    RandomSeed: 3670594849
+  - EventId: 297
+    Amount: 67945820
+    Kind: 2
+    WorldPosition: {x: -4.882698, y: -1.1476051, z: 0}
+    SpawnTime: 5.92
+    RandomSeed: 767945740
+  - EventId: 298
+    Amount: 25109709
+    Kind: 0
+    WorldPosition: {x: 4.9608994, y: -1.5288367, z: 0}
+    SpawnTime: 5.94
+    RandomSeed: 2025109499
+  - EventId: 299
+    Amount: 50003892
+    Kind: 1
+    WorldPosition: {x: -2.204301, y: 1.1593353, z: 0}
+    SpawnTime: 5.96
+    RandomSeed: 1450003742
+  - EventId: 300
+    Amount: 30635291
+    Kind: 2
+    WorldPosition: {x: -0.25904202, y: -1.8074291, z: 0}
+    SpawnTime: 5.98
+    RandomSeed: 3030634981
+  - EventId: 301
+    Amount: 67482448
+    Kind: 0
+    WorldPosition: {x: 0.0048875855, y: 1.6432062, z: 0}
+    SpawnTime: 6
+    RandomSeed: 767482368
+  - EventId: 302
+    Amount: 24944869
+    Kind: 1
+    WorldPosition: {x: -1.568915, y: 0.75855327, z: 0}
+    SpawnTime: 6.02
+    RandomSeed: 3824944479
+  - EventId: 303
+    Amount: 32109692
+    Kind: 2
+    WorldPosition: {x: 2.99609, y: -1.1036168, z: 0}
+    SpawnTime: 6.04
+    RandomSeed: 3232109362
+  - EventId: 304
+    Amount: 75110151
+    Kind: 0
+    WorldPosition: {x: -2.7223852, y: -1.172043, z: 0}
+    SpawnTime: 6.06
+    RandomSeed: 275110121
+  - EventId: 305
+    Amount: 69929884
+    Kind: 1
+    WorldPosition: {x: -1.9892473, y: -0.24828935, z: 0}
+    SpawnTime: 6.08
+    RandomSeed: 3569929524
+  - EventId: 306
+    Amount: 76969003
+    Kind: 2
+    WorldPosition: {x: 2.5366569, y: -0.47311828, z: 0}
+    SpawnTime: 6.1
+    RandomSeed: 376968963
+  - EventId: 307
+    Amount: 29932888
+    Kind: 0
+    WorldPosition: {x: -3.6901271, y: 1.4770284, z: 0}
+    SpawnTime: 6.12
+    RandomSeed: 2029932678
+  - EventId: 308
+    Amount: 58152743
+    Kind: 1
+    WorldPosition: {x: 0.44477028, y: -1.6168133, z: 0}
+    SpawnTime: 6.14
+    RandomSeed: 2458152493
+  - EventId: 309
+    Amount: 63205890
+    Kind: 2
+    WorldPosition: {x: -0.8553275, y: -1.914956, z: 0}
+    SpawnTime: 6.16
+    RandomSeed: 863205800
+  - EventId: 310
+    Amount: 73847591
+    Kind: 0
+    WorldPosition: {x: -2.7419355, y: 1.0860215, z: 0}
+    SpawnTime: 6.18
+    RandomSeed: 3173847271
+  - EventId: 311
+    Amount: 29632226
+    Kind: 1
+    WorldPosition: {x: -2.2434018, y: -1.7976539, z: 0}
+    SpawnTime: 6.2
+    RandomSeed: 1929632026
+  - EventId: 312
+    Amount: 84112655
+    Kind: 2
+    WorldPosition: {x: -0.7673509, y: 0.5434995, z: 0}
+    SpawnTime: 6.22
+    RandomSeed: 3484112305
+  - EventId: 313
+    Amount: 87810832
+    Kind: 0
+    WorldPosition: {x: 3.4066472, y: 1.9462366, z: 0}
+    SpawnTime: 6.24
+    RandomSeed: 1787810652
+  - EventId: 314
+    Amount: 49045263
+    Kind: 1
+    WorldPosition: {x: 2.6148582, y: 1.7947214, z: 0}
+    SpawnTime: 6.2599998
+    RandomSeed: 2549045003
+  - EventId: 315
+    Amount: 95412300
+    Kind: 2
+    WorldPosition: {x: -2.6735094, y: -0.57575756, z: 0}
+    SpawnTime: 6.2799997
+    RandomSeed: 3495411950
+  - EventId: 316
+    Amount: 67615363
+    Kind: 0
+    WorldPosition: {x: 3.6510265, y: -2.8240469, z: 0}
+    SpawnTime: 6.2999997
+    RandomSeed: 2667615093
+  - EventId: 317
+    Amount: 37283818
+    Kind: 1
+    WorldPosition: {x: 0.7869013, y: -1.7341154, z: 0}
+    SpawnTime: 6.3199997
+    RandomSeed: 4037283408
+  - EventId: 318
+    Amount: 44213459
+    Kind: 2
+    WorldPosition: {x: -1.4125122, y: -0.6392962, z: 0}
+    SpawnTime: 6.3399997
+    RandomSeed: 944213359
+  - EventId: 319
+    Amount: 82734006
+    Kind: 0
+    WorldPosition: {x: -4.9804497, y: -2.2619746, z: 0}
+    SpawnTime: 6.3599997
+    RandomSeed: 1782733826
+  - EventId: 320
+    Amount: 45918615
+    Kind: 1
+    WorldPosition: {x: 3.6901271, y: -0.370479, z: 0}
+    SpawnTime: 6.3799996
+    RandomSeed: 245918585
+  - EventId: 321
+    Amount: 93489022
+    Kind: 2
+    WorldPosition: {x: 1.2952101, y: 1.8826979, z: 0}
+    SpawnTime: 6.3999996
+    RandomSeed: 2493488772
+  - EventId: 322
+    Amount: 857231
+    Kind: 0
+    WorldPosition: {x: -4.814272, y: -0.9374389, z: 0}
+    SpawnTime: 6.42
+    RandomSeed: 3700856851
+  - EventId: 323
+    Amount: 50377432
+    Kind: 1
+    WorldPosition: {x: 0.8455523, y: -0.7370479, z: 0}
+    SpawnTime: 6.44
+    RandomSeed: 1250377302
+  - EventId: 324
+    Amount: 70416747
+    Kind: 2
+    WorldPosition: {x: -0.65004885, y: -0.06744868, z: 0}
+    SpawnTime: 6.46
+    RandomSeed: 4270416317
+  - EventId: 325
+    Amount: 9405888
+    Kind: 0
+    WorldPosition: {x: 4.931574, y: 1.7556207, z: 0}
+    SpawnTime: 6.48
+    RandomSeed: 1909405688
+  - EventId: 326
+    Amount: 92518923
+    Kind: 1
+    WorldPosition: {x: 2.419355, y: 0.0009775171, z: 0}
+    SpawnTime: 6.5
+    RandomSeed: 192518903
+  - EventId: 327
+    Amount: 35998622
+    Kind: 2
+    WorldPosition: {x: 4.7947216, y: -0.11632454, z: 0}
+    SpawnTime: 6.52
+    RandomSeed: 1735998442
+  - EventId: 328
+    Amount: 73498713
+    Kind: 0
+    WorldPosition: {x: 0.6402737, y: -2.9315739, z: 0}
+    SpawnTime: 6.54
+    RandomSeed: 2773498433
+  - EventId: 329
+    Amount: 25838382
+    Kind: 1
+    WorldPosition: {x: 1.686217, y: -2.7507331, z: 0}
+    SpawnTime: 6.56
+    RandomSeed: 1225838252
+  - EventId: 330
+    Amount: 47200387
+    Kind: 2
+    WorldPosition: {x: 0.26881722, y: 1.3695015, z: 0}
+    SpawnTime: 6.58
+    RandomSeed: 3547200027
+  - EventId: 331
+    Amount: 27885602
+    Kind: 0
+    WorldPosition: {x: -3.1427176, y: 1.5063539, z: 0}
+    SpawnTime: 6.6
+    RandomSeed: 927885502
+  - EventId: 332
+    Amount: 9610219
+    Kind: 1
+    WorldPosition: {x: -2.4486804, y: -1.7585533, z: 0}
+    SpawnTime: 6.62
+    RandomSeed: 2209609989
+  - EventId: 333
+    Amount: 81555514
+    Kind: 2
+    WorldPosition: {x: 1.568915, y: -0.629521, z: 0}
+    SpawnTime: 6.64
+    RandomSeed: 4081555104
+  - EventId: 334
+    Amount: 35100647
+    Kind: 0
+    WorldPosition: {x: -1.2561095, y: -1.3284458, z: 0}
+    SpawnTime: 6.66
+    RandomSeed: 3535100287
+  - EventId: 335
+    Amount: 4780652
+    Kind: 1
+    WorldPosition: {x: -2.9472141, y: -1.7194526, z: 0}
+    SpawnTime: 6.68
+    RandomSeed: 4004780242
+  - EventId: 336
+    Amount: 14855161
+    Kind: 2
+    WorldPosition: {x: 0.092864126, y: 0.088954054, z: 0}
+    SpawnTime: 6.7
+    RandomSeed: 2314854921
+  - EventId: 337
+    Amount: 75923536
+    Kind: 0
+    WorldPosition: {x: 4.5796676, y: -3, z: 0}
+    SpawnTime: 6.72
+    RandomSeed: 3775923156
+  - EventId: 338
+    Amount: 3132385
+    Kind: 1
+    WorldPosition: {x: -2.1554253, y: 0.0058651026, z: 0}
+    SpawnTime: 6.74
+    RandomSeed: 1803132195
+  - EventId: 339
+    Amount: 24603650
+    Kind: 2
+    WorldPosition: {x: -4.6285434, y: -2.1006842, z: 0}
+    SpawnTime: 6.7599998
+    RandomSeed: 2124603430
+  - EventId: 340
+    Amount: 41535253
+    Kind: 0
+    WorldPosition: {x: -1.744868, y: -0.038123168, z: 0}
+    SpawnTime: 6.7799997
+    RandomSeed: 1941535053
+  - EventId: 341
+    Amount: 85993402
+    Kind: 1
+    WorldPosition: {x: 0.7086999, y: -1.8172044, z: 0}
+    SpawnTime: 6.7999997
+    RandomSeed: 3685993032
+  - EventId: 342
+    Amount: 58648923
+    Kind: 2
+    WorldPosition: {x: -2.42913, y: -2.71652, z: 0}
+    SpawnTime: 6.8199997
+    RandomSeed: 3358648583
+  - EventId: 343
+    Amount: 75749586
+    Kind: 0
+    WorldPosition: {x: 1.8230695, y: -2.198436, z: 0}
+    SpawnTime: 6.8399997
+    RandomSeed: 2775749306
+  - EventId: 344
+    Amount: 48736735
+    Kind: 1
+    WorldPosition: {x: 2.0478983, y: -2.8435972, z: 0}
+    SpawnTime: 6.8599997
+    RandomSeed: 2648736465
+  - EventId: 345
+    Amount: 69749454
+    Kind: 2
+    WorldPosition: {x: -0.0342131, y: 1.3352884, z: 0}
+    SpawnTime: 6.8799996
+    RandomSeed: 2069749244
+  - EventId: 346
+    Amount: 87329317
+    Kind: 0
+    WorldPosition: {x: -2.0772238, y: -2.491691, z: 0}
+    SpawnTime: 6.8999996
+    RandomSeed: 2487329067
+  - EventId: 347
+    Amount: 4827568
+    Kind: 1
+    WorldPosition: {x: -3.6119256, y: 1.4623656, z: 0}
+    SpawnTime: 6.92
+    RandomSeed: 2804827278
+  - EventId: 348
+    Amount: 73621511
+    Kind: 2
+    WorldPosition: {x: 1.4613881, y: -0.8103617, z: 0}
+    SpawnTime: 6.94
+    RandomSeed: 3673621141
+  - EventId: 349
+    Amount: 9998852
+    Kind: 0
+    WorldPosition: {x: 2.3509285, y: 1.516129, z: 0}
+    SpawnTime: 6.96
+    RandomSeed: 109998832
+  - EventId: 350
+    Amount: 63910783
+    Kind: 1
+    WorldPosition: {x: -1.0997068, y: -0.99608994, z: 0}
+    SpawnTime: 6.98
+    RandomSeed: 2363910543
+  - EventId: 351
+    Amount: 66901374
+    Kind: 2
+    WorldPosition: {x: -0.9139785, y: -0.40957966, z: 0}
+    SpawnTime: 7
+    RandomSeed: 2166901154
+  - EventId: 352
+    Amount: 61692845
+    Kind: 0
+    WorldPosition: {x: -3.5043988, y: -1.9882698, z: 0}
+    SpawnTime: 7.02
+    RandomSeed: 161692825
+  - EventId: 353
+    Amount: 32801104
+    Kind: 1
+    WorldPosition: {x: -2.1456501, y: 1.6871945, z: 0}
+    SpawnTime: 7.04
+    RandomSeed: 2932800804
+  - EventId: 354
+    Amount: 14006719
+    Kind: 2
+    WorldPosition: {x: 0.5034213, y: -2.3304007, z: 0}
+    SpawnTime: 7.06
+    RandomSeed: 1314006579
+  - EventId: 355
+    Amount: 99195672
+    Kind: 0
+    WorldPosition: {x: -0.092864126, y: 1.4428153, z: 0}
+    SpawnTime: 7.08
+    RandomSeed: 2899195382
+  - EventId: 356
+    Amount: 3015333
+    Kind: 1
+    WorldPosition: {x: -2.839687, y: 1.2864125, z: 0}
+    SpawnTime: 7.1
+    RandomSeed: 1903015133
+  - EventId: 357
+    Amount: 87949880
+    Kind: 2
+    WorldPosition: {x: -3.514174, y: -1.0645162, z: 0}
+    SpawnTime: 7.12
+    RandomSeed: 1587949720
+  - EventId: 358
+    Amount: 18086689
+    Kind: 0
+    WorldPosition: {x: 2.7321603, y: -1.7585533, z: 0}
+    SpawnTime: 7.14
+    RandomSeed: 18086679
+  - EventId: 359
+    Amount: 17489374
+    Kind: 1
+    WorldPosition: {x: -1.1485826, y: 1.0224829, z: 0}
+    SpawnTime: 7.16
+    RandomSeed: 3317489034
+  - EventId: 360
+    Amount: 788657
+    Kind: 2
+    WorldPosition: {x: 3.455523, y: -1.3822092, z: 0}
+    SpawnTime: 7.18
+    RandomSeed: 700788577
+  - EventId: 361
+    Amount: 62180156
+    Kind: 0
+    WorldPosition: {x: -1.7546432, y: 0.7536657, z: 0}
+    SpawnTime: 7.2
+    RandomSeed: 2362179916
+  - EventId: 362
+    Amount: 18049945
+    Kind: 1
+    WorldPosition: {x: -4.423265, y: 0.53372437, z: 0}
+    SpawnTime: 7.22
+    RandomSeed: 3418049595
+  - EventId: 363
+    Amount: 3127680
+    Kind: 2
+    WorldPosition: {x: -4.081134, y: -1.6461388, z: 0}
+    SpawnTime: 7.24
+    RandomSeed: 2803127390
+  - EventId: 364
+    Amount: 56028739
+    Kind: 0
+    WorldPosition: {x: -4.6383185, y: -2.1593354, z: 0}
+    SpawnTime: 7.2599998
+    RandomSeed: 256028709
+  - EventId: 365
+    Amount: 65774484
+    Kind: 1
+    WorldPosition: {x: 3.1329424, y: 1.2619746, z: 0}
+    SpawnTime: 7.2799997
+    RandomSeed: 3365774144
+  - EventId: 366
+    Amount: 50501359
+    Kind: 2
+    WorldPosition: {x: -0.943304, y: 0.67057675, z: 0}
+    SpawnTime: 7.2999997
+    RandomSeed: 750501279
+  - EventId: 367
+    Amount: 57552090
+    Kind: 0
+    WorldPosition: {x: 1.1192571, y: 0.7292278, z: 0}
+    SpawnTime: 7.3199997
+    RandomSeed: 3557551730
+  - EventId: 368
+    Amount: 87530045
+    Kind: 1
+    WorldPosition: {x: 2.9081135, y: 1.2130988, z: 0}
+    SpawnTime: 7.3399997
+    RandomSeed: 187530025
+  - EventId: 369
+    Amount: 90596366
+    Kind: 2
+    WorldPosition: {x: 1.1388074, y: -2.5210166, z: 0}
+    SpawnTime: 7.3599997
+    RandomSeed: 4090595956
+  - EventId: 370
+    Amount: 93870673
+    Kind: 0
+    WorldPosition: {x: 3.162268, y: -2.6285436, z: 0}
+    SpawnTime: 7.3799996
+    RandomSeed: 2693870403
+  - EventId: 371
+    Amount: 69957172
+    Kind: 1
+    WorldPosition: {x: 4.4428153, y: -1.0498533, z: 0}
+    SpawnTime: 7.3999996
+    RandomSeed: 1069957062
+  - EventId: 372
+    Amount: 73701529
+    Kind: 2
+    WorldPosition: {x: -3.9345064, y: 1.7165201, z: 0}
+    SpawnTime: 7.4199996
+    RandomSeed: 2973701229
+  - EventId: 373
+    Amount: 67320968
+    Kind: 0
+    WorldPosition: {x: 2.2727273, y: 0.56793743, z: 0}
+    SpawnTime: 7.44
+    RandomSeed: 1567320808
+  - EventId: 374
+    Amount: 41871499
+    Kind: 1
+    WorldPosition: {x: -2.1163244, y: -1.8074291, z: 0}
+    SpawnTime: 7.46
+    RandomSeed: 941871399
+  - EventId: 375
+    Amount: 62069934
+    Kind: 2
+    WorldPosition: {x: -4.1202345, y: -1.4017595, z: 0}
+    SpawnTime: 7.48
+    RandomSeed: 3362069594
+  - EventId: 376
+    Amount: 7449795
+    Kind: 0
+    WorldPosition: {x: 4.8631477, y: -0.7370479, z: 0}
+    SpawnTime: 7.5
+    RandomSeed: 2007449585
+  - EventId: 377
+    Amount: 37826806
+    Kind: 1
+    WorldPosition: {x: -3.4750733, y: -2.9315739, z: 0}
+    SpawnTime: 7.52
+    RandomSeed: 837826716
+  - EventId: 378
+    Amount: 57408341
+    Kind: 2
+    WorldPosition: {x: 3.2404692, y: 0.7438905, z: 0}
+    SpawnTime: 7.54
+    RandomSeed: 57408331
+  - EventId: 379
+    Amount: 83661010
+    Kind: 0
+    WorldPosition: {x: -4.550342, y: 1.2521994, z: 0}
+    SpawnTime: 7.56
+    RandomSeed: 4183660590
+  - EventId: 380
+    Amount: 23347155
+    Kind: 1
+    WorldPosition: {x: -0.72825027, y: -3, z: 0}
+    SpawnTime: 7.58
+    RandomSeed: 223347125
+  - EventId: 381
+    Amount: 7938100
+    Kind: 2
+    WorldPosition: {x: 3.914956, y: 0.17204301, z: 0}
+    SpawnTime: 7.6
+    RandomSeed: 4107937680
+  - EventId: 382
+    Amount: 51815287
+    Kind: 0
+    WorldPosition: {x: -0.7869013, y: -1.0205278, z: 0}
+    SpawnTime: 7.62
+    RandomSeed: 1951815087
+  - EventId: 383
+    Amount: 9880018
+    Kind: 1
+    WorldPosition: {x: 3.1524928, y: 0.75855327, z: 0}
+    SpawnTime: 7.64
+    RandomSeed: 3909879618
+  - EventId: 384
+    Amount: 55871155
+    Kind: 2
+    WorldPosition: {x: -0.68914956, y: -2.4965787, z: 0}
+    SpawnTime: 7.66
+    RandomSeed: 2455870905
+  CameraKeys:
+  - Time: 0
+    Position: {x: 0, y: 0, z: -10}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    FieldOfView: 60
+    OrthographicSize: 5
+  - Time: 9
+    Position: {x: 0.5, y: 0.25, z: -10}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    FieldOfView: 60
+    OrthographicSize: 5

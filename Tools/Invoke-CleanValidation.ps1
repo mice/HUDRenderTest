@@ -3,7 +3,8 @@ param(
     [string]$UnityExe = "C:\Program Files\Unity\Hub\Editor\2022.3.53f1\Editor\Unity.exe",
     [ValidateSet("EditMode", "PlayMode", "Both")]
     [string]$TestPlatform = "EditMode",
-    [int]$TimeoutMinutes = 30
+    [int]$TimeoutMinutes = 30,
+    [switch]$WithGraphics
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,7 +43,6 @@ function Invoke-UnityTests {
     $logPath = Join-Path $outputRoot "unity-$($Platform.ToLowerInvariant()).log"
     $arguments = @(
         "-batchmode",
-        "-nographics",
         "-projectPath", $projectPath,
         "-runTests",
         "-testPlatform", $Platform,
@@ -50,8 +50,10 @@ function Invoke-UnityTests {
         "-testResults", $resultPath,
         "-logFile", $logPath
     )
+    if ($Platform -eq "PlayMode" -and $WithGraphics) { $arguments += "-force-d3d11" }
+    else { $arguments += "-nographics" }
 
-    $process = Start-Process -FilePath $UnityExe -ArgumentList $arguments -PassThru -NoNewWindow
+    $process = Start-Process -FilePath $UnityExe -ArgumentList $arguments -PassThru -WindowStyle Hidden
     $deadline = [DateTime]::UtcNow.AddMinutes($TimeoutMinutes)
     while (-not $process.HasExited) {
         if ([DateTime]::UtcNow -gt $deadline) {
@@ -86,6 +88,7 @@ if (-not (Test-Path -LiteralPath $UnityExe -PathType Leaf)) {
 
 Assert-ChildPath -Parent $tempRoot -Child $snapshotRoot
 Assert-ChildPath -Parent $tempRoot -Child $temporaryIndex
+Assert-ChildPath -Parent $repositoryRoot -Child $outputRoot
 
 New-Item -ItemType Directory -Force -Path $tempRoot | Out-Null
 if (Test-Path -LiteralPath $snapshotRoot) {

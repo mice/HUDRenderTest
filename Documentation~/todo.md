@@ -1,6 +1,6 @@
 # HUDRenderPackage TODO
 
-> 当前未闭环事项。更新时间：2026-10-25。`[ ]` 表示仍需执行或重新验证；完成项已归档到 roadmap 节点，不留在活动队列。每个活动条目必须绑定 roadmap 节点；节点完成时，先整体审视本文件，再把已完成条目写入节点记录并从这里清理。
+> 当前未闭环事项。更新时间：2026-10-28。`[ ]` 表示仍需执行或重新验证；完成项已归档到 roadmap 节点，不留在活动队列。每个活动条目必须绑定 roadmap 节点；节点完成时，先整体审视本文件，再把已完成条目写入节点记录并从这里清理。
 
 ## 节点绑定规则
 
@@ -8,6 +8,16 @@
 - `node: M4` 或 `node: future`：后续节点或尚未承诺的条目。
 - `blocked:` / `deferred:`：保留在活动队列，必须写明原因和下一触发条件。
 - 已完成条目不长期保留在这里；它们归档到对应 roadmap 节点的 `TODO lifecycle` 记录，并保留原始 TODO ID。
+
+## DT2 数字渲染对照
+
+- [ ] **DAMAGE-03 补齐正式 GPU 与完整帧对照** (`node: DT2`, `target: unassigned`, `deferred/environment-limited`)
+  - **承接**：DAMAGE-02 已于 2026-10-28 按用户要求阶段归档，任务 21/22；CPU/精度及插桩画面已完成，原 3.1 GPU 门禁保持未完成。见 [归档结论](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/archive-record.md)。
+  - **阻塞条件**：设备 thermal status 持续为 3，尚未满足预注册温控条件；正式插桩影响与 GPU 性能矩阵未执行。未重启设备。
+  - **下一触发条件**：用户恢复此项，设备可独占且 thermal status 0；若需调整环境门槛，先明确修订预注册条件。
+  - **行动**：重新绑定精确源码/APK/资源及画面条件，完成插桩 off/on ABBA、13 组/52 轮正式 GPU 采样与完整排空，分别报告 HUD-camera-instrumented、完整帧及缺失计数器口径。
+  - **验收**：有效的同负载平衡采样、每轮至少 3,000 个有效帧、爆发至少 100 完整窗口；GPU 与整帧分别给出统计结论或明确 unverified，不以计时通路、容量压缩或 CPU 结果替代。
+  - **边界**：Float32 默认；C excluded、D not-integrated；其他 API/URP、真实业务 ECS、主城负载及 Jenkins 另行安排。
 
 ## M5 v0.1.2 治理周期
 
@@ -44,25 +54,12 @@
   - **下一触发条件**：获得 release、tag 或 registry 发布证据后重新查询并更新映射。
   - **来源**：[com.uidatarender/CHANGELOG.md](../com.uidatarender/CHANGELOG.md)、Git tag 查询。
 
-- [ ] **GOV-004 核对候选版本与 CI 验证对应关系** (`node: M5`, `target: future`, `blocked: release evidence pending`)
-  - **行动**：通过 Jenkins 为每个 `v0.1.2-rc.N` 记录精确提交、tag、changelog、clean checkout、EditMode、PlayMode、治理、覆盖率和真实 CI run；确认 tag 推送不会被误认为已触发 CI。
-  - **验收**：同一提交的验证证据完整，失败候选递增到下一个未使用的 RC 序号；正式 v0.1.2 仍需用户明确确认。
-  - **触发条件**：创建首个 RC 或发现远端发布状态可核实时执行。
-  - **来源**：[package-release-governance spec](../openspec/specs/package-release-governance/spec.md)。
-
 - [ ] **VERIFY-02 对齐 UGUI 依赖与独立分发契约** (`node: M5`, `target: v0.1.2`)
   - **现状**：Runtime 调用仓库定制 UGUI 的 `VertexHelper.CopyIndices`，Sample 使用本地 UGUI；包 metadata 和主规格仍要求声明版本及 stock UGUI 可编译，现有布局检查允许本地覆盖。
   - **行动**：确定 stock-compatible fallback 或受支持的定制依赖交付方式，对齐代码、metadata、规格和活动文档；保留 PERF-01 的历史记录。
   - **验收**：只使用声明依赖的干净消费项目可编译，相关 extraction 正确性/分配验证通过，并记录精确依赖来源；布局通过不能代替此验证。
   - **触发条件**：首个 RC 准备前完成；可与诊断收口并行规划。
   - **来源**：[2026-10-20 审查](change-review-2026-10-20.md)、[UPM 分发规格](../openspec/specs/upm-package-distribution/spec.md)、`com.uidatarender/Runtime/UGUI.Extends/VertexHelperUtils.cs`。
-
-## P0：交付证据与性能门槛
-
-- [ ] **VERIFY-01 复核当前覆盖率与测试治理** (`node: M3`)
-  - **行动**：在当前提交运行 `Invoke-LocalValidation.ps1 -WithCoverage -CoverageThreshold 70` 和 `Sync-UnitTestGovernance.ps1 -Scope All`。
-  - **验收**：`UIDataRender` 行覆盖率不低于 70%；Package/Sample 测试与记录双向一致、无重复或孤立记录；将最新数字写回证据文档。
-  - **参考基线**：最近交付证据为 118 个 EditMode、22 个 PlayMode、81.5% 行覆盖率。
 
 ## P1：性能场景与渲染路径决策
 

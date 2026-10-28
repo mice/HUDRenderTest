@@ -1,0 +1,317 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 287f56c39f67467b8d7bfc028a5a5c1b, type: 3}
+  m_Name: Boundaries
+  m_EditorClassIdentifier: 
+  Version: sample-clip-v1
+  Seed: 12345
+  Duration: 6
+  Events:
+  - EventId: 1
+    Amount: 10
+    Kind: 0
+    WorldPosition: {x: -3.75, y: -2.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 3
+  - EventId: 2
+    Amount: 99
+    Kind: 0
+    WorldPosition: {x: -1.25, y: -2.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 74
+  - EventId: 3
+    Amount: 100
+    Kind: 0
+    WorldPosition: {x: 1.25, y: -2.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 145
+  - EventId: 4
+    Amount: 99999999
+    Kind: 0
+    WorldPosition: {x: 3.75, y: -2.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 216
+  - EventId: 5
+    Amount: 10
+    Kind: 1
+    WorldPosition: {x: -3.75, y: -0.5, z: 0}
+    SpawnTime: 0
+    RandomSeed: 287
+  - EventId: 6
+    Amount: 99
+    Kind: 1
+    WorldPosition: {x: -1.25, y: -0.5, z: 0}
+    SpawnTime: 0
+    RandomSeed: 358
+  - EventId: 7
+    Amount: 100
+    Kind: 1
+    WorldPosition: {x: 1.25, y: -0.5, z: 0}
+    SpawnTime: 0
+    RandomSeed: 429
+  - EventId: 8
+    Amount: 99999999
+    Kind: 1
+    WorldPosition: {x: 3.75, y: -0.5, z: 0}
+    SpawnTime: 0
+    RandomSeed: 500
+  - EventId: 9
+    Amount: 10
+    Kind: 2
+    WorldPosition: {x: -3.75, y: 1.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 571
+  - EventId: 10
+    Amount: 99
+    Kind: 2
+    WorldPosition: {x: -1.25, y: 1.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 642
+  - EventId: 11
+    Amount: 100
+    Kind: 2
+    WorldPosition: {x: 1.25, y: 1.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 713
+  - EventId: 12
+    Amount: 99999999
+    Kind: 2
+    WorldPosition: {x: 3.75, y: 1.1, z: 0}
+    SpawnTime: 0
+    RandomSeed: 784
+  - EventId: 13
+    Amount: 10
+    Kind: 0
+    WorldPosition: {x: -3.75, y: -2.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 855
+  - EventId: 14
+    Amount: 99
+    Kind: 0
+    WorldPosition: {x: -1.25, y: -2.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 926
+  - EventId: 15
+    Amount: 100
+    Kind: 0
+    WorldPosition: {x: 1.25, y: -2.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 997
+  - EventId: 16
+    Amount: 99999999
+    Kind: 0
+    WorldPosition: {x: 3.75, y: -2.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1068
+  - EventId: 17
+    Amount: 10
+    Kind: 1
+    WorldPosition: {x: -3.75, y: -0.5, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1139
+  - EventId: 18
+    Amount: 99
+    Kind: 1
+    WorldPosition: {x: -1.25, y: -0.5, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1210
+  - EventId: 19
+    Amount: 100
+    Kind: 1
+    WorldPosition: {x: 1.25, y: -0.5, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1281
+  - EventId: 20
+    Amount: 99999999
+    Kind: 1
+    WorldPosition: {x: 3.75, y: -0.5, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1352
+  - EventId: 21
+    Amount: 10
+    Kind: 2
+    WorldPosition: {x: -3.75, y: 1.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1423
+  - EventId: 22
+    Amount: 99
+    Kind: 2
+    WorldPosition: {x: -1.25, y: 1.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1494
+  - EventId: 23
+    Amount: 100
+    Kind: 2
+    WorldPosition: {x: 1.25, y: 1.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1565
+  - EventId: 24
+    Amount: 99999999
+    Kind: 2
+    WorldPosition: {x: 3.75, y: 1.1, z: 0}
+    SpawnTime: 1.5
+    RandomSeed: 1636
+  - EventId: 25
+    Amount: 10
+    Kind: 0
+    WorldPosition: {x: -3.75, y: -2.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 1707
+  - EventId: 26
+    Amount: 99
+    Kind: 0
+    WorldPosition: {x: -1.25, y: -2.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 1778
+  - EventId: 27
+    Amount: 100
+    Kind: 0
+    WorldPosition: {x: 1.25, y: -2.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 1849
+  - EventId: 28
+    Amount: 99999999
+    Kind: 0
+    WorldPosition: {x: 3.75, y: -2.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 1920
+  - EventId: 29
+    Amount: 10
+    Kind: 1
+    WorldPosition: {x: -3.75, y: -0.5, z: 0}
+    SpawnTime: 3
+    RandomSeed: 1991
+  - EventId: 30
+    Amount: 99
+    Kind: 1
+    WorldPosition: {x: -1.25, y: -0.5, z: 0}
+    SpawnTime: 3
+    RandomSeed: 2062
+  - EventId: 31
+    Amount: 100
+    Kind: 1
+    WorldPosition: {x: 1.25, y: -0.5, z: 0}
+    SpawnTime: 3
+    RandomSeed: 2133
+  - EventId: 32
+    Amount: 99999999
+    Kind: 1
+    WorldPosition: {x: 3.75, y: -0.5, z: 0}
+    SpawnTime: 3
+    RandomSeed: 2204
+  - EventId: 33
+    Amount: 10
+    Kind: 2
+    WorldPosition: {x: -3.75, y: 1.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 2275
+  - EventId: 34
+    Amount: 99
+    Kind: 2
+    WorldPosition: {x: -1.25, y: 1.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 2346
+  - EventId: 35
+    Amount: 100
+    Kind: 2
+    WorldPosition: {x: 1.25, y: 1.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 2417
+  - EventId: 36
+    Amount: 99999999
+    Kind: 2
+    WorldPosition: {x: 3.75, y: 1.1, z: 0}
+    SpawnTime: 3
+    RandomSeed: 2488
+  - EventId: 37
+    Amount: 10
+    Kind: 0
+    WorldPosition: {x: -3.75, y: -2.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2559
+  - EventId: 38
+    Amount: 99
+    Kind: 0
+    WorldPosition: {x: -1.25, y: -2.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2630
+  - EventId: 39
+    Amount: 100
+    Kind: 0
+    WorldPosition: {x: 1.25, y: -2.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2701
+  - EventId: 40
+    Amount: 99999999
+    Kind: 0
+    WorldPosition: {x: 3.75, y: -2.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2772
+  - EventId: 41
+    Amount: 10
+    Kind: 1
+    WorldPosition: {x: -3.75, y: -0.5, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2843
+  - EventId: 42
+    Amount: 99
+    Kind: 1
+    WorldPosition: {x: -1.25, y: -0.5, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2914
+  - EventId: 43
+    Amount: 100
+    Kind: 1
+    WorldPosition: {x: 1.25, y: -0.5, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 2985
+  - EventId: 44
+    Amount: 99999999
+    Kind: 1
+    WorldPosition: {x: 3.75, y: -0.5, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 3056
+  - EventId: 45
+    Amount: 10
+    Kind: 2
+    WorldPosition: {x: -3.75, y: 1.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 3127
+  - EventId: 46
+    Amount: 99
+    Kind: 2
+    WorldPosition: {x: -1.25, y: 1.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 3198
+  - EventId: 47
+    Amount: 100
+    Kind: 2
+    WorldPosition: {x: 1.25, y: 1.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 3269
+  - EventId: 48
+    Amount: 99999999
+    Kind: 2
+    WorldPosition: {x: 3.75, y: 1.1, z: 0}
+    SpawnTime: 4.5
+    RandomSeed: 3340
+  CameraKeys:
+  - Time: 0
+    Position: {x: 0, y: 0, z: -10}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    FieldOfView: 60
+    OrthographicSize: 5
+  - Time: 6
+    Position: {x: 0.5, y: 0.25, z: -10}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    FieldOfView: 60
+    OrthographicSize: 5
