@@ -1,6 +1,6 @@
 # HUDRenderPackage Roadmap
 
-> 当前路线图唯一入口。更新时间：2026-10-28。状态以仓库当前结构、现有测试记录和发布证据为准；`Documentation~/Legacy/` 下的计划与审计文件属于历史资料，活动任务以本文和 [todo.md](todo.md) 为准。
+> 当前路线图唯一入口。更新时间：2026-11-11。状态以仓库当前结构、现有测试记录和发布证据为准；`Documentation~/Legacy/` 下的计划与审计文件属于历史资料，活动任务以本文和 [todo.md](todo.md) 为准。
 
 ## 项目定位
 
@@ -8,18 +8,21 @@
 
 ## 当前基线
 
-- **包结构**：`com.uidatarender` 是 UPM 交付包，Sample 通过 `file:../../com.uidatarender` 引用；当前 Sample 使用仓库内定制 UGUI，Runtime 已调用其 `CopyIndices`。与 stock UGUI 独立分发规格的对齐由 `VERIFY-02` 跟踪，不能沿用迁移时的兼容结论。
+- **PERF-04 stock 增量（2026-11-11）**：真实 BuiltIn UGUI 1.0.0 与 custom 的横屏 2340×1080 八轮 72,048 帧同负载对照、来源/输出等价和设备恢复均已验收。Burst update median/p95 的运行统计量均值为 custom `6.2247375/6.42495`、stock `8.5542625/8.74620 ms`，stock 分别增加 37.42%/36.13%；不推广为 GPU/FPS 或通用收益。stock 相关 22/22 EditMode、12/12 D3D11 PlayMode，治理 267/267 通过；第三次 Profiler 有 39 个 Bytes/解析栈正控、906 个受控 Editor/Mono 主线程 scope，观测 0 事件/0 B，前两次拒绝证据保留。见 [完整结论](perf-04-stock-scene-results-2026-11-11.md)。预算、目标设备字节和精确 RC/覆盖率门禁继续开放。
+
+- **包结构**：`com.uidatarender` 是 UPM 交付包，Sample 通过 `file:../../com.uidatarender` 引用；当前 Sample 使用仓库内定制 UGUI。`VERIFY-02` 已完成包内公共 API 回退、定制 `CopyIndices` 快速路径兼容及实际 stock UGUI 1.0.0 独立分发验收，详见 [结论与来源](verify-02-stock-ugui-results-2026-11-06.md)。
 - **核心渲染**：公共 `VertexHelper` 提取、`UIMeshData`/`UIMeshDataX`、几何池、`TextureSlotTable`、`MergeBatcher`、`HolderBatchRenderer`、材质绑定和纹理超容量分批已经落地。
 - **观测与 Job**：`PerfProbe` 已接入 Fill/Merge/Draw 路径并支持 CSV；Burst SoA 路径已有输出等价测试，旧的托管 Job 路径仍保留。
 - **TMP**：`UITMPText` 已进入现有批渲染链路，基础 SDF/描边材质路径和 Sample 场景已存在；多材质、fallback atlas、sprite 与高级 TMP 效果仍有限制。
-- **验证**：相关源码回归通过 EditMode 190/190、D3D11 PlayMode 61/61、治理 251/251，UIDataRender 行覆盖率 90.0%（3,342/3,713），并完成适用的无 Library 干净快照验证。设备原生计时方法与画面已验证，正式 GPU/完整帧结论仍开放；见 [阶段归档结论](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/archive-record.md)。原始工件仅本地保存。Sprite 和 128-holder 真机数据保留各自负载的历史适用范围；本轮未执行 Jenkins 或 RC 验收。
+- **验证**：2026-11-06 的 VERIFY-02 回归中，原 Sample 与实际 stock UGUI 消费环境各通过 EditMode 196/196、D3D11 PlayMode 61/61，治理 257/257；stock 首次专项从无 Library 状态完成编译与 13/13 提取测试。UIDataRender 行覆盖率 90.0%（3,342/3,713）仍为历史值，本次未重跑覆盖率。同期完成同 APK 的正式 GPU 矩阵 13 组/52 轮、187,464 个有效样本及设备恢复读回；B32 GPU 中位数较低但部分纯绘制 p95 更高，完整帧收益为 unverified。见 [GPU 与完整帧结论](damage-03-gpu-results-2026-11-06.md)及[历史阶段归档](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/archive-record.md)。原始工件仅本地保存。Sprite 和 128-holder 真机数据保留各自负载的历史适用范围；Jenkins、Android/IL2CPP 和 RC 验收未在本次重跑。
 - **包版本**：`com.uidatarender/package.json` 当前为 `0.1.2`；`com.uidatarender/CHANGELOG.md` 的 `0.1.2` 仍为 Unreleased，预期 tag 为 `v0.1.2`，实际发布尚未核实。
+- **PERF-04 增量（2026-11-10）**：generation 量化与独立 Profiler GC 完成；原项目 205/205 EditMode、65/65 D3D11 PlayMode，stock 相关 9/9、12/12，治理 267/267，UIDataRender 行覆盖率 90.2% 通过。Mi 10 八轮 72,048 帧显示正常 generation median 运行均值 8.11815 ms；全阶段探针使 Burst update median/p95 增加 37.42%/44.12%，阶段值仅作仪器化定位。Profiler 39 个正控覆盖 906 个 Editor/Mono 主线程 HUD scope 为 0 事件/0 B，不替代目标设备字节或全应用 GC。stock 场景性能、原预算和精确 RC/覆盖率绑定仍开放。详见 [本轮结论](perf-04-generation-profile-results-2026-11-10.md)。
 
 2026-10-25 增量验证：查询复用候选已通过 EditMode 150/150、PlayMode 29/29、治理 179/179。Mi 10 四轮 36,000 帧对照中，128-holder 全量刷新候选 p95 为 1.2971 / 1.2310 ms，满足局部 1.5 ms p95 目标；峰值 1.5241 ms，未宣称硬最大值或 RC 整体验收通过。见 [结果与边界](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/evidence/query-results.md)。
 
 2026-10-25 分桶交付：显式状态队列、2×128 公平轮转、front/back 发布和透明顺序已验证。EditMode 161/161、D3D11 PlayMode 31/31、治理 192/192；Mi 10 六轮主对照和旧绘制控制共 63,036 帧，轮转 p95 1.3555 / 1.3413 ms，局部 1.5 ms p95 目标通过。峰值 5.3688 ms，仍保留长尾、两帧总成本和设备 GC 限制。见 [完整证据](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/bucket-results.md)。
 
-2026-10-26 战斗飘字：首期数字事件/固定 atlas/整数布局、GPU 动画、持久桶、确定性播放器及 Sample 已完成；正常回放 48/384/640 事件记录，无拒绝/漏显。后继 A/B 与 FP16 已完成实现、回归及 Mi 10 CPU/精度对照并阶段归档；正式 GPU/完整帧、真实 ECS、URP 和设备预算继续开放，见 DT1/DT2。
+2026-10-26 战斗飘字：首期数字事件/固定 atlas/整数布局、GPU 动画、持久桶、确定性播放器及 Sample 已完成；正常回放 48/384/640 事件记录，无拒绝/漏显。后继 A/B 与 FP16 已完成实现、回归及 Mi 10 CPU/精度对照并阶段归档；2026-11-06 完成正式 GPU/完整帧测量与分口径结论，完整帧收益未证实。真实 ECS、URP 和业务设备预算继续后续验收，见 DT1/DT2。
 
 ## 里程碑
 
@@ -117,6 +120,32 @@
 
 **节点 ID**：`M5`；**目标版本**：`v0.1.2` 治理周期；不等同于已发布。
 
+**PERF-04 stock 对照入场复核（2026-11-11）**：整体重读九项活动 TODO：PERF-04、GOV-002、MAINT-01 延续 M5；PERF-02/03、JOB-01 延续 M3；TMP-01..03 延续 M4，GOV-002 继续 blocked/unverified。本轮仅承接真实 stock 场景性能和独立 Profiler scoped 字节，固定 2340×1080 同负载八轮；来源、相关 22/22 EditMode、12/12 D3D11 PlayMode 与 Release 构建已验收。stock Profiler 两次证据不完整，GC 不记为通过。详见 [本轮记录](perf-04-stock-scene-results-2026-11-11.md)。不改变 0.1.2 Unreleased、原预算或精确 RC/覆盖率门禁，不归档活动 TODO。
+
+**PERF-04 stock 对照 / 出口复核（2026-11-11）**：八轮 72,048 帧及两份 CSV 逐行验收；stock Burst update median/p95 运行均值比 custom 高 37.42%/36.13%，四组相邻配对同向。第三次独立 stock Profiler 完整通过 39 正控/906 scope，受控 Editor/Mono 主线程为 0 事件/0 B；前两次仍拒绝，不拼接。原 APK、请求、九项设置与文件名恢复一致，应用停止。完整重读九项活动 TODO，仍全部 carried-forward（M5/M3/M4 各三项），GOV-002 保持 blocked/unverified，JOB-01 按预算触发，不归档或复用 ID。下一步低扰动复核 TMP regeneration，补目标设备 scoped 字节及精确候选测试/覆盖率绑定；0.1.2 仍 Unreleased，PERF-04/M5 和发布门禁不由本轮关闭。
+
+**PERF-04 generation 量化 / 出口复核（2026-11-10）**：交付默认关闭的实际完成 holder/TMP 阶段、计数/可用性与 Unity 尺寸；原项目 205/205、65/65，stock 相关 9/9、12/12，治理 267/267，UIDataRender 行覆盖率 90.2% 通过。冻结来源下同 Mi 10 同 APK 八轮 72,048 帧的请求/几何/方向均等价，正常路径 Burst median/p95 运行均值为 9.2754/10.23545 ms，generation median 为 8.11815 ms。全阶段探针增加 median/p95 37.42%/44.12%，ForceMeshUpdate 仅确认为仪器化叶阶段中的最大项，不称正常路径精确瓶颈或优化收益。独立 Unity Profiler 39 个 Bytes/解析栈正控覆盖 906 个主线程 scope，Editor/Mono 固定负载为 0 事件/0 B；scope 外 136,538 个诊断 GC 样本、其他线程未检验、完整离线重放与目标设备字节仍未验证。原 APK/请求/九项设置恢复后主代理实际读回通过，原始失败组保留。见 [完整结论](perf-04-generation-profile-results-2026-11-10.md)。
+
+出口整体重读九项活动 TODO，全部 carried-forward：PERF-04/GOV-002/MAINT-01 继续 M5，PERF-02/03/JOB-01 继续 M3，TMP-01..03 继续 M4；GOV-002 仍 blocked/unverified，JOB-01 按预算触发，无 ID 归档、删除或复用。下一步补 stock 场景性能，并在优化前以低扰动方法复核 TMP mesh regeneration。原预算、目标设备 scoped 字节、精确 RC/覆盖率绑定继续开放；0.1.2 仍 Unreleased，不关闭 M5，不触发 Jenkins、tag 或发布。
+
+**PERF-04 generation 量化 / 入口复核（2026-11-09）**：承接 [profile-representative-hud-generation](../openspec/changes/profile-representative-hud-generation/proposal.md)，先补实际 Rotating 完成 holder 的阶段采样，再量化同 APK 探针开关开销与 generation 构成。用户指定 GC 验收通过 Unity Profiler，避免增加运行时统计代码；独立 Profiler 诊断必须有正控和有效采样范围，不把其耗时混入 Release 结果。完整重读九项活动 TODO，PERF-04/GOV-002/MAINT-01 继续 M5，PERF-02/03/JOB-01 继续 M3，TMP-01..03 继续 M4，GOV-002 仍 blocked/unverified、JOB-01 按预算触发；不新增/复用 TODO ID，不改变预算/版本/发布状态。stock 场景性能、scoped 字节和精确 RC/覆盖率继续开放。
+
+**PERF-04 TMP 提取复用子项 / 出口复核（2026-11-08）**：完成 [reuse-tmp-extraction-scratch](../openspec/changes/reuse-tmp-extraction-scratch/proposal.md) 的分配归因、缓冲复用、正确性和两种 UGUI 验证。原 Sample EditMode 204/204、D3D11 PlayMode 64/64、stock 相关 EditMode 12/12、PlayMode 11/11、治理 265/265 通过。Mi 10 九轮 56,754 帧（含排空）来源/请求/几何/方向验收通过；历史正式横屏为 2340×1080，因此保留当前方向和分辨率。混合 HUD 有界分配事件由 10,360 降为 0，正控有效且无饱和，字节不可用。Release Burst 刷新 p95 运行均值 `10.7578→9.86305 ms`（观测下降 8.32%）；历史无 TMP 单对无一致收益。每版本两次运行、中断 556 秒及环境端点限制已披露。原 APK/请求/九项设置恢复读回通过。见 [完整结论](perf-04-tmp-scratch-results-2026-11-08.md)。
+
+完整重读活动 TODO 后，九项均 carried-forward：PERF-04、GOV-002、MAINT-01 继续 M5；PERF-02/03、JOB-01 继续 M3；TMP-01..03 继续 M4。GOV-002 保持 blocked/unverified，JOB-01 按预算触发，无 TODO ID 归档、删除或复用。下一步量化剩余 generation 成本，补 stock 场景性能、设备 scoped 字节、精确 RC/覆盖率门禁；不改预算、版本或发布状态，M5 和 PERF-04 继续开放。
+
+**PERF-04 代表性负载阶段完成 / 出口复核（2026-11-07）**：三独立 Sprite 纹理、主 atlas TMP、分桶文本快照、正向分配事件控制及来源报告已交付。原 Sample EditMode 196/196、D3D11 PlayMode 64/64、治理 260/260 通过；Mi 10 六轮 Release 共 54,036 个含排空样本，另有独立 Development 诊断和 smoke。混合负载 Burst 刷新 update p95 为 SingleBucket 21.1027–23.2966 ms、Rotating 10.7821–11.4473 ms；两帧总成本与 Partial 无稳定改善，刷新存在分配事件。历史控制当时 2.0837/2.5211 ms 未复现旧 1.5 ms 目标；Release/scoped 分配字节仍不可用。原 APK、请求缺省状态和 9 项设置恢复读回通过。见 [完整结论与本地证据索引](perf-04-representative-results-2026-11-07.md)及 [0.1.2 Unreleased changelog](../com.uidatarender/CHANGELOG.md)。
+
+完整重读 TODO 后，9 项均 carried-forward：PERF-04、GOV-002、MAINT-01 继续 M5；PERF-02/03、JOB-01 继续 M3；TMP-01..03 继续 M4。GOV-002 保持 blocked/unverified，JOB-01 按预算触发，无 ID 归档、删除或复用。下一步先定位 TMP 生成分配/缓存，并匹配环境复核当前控制；不把本轮可追溯工作树测量记作 RC、stock 场景性能、覆盖率或发布通过，不改变预算。
+
+**PERF-04 代表性负载入口复核（2026-11-06）**：承接 [measure-representative-hud-workloads](../openspec/changes/measure-representative-hud-workloads/proposal.md)，用户选择仓库现有 Sprite、TMP 和多纹理资源作为可复现负载。完整复核 9 个活动 TODO：PERF-04、GOV-002、MAINT-01 延续 M5；PERF-02/03、JOB-01 延续 M3；TMP-01..03 延续 M4。GOV-002 保持 blocked/unverified，JOB-01 按预算触发。目标保持 0.1.2 Unreleased，不新增 TODO ID，不把历史 null-Sprite 局部 1.5 ms 目标扩展为新负载预算；代表性设备计时、分配、精确候选和覆盖率证据分别核实。
+
+**VERIFY-02 入口复核（2026-11-06）**：完整重读 10 个活动 TODO，本轮承接 `VERIFY-02 / M5 / v0.1.2`，实施 [stock UGUI 兼容变更](../openspec/changes/restore-stock-ugui-extraction/proposal.md)。PERF-04、GOV-002、MAINT-01 延续 M5，PERF-02/03、JOB-01 延续 M3，TMP-01..03 延续 M4；GOV-002 保持 blocked/unverified。已加入回退实现、资源清理和 UT_MESH_031..036，治理静态检查 257/257；唯一复用 stock 快照位于 `D:/workspace/HUDRenderPackageValidation`，准备阶段未启动 Unity。stock 消费项目的真实编译、正确性和分配验证通过前，不关闭 VERIFY-02，活动队列仍为 10 项。未改包版本或发布状态。
+
+**完成记录 / 归档 VERIFY-02（2026-11-06）**：用户授权自由使用编辑器后，原 Sample/定制 UGUI 与 stock BuiltIn 1.0.0 两种环境的提取专项各 13/13、完整 EditMode 各 196/196、D3D11 PlayMode 各 61/61 通过，无失败/跳过，治理 257/257、布局、OpenSpec strict 20/20 和 diff 检查通过。首次 stock 消费从无 Library 状态编译；随后同一目录改为 detached worktree，修复普通导出缺少 Git 来源导致的一项 Sample 报告断言失败，保留失败证据并完成专项及全套复测。stock 实际依赖路径/源码哈希、定制方法缺失、预热零分配和资源清理见 [验收结论](verify-02-stock-ugui-results-2026-11-06.md)；主规格已同步，修复进入 [0.1.2 Unreleased changelog](../com.uidatarender/CHANGELOG.md)。
+
+**VERIFY-02 出口整体复核**：完整复核 10 项活动 TODO，`VERIFY-02 / M5 / v0.1.2` 分类为 completed 并移出队列。PERF-04、GOV-002、MAINT-01 延续 M5，PERF-02/03、JOB-01 延续 M3，TMP-01..03 延续 M4；最终 9 项（M5 3、M3 3、M4 3），GOV-002 仍 blocked/unverified，JOB-01 保持按预算触发。无需新增 ID，stock 回退的场景性能确认由既有 PERF-04 承接。回退的 `<65,000` 顶点/额外 Mesh 成本已文档化，未把功能验收扩为性能、覆盖率或 RC/发布通过。版本仍为 0.1.2 Unreleased。
+
 **当前范围调整（2026-10-27）**：按用户要求，将 `GOV-004` 及 Jenkins/候选 CI 执行任务从活动队列和 DT2 验收移除，后续另行安排。此次为移出当前范围，不记录为 CI 已通过。整体复核后活动 TODO 从 12 项减为 11 项（M5 4、M3 3、M4 3、DT2 1），其余条目继续原节点；历史快照保留。正式发布仍按发布规格执行。
 
 **TODO lifecycle**：本周期入口快照为 2026-09-27 的活动 TODO：`PERF-04`、`GOV-001`、`GOV-002`、`GOV-003`、`GOV-004`、`CI-01`、`VERIFY-01`、`PERF-02`、`PERF-03`、`JOB-01`、`TMP-01`、`TMP-02`、`TMP-03`、`MAINT-01`。该快照保留当时的入场状态；随后 `CI-01` 按渠道决策归档为废止项，Jenkins 验证要求由 `GOV-004` 继续跟踪。节点出口必须整体审视 TODO，将已完成或废止治理项记录在本节点后清理，性能和 TMP 未完成项继续保留原节点。
@@ -158,7 +187,7 @@
 
 **TODO lifecycle 出口整体复核**：重新通读整个队列，`DAMAGE-01` 按以上证据完成并移出活动队列；本地复核同时满足 `VERIFY-01`，在 M3 单独归档。新增 `DAMAGE-02 / DT2` 承接 M4–M5。其余 11 项继续原节点；队列最终 12 项（M5 5、M3 3、M4 3、DT2 1）。GPU/真机性能、FP16、真实 ECS、URP 与业务替换继续开放，不因本节点完成而通过。2026-10-26 按用户要求，将 13 条需求、26 个场景同步到 [数字渲染主规格](../openspec/specs/damage-text-rendering/spec.md)和 [播放器主规格](../openspec/specs/damage-text-playback/spec.md)，并归档至 `2026-10-26-add-damage-text-playback`；后继对照的最新状态见 DT2。
 
-### DT2：数字渲染对照与 FP16 —— 阶段归档（GPU 后续开放）
+### DT2：数字渲染对照与 FP16 —— 阶段归档（GPU 续测已收口）
 
 **节点 ID**：`DT2`；**目标版本**：未分配。`DAMAGE-02` 承接 DT1，完成共享 Quad A / 持久 Mesh B、三模式/两阶段采样、局部 XY FP16、可追溯报告和原生 Vulkan 查询通路。规格已同步到 [渲染对照](../openspec/specs/damage-text-renderer-comparison/spec.md)与 [FP16](../openspec/specs/damage-text-local-fp16/spec.md)；阶段范围和结论见 [归档记录](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/archive-record.md)，功能进入 [0.1.2 Unreleased changelog](../com.uidatarender/CHANGELOG.md)。
 
@@ -172,9 +201,25 @@
 
 本轮未重启设备。Jenkins 另行安排；C excluded，D not-integrated，其他 API/URP、真实业务 ECS 与主城全局约 10 次更新/秒继续后续范围。原始工件及旧源码检查点仅本地保存，远端保留源码、主规格和最终结论；未创建 RC/tag/release。
 
+**DAMAGE-03 续测入口（2026-10-28）**：重新完整复核 11 个活动 TODO，本节点仅承接 DAMAGE-03，其余 10 项保留原节点；目标版本仍未分配。用户确认正常重启并手动解锁后，系统热状态恢复为 0，未使用温控 override。已重新备份 APK/请求/设置并核对候选 APK 的运行时代码与当前提交一致，继续同 APK 的 16 轮插桩开关对照及 13 组/52 轮正式 GPU 矩阵；归档的 DAMAGE-02 仍保留当时 21/22 的历史状态，不提前关闭未完成验收。
+
+插桩 off/on/on/off 的 A/B × 纯绘制/生命周期四组共 16 轮、57,600 个样本已通过单轮及输入一致性检查，电池温度 30.2–33.2°C，热状态全为 0。相机回调的绑定 CPU 和准备成本单列，60 Hz 节奏限制整帧小差异的判断，不推算未插桩 GPU 时间。正式矩阵首次入口在任何采样开始前遇到本地 Windows 路径参数问题，保留失败记录并恢复设备后，已从新目录开始；有效采样不覆盖或静默重跑，最终 GPU/完整帧验收仍待完成。
+
+**DAMAGE-03 中断审计及续测入口（2026-11-06）**：按用户接受的计划，完整复核 11 个活动 TODO，本轮仅承接 DAMAGE-03，其余 10 项继续原节点。设备端恢复了 2026-10-28 15:21:54 UTC 的第 28 轮导出；采样实际完成，主机没有留下拉取、完成登记及结束温控记录，主机中断原因未知。28 轮报告的哈希、输入/状态、逐帧原生查询与排空校验通过；静态 2/5/8 位、连续生命周期及 127/128 爆发共 6 个完整 ABBA 组、24 轮可保留。原 129 组的 A2 缺少同期结束温控，整组保留为 environment-unverified，不把当前设备温度补作历史证据。
+
+已重新备份接入时的 APK、请求与屏幕/GPU 调试设置，原 APK 哈希、构建 GUID、校准、画面及插桩开关证据保持一致；当前 Runtime/基准源码与历史构建提交无功能差异，Sample 依赖修改不计入该 APK。新会话注册 7 组/28 轮：完整重测 129，继续未启动的 256、高重叠、B32/B16 与实时负载；各 ABBA 四轮保持在同一会话内。原温控、预热、采样、排空、保留尾部及无效即停规则不变。以上为入口快照，正式矩阵及结论的完成状态见下文；原始证据仅本地保存，历史 DAMAGE-02 仍为 21/22。
+
+**完成记录 / 归档 DAMAGE-03（2026-11-06）**：旧 24 + 新 28 轮组成 13 个完整 ABBA 组、52 轮、187,464 个有效样本；原 129 四轮另行保留为 environment-unverified。每轮至少 3,000 帧，爆发每轮 100 个完整窗口，原始哈希、输入/状态、原生逐帧查询、排空和起止温控均通过；电池范围 25.2–30.2°C，thermal status 0。设备 APK/请求/屏幕/旋转/GPU 调试设置恢复后再次实际读回通过。同 APK 原 16 轮/57,600 样本插桩对照继续适用，计时区间包含插桩开销。
+
+B32 的 HUD GPU 运行中位数比 A 低 1.45%–6.58%，但部分纯绘制 p95 更高；A 生命周期 CPU 更低。FP16 没有可靠 GPU 改善，固定连续生命周期外层 CPU 约增加 0.061725 ms / 28.21%，Float32 保持默认。实际帧间隔受 60 Hz 节奏限制，完整帧收益明确为 unverified；按 DAMAGE-03 的分口径测量与结论验收完成，不宣称业务替换、统一分布优势或发布通过。完整结果、统计局限和本地证据索引见 [最终结论](damage-03-gpu-results-2026-11-06.md)。本轮不改 Runtime，不重跑 Unity 测试或构建；历史 DAMAGE-02 仍保留归档时 21/22。
+
+**TODO lifecycle 出口整体复核（2026-11-06）**：完整复核 11 个活动条目，`DAMAGE-03 / DT2 / target: unassigned` 分类为 completed，以上验收及最终结论为证据，已移出活动 TODO。其余 10 项 carried-forward 至原节点：M5 的 PERF-04、GOV-002、VERIFY-02、MAINT-01；M3 的 PERF-02/03、JOB-01；M4 的 TMP-01..03。GOV-002 仍 blocked/unverified，JOB-01 仍按预算触发；无新增或复用 TODO ID。未把 FP16 美术接受、其他 API/URP、真实业务 ECS、主城、Jenkins 或 RC 门禁归档为通过。活动队列最终 10 项（M5 4、M3 3、M4 3），后续优先 VERIFY-02。
+
 ## 优先级顺序
 
-1. **P0**：[128-holder 优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)已归档，[分桶交付](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/bucket-results.md)已完成 10/10，局部 1.5 ms p95 目标通过。下一步围绕 PERF-04 补齐代表性资源负载和真机分配证据，继续处理原 1 ms 参考、VERIFY-02 独立分发、覆盖率。若需要进一步优化，再启动 JOB-01 的 Burst/SIMD 对照。
+**DAMAGE-03 与 VERIFY-02 已完成**。PERF-04 已完成 TMP 提取复用、generation 量化、真实 stock 场景性能对照及两种依赖各自的受控 Editor 主线程 Profiler GC 验收；下一步以低扰动方法复核潜在优化点，继续处理目标设备 scoped 字节和精确 RC/覆盖率门禁。
+
+1. **P0**：按 [stock 对照结论](perf-04-stock-scene-results-2026-11-11.md)继续低扰动复核 TMP mesh regeneration，再决定后续优化；当前同负载 custom/stock Burst update median 均值为 6.2247375/8.5542625 ms。上一轮全阶段探针干扰明显，仪器化 ForceMeshUpdate 值不等于正常成本；不同轮次绝对时间不作代码收益对照。历史 [128-holder](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)和[分桶](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/bucket-results.md)局部 1.5 ms 通过不扩展为当前通过。原预算、目标设备 scoped 字节、精确 RC/覆盖率绑定继续由 PERF-04 承接，JOB-01 按预算触发。
 2. **P1**：8 槽 GPU 证据和统一性能场景，确定默认槽数与 Job 路径选择。
 3. **P2**：TMP 高级材质/资源能力、低风险代码清理和可选 UI 能力扩展。
 

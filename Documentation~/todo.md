@@ -1,6 +1,6 @@
 # HUDRenderPackage TODO
 
-> 当前未闭环事项。更新时间：2026-10-28。`[ ]` 表示仍需执行或重新验证；完成项已归档到 roadmap 节点，不留在活动队列。每个活动条目必须绑定 roadmap 节点；节点完成时，先整体审视本文件，再把已完成条目写入节点记录并从这里清理。
+> 当前未闭环事项。更新时间：2026-11-11。`[ ]` 表示仍需执行或重新验证；完成项已归档到 roadmap 节点，不留在活动队列。每个活动条目必须绑定 roadmap 节点；节点完成时，先整体审视本文件，再把已完成条目写入节点记录并从这里清理。
 
 ## 节点绑定规则
 
@@ -9,19 +9,14 @@
 - `blocked:` / `deferred:`：保留在活动队列，必须写明原因和下一触发条件。
 - 已完成条目不长期保留在这里；它们归档到对应 roadmap 节点的 `TODO lifecycle` 记录，并保留原始 TODO ID。
 
-## DT2 数字渲染对照
-
-- [ ] **DAMAGE-03 补齐正式 GPU 与完整帧对照** (`node: DT2`, `target: unassigned`, `deferred/environment-limited`)
-  - **承接**：DAMAGE-02 已于 2026-10-28 按用户要求阶段归档，任务 21/22；CPU/精度及插桩画面已完成，原 3.1 GPU 门禁保持未完成。见 [归档结论](../openspec/changes/archive/2026-10-28-compare-damage-text-renderers/archive-record.md)。
-  - **阻塞条件**：设备 thermal status 持续为 3，尚未满足预注册温控条件；正式插桩影响与 GPU 性能矩阵未执行。未重启设备。
-  - **下一触发条件**：用户恢复此项，设备可独占且 thermal status 0；若需调整环境门槛，先明确修订预注册条件。
-  - **行动**：重新绑定精确源码/APK/资源及画面条件，完成插桩 off/on ABBA、13 组/52 轮正式 GPU 采样与完整排空，分别报告 HUD-camera-instrumented、完整帧及缺失计数器口径。
-  - **验收**：有效的同负载平衡采样、每轮至少 3,000 个有效帧、爆发至少 100 完整窗口；GPU 与整帧分别给出统计结论或明确 unverified，不以计时通路、容量压缩或 CPU 结果替代。
-  - **边界**：Float32 默认；C excluded、D not-integrated；其他 API/URP、真实业务 ECS、主城负载及 Jenkins 另行安排。
-
 ## M5 v0.1.2 治理周期
 
 - [ ] **PERF-04 代表性 HUD 场景性能验收** (`node: M5`, `target: v0.1.2`, `source: hud-rc-performance-acceptance`)
+  - **真实 stock 场景计时与 scoped Profiler 子项完成（2026-11-11）**：普通执行来源和非 UGUI 依赖一致，stock 相关 EditMode 22/22、D3D11 PlayMode 12/12 通过。Mi 10 横屏 2340×1080 八轮 72,048 帧的身份/请求/完成/几何/恢复均验收一致；四轮统计量均值的 Burst update median/p95 为 custom `6.2247375/6.42495`、stock `8.5542625/8.74620 ms`（stock +37.42%/+36.13%）。这是当前代表性负载的依赖路径比较，不是运行优化收益。stock Profiler 第三次完整通过 906 scope/39 个 4128 B 栈正控，受控 Editor/Mono 主线程为 0 事件/0 B；前两次拒绝证据保留，未新增生产 GC 机制。见 [完整结论](perf-04-stock-scene-results-2026-11-11.md)。**后续门禁**：目标设备字节、低扰动 TMP regeneration 复核、原预算、精确候选 commit/version/source manifest 与测试/覆盖率同源绑定继续开放，覆盖率门槛仍为 70%；不关闭 PERF-04/M5 或批准发布。
+  - **Generation 量化子项完成（2026-11-10）**：默认关闭阶段诊断与 2340×1080 同 APK 八轮共 72,048 帧验收通过；正常路径 Burst update median/p95 运行均值 9.2754/10.23545 ms，generation median 均值 8.11815 ms。全阶段探针使 median/p95 增加 37.42%/44.12%，ForceMeshUpdate 是仪器化叶阶段中最大项，不能把其 4.1574 ms 当作正常路径真实成本。按用户要求以独立 Unity Profiler 验收 GC，未增加运行时 GC 机制：39 个字节/栈正控、906 个 Editor/Mono 主线程 HUD scope 为 0 事件/0 B；设备字节和完整离线重放未由此通过。原项目 205/205 EditMode、65/65 D3D11 PlayMode，stock 相关 9/9、12/12，治理 267/267、UIDataRender 行覆盖率 90.2% 均通过，设备恢复读回有效。见 [完整结论](perf-04-generation-profile-results-2026-11-10.md)。**下一步**：补 stock 场景性能，低扰动复核 TMP mesh regeneration 后再决定优化；目标设备字节、原预算、精确 RC/覆盖率绑定继续开放，不关闭 PERF-04。
+  - **TMP 提取复用子项完成（2026-11-08）**：原项目 EditMode 204/204、D3D11 PlayMode 64/64，stock 相关 EditMode 12/12、PlayMode 11/11，治理 265/265 通过。Mi 10 九轮共 56,754 帧验收通过；历史正式分辨率为 2340×1080，本轮保留横屏。Development 混合负载 HUD 范围事件 `10,360→0`，正控有效且未饱和，字节不可用。Release 两次/版本的 Burst 刷新 p95 均值 `10.7578→9.86305 ms`，观测下降 8.32%；暂停 556 秒及有限重复不支持普遍显著性结论。历史单对无一致收益。原应用、请求和九项设置恢复读回通过。见 [本轮结论](perf-04-tmp-scratch-results-2026-11-08.md)。**下一步**：量化剩余 generation 成本，补 stock 场景性能、scoped 字节和精确 RC/覆盖率门禁；原预算与整体 PERF-04 继续开放。
+  - **代表性资源实测（2026-11-07）**：已完成 Sprite3/TMP6/三纹理固定负载、请求/资源/build/UGUI 来源及计数器校准。Mi 10 同 Release APK 四轮 ABBA 的 Burst 刷新 update p95：SingleBucket `21.1027–23.2966 ms`，Rotating `10.7821–11.4473 ms`；两帧总成本和 Partial p95 无稳定下降。两轮历史 null-Sprite 当前为 `2.0837/2.5211 ms`，不能复用旧 1.5 ms 通过结论，也不能直接归因为代码回退。Development 混合刷新每 completed holder 观测到一次分配事件，历史 HUD 范围为零事件；Release/设备 scoped 分配字节仍不可用。原 Sample EditMode 196/196、图形 PlayMode 64/64、治理 260/260 通过，原 APK/请求/设置恢复读回通过。见 [本轮结论](perf-04-representative-results-2026-11-07.md)。**下一步**：固定/变化文本与图片控制定位 TMP 生成分配和缓存复用；匹配环境复核 null-Sprite 基线。stock 场景性能、原预算、精确 RC/覆盖率门禁继续开放，不调整预算或关闭 PERF-04。
+  - **后续入口（2026-11-06）**：VERIFY-02 已完成 stock UGUI 独立分发验收，原 Sample 与 stock 消费快照各通过 EditMode 196/196、图形 PlayMode 61/61。下一步补代表性资源负载、设备分配计数器和精确候选来源；记录定制直接复制或 stock Mesh 回退路径，后者有额外 Mesh 往返成本，本次功能/零分配结果不替代场景性能验收。见 [独立分发结论](verify-02-stock-ugui-results-2026-11-06.md)。
   - **当前进展（2026-10-25）**：128-holder 查询复用优化已归档；2×128 显式分桶已实现并完成同源六轮 Mi 10 对照及旧绘制控制。轮转刷新 p95 **1.3555 / 1.3413 ms**，完成延迟最多一帧，满足局部 1.5 ms p95 目标；峰值 **5.3688 ms**，不承诺硬最大值，两帧累计成本略增。EditMode 161/161、实际图形 PlayMode 31/31、治理 192/192 通过。见 [分桶证据](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/evidence/bucket-results.md)。下一步补代表性资源负载、设备分配计数器和精确候选验证；原 1 ms 参考、完整 RC 矩阵、独立分发/覆盖率/发布证据仍未闭环，PERF-04 继续开放。
   - **当前入口（2026-10-21）**：现有 5 个 change 已同步主规格并归档：4 个优化按完成归档；总体验收以 `inconclusive/environment-limited` 阶段交付归档，2.3/3.4 保持未完成。缓存几何/冷暖完整输出等价和 Sprite 双路径缺口已补齐，EditMode 147/147、PlayMode 28/28、治理 175/175 通过；Sprite 四轮 7,200 帧确认路径命中及等价，但没有可靠总耗时改善。用户确认当前 256-holder 目标未通过，已建立 [分桶探索 change](../openspec/changes/archive/2026-10-25-add-holder-bucket-scheduling/proposal.md)，允许 2×128 两帧轮转及后一桶额外一帧延迟。128-holder 两轮整体全量刷新 p95 为 3.7467 / 3.7664 ms；当前优先 [128-holder 生成优化](../openspec/changes/archive/2026-10-25-optimize-128-holder-generation/proposal.md)，目标为同步整体刷新 p95 ≤ 1.5 ms，先量化查询/准备，再评估批量 Burst/SIMD；分桶实施后置。
   - **行动**：基于已归档 `PERF-01` 微基准，新增专用 `Scene_Perf_HUD_RC.unity` 和 Sample runner，记录静态、局部更新、集中刷新下的 regeneration CPU、主线程/帧时间 median/p95、负载、预热、采样环境和分配归因。沿用 `PERF-04`，不重新分配已有后续 ID。
@@ -53,13 +48,6 @@
   - **验收**：有 tag/提交/日期证据，或有带触发条件的阻塞记录；不得改写历史条目。
   - **下一触发条件**：获得 release、tag 或 registry 发布证据后重新查询并更新映射。
   - **来源**：[com.uidatarender/CHANGELOG.md](../com.uidatarender/CHANGELOG.md)、Git tag 查询。
-
-- [ ] **VERIFY-02 对齐 UGUI 依赖与独立分发契约** (`node: M5`, `target: v0.1.2`)
-  - **现状**：Runtime 调用仓库定制 UGUI 的 `VertexHelper.CopyIndices`，Sample 使用本地 UGUI；包 metadata 和主规格仍要求声明版本及 stock UGUI 可编译，现有布局检查允许本地覆盖。
-  - **行动**：确定 stock-compatible fallback 或受支持的定制依赖交付方式，对齐代码、metadata、规格和活动文档；保留 PERF-01 的历史记录。
-  - **验收**：只使用声明依赖的干净消费项目可编译，相关 extraction 正确性/分配验证通过，并记录精确依赖来源；布局通过不能代替此验证。
-  - **触发条件**：首个 RC 准备前完成；可与诊断收口并行规划。
-  - **来源**：[2026-10-20 审查](change-review-2026-10-20.md)、[UPM 分发规格](../openspec/specs/upm-package-distribution/spec.md)、`com.uidatarender/Runtime/UGUI.Extends/VertexHelperUtils.cs`。
 
 ## P1：性能场景与渲染路径决策
 

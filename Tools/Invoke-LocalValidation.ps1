@@ -7,6 +7,7 @@ param(
     [switch]$SkipStructure,
     [switch]$WithGraphics,
     [switch]$WithCoverage,
+    [string]$TestFilter = "",
     [double]$CoverageThreshold = -1
 )
 
@@ -155,6 +156,7 @@ if (-not $SkipEditMode) {
         "-testResults", $editResultPath,
         "-logFile", $editLogPath
     )
+    if ($TestFilter) { $editArgs += @("-testFilter", $TestFilter) }
 
     if ($WithCoverage) {
         Remove-PathIfExists -Path $coveragePath
@@ -182,6 +184,7 @@ if (-not $SkipPlayMode) {
         "-testResults", $playResultPath,
         "-logFile", $playLogPath
     )
+    if ($TestFilter) { $playArgs += @("-testFilter", $TestFilter) }
     if ($WithGraphics) { $playArgs += "-force-d3d11" }
     else { $playArgs += "-nographics" }
 
@@ -231,7 +234,9 @@ if ($WithCoverage) {
     Write-Host ("  {0}" -f $coveragePath)
 }
 
-$failedSummaries = @($summaries | Where-Object { $_.Result -ne "Passed" -or $_.Failed -gt 0 })
+$failedSummaries = @($summaries | Where-Object {
+    $_.Result -ne "Passed" -or $_.Total -le 0 -or $_.Passed -le 0 -or $_.Failed -gt 0 -or $_.Skipped -gt 0
+})
 if ($failedSummaries.Count -gt 0) {
     $names = ($failedSummaries | ForEach-Object { $_.Name }) -join ", "
     throw "Validation failed: $names"

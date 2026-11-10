@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using System.IO;
 using NUnit.Framework;
 using UnityEngine;
@@ -6,10 +8,188 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
+using UnityEditor;
 #endif
 
 public class TestHudRcPerformanceRunner
 {
+    private void ConfigureRepositoryFixture()
+    {
+#if UNITY_EDITOR
+        runner.repositorySprites = new[] {
+            AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Atlas/Main/01_0040.png"),
+            AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Atlas/Login/02_0041.png"),
+            AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Atlas/IconCtrl/02_11.png") };
+        runner.repositoryFont = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(
+            "Packages/com.uidatarender/Runtime/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
+#else
+        Assert.Ignore("Fixture references are loaded from repository assets in Editor PlayMode.");
+#endif
+        runner.mixedShader = Shader.Find("Hidden/UIE-TMP-SDF");
+        runner.configuration.repositoryResources = true;
+        runner.configuration.quadsPerHolder = 3;
+        runner.configuration.disableBuildMeshDiagnostics = true;
+        runner.configuration.useGenerationBatch = true;
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_021.md
+    [UnityTest]
+    [Category("UT_PERF_021")]
+    public IEnumerator RepositoryFixture_PreservesTextureSlotsTextAndConvergedBucketGeometry()
+    {
+        Create(true); ConfigureRepositoryFixture();
+        runner.configuration.holderCount = 129;
+        runner.configuration.useBucketScheduling = true;
+        HudRcPerformanceRunner.Report reference = null;
+        foreach (var strategy in new[] { HolderBucketStrategy.SingleBucket, HolderBucketStrategy.SameFrame, HolderBucketStrategy.Rotating })
+        {
+            runner.configuration.bucketStrategy = strategy;
+            runner.BeginRun();
+            var live = (List<IUIPrefabHolder>)typeof(HudRcPerformanceRunner).GetField("holders", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(runner);
+            var vertices = new List<Vector3>(); var uv = new List<Vector4>();
+            var colors = new List<Color32>(); var triangles = new List<int>();
+            live[0].Fill(vertices, uv, colors, triangles, Vector3.zero);
+            Assert.AreEqual(36, vertices.Count);
+            for (int i = 0; i < 12; i++) { Assert.AreEqual(i / 4 + 1, uv[i].z); Assert.AreEqual(0, uv[i].w); }
+            for (int i = 12; i < 36; i++) { Assert.AreEqual(0, uv[i].z); Assert.AreEqual(1, uv[i].w); }
+            int bound = 0;
+            foreach (var material in Resources.FindObjectsOfTypeAll<Material>())
+            {
+                if (material.shader != runner.mixedShader || material.GetTexture("_MainTex1") != runner.repositorySprites[0].texture) continue;
+                Assert.AreSame(runner.repositorySprites[1].texture, material.GetTexture("_MainTex2"));
+                Assert.AreSame(runner.repositorySprites[2].texture, material.GetTexture("_MainTex3"));
+                Assert.AreSame(runner.repositoryFont.atlasTexture, material.GetTexture("_MainTex")); bound++;
+            }
+            Assert.Greater(bound, 0);
+            yield return Complete();
+            var report = runner.CreateReport();
+            Assert.AreEqual("repository-sprite3-tmp6-v1", report.resourceProfile);
+            Assert.AreEqual(3, report.preparedSpriteImages);
+            foreach (var frame in report.frames)
+            {
+                Assert.AreEqual(129 * 36, frame.vertices); Assert.AreEqual(129 * 54, frame.indices);
+                Assert.IsFalse(frame.allocationEventsAvailable); Assert.AreEqual(-1, frame.allocationEventBytes);
+            }
+            if (reference != null)
+            {
+                CollectionAssert.AreEqual(reference.bucketOutputChecksums, report.bucketOutputChecksums);
+                for (int i = 0; i < report.bucketRequests.Length; i++)
+                { Assert.AreEqual(reference.bucketRequests[i].holder, report.bucketRequests[i].holder); Assert.AreEqual(reference.bucketRequests[i].requestVersion, report.bucketRequests[i].requestVersion); }
+            }
+            else reference = report;
+            runner.ResetRun(); yield return null;
+            Assert.IsTrue(runner.repositorySprites[0] != null, "Borrowed assets survive cleanup.");
+            Assert.AreEqual(0, root.GetComponentsInChildren<UITMPText>(true).Length);
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_022.md
+    [Test]
+    [Category("UT_PERF_022")]
+    public void RepositoryFixture_RejectsMissingRepeatedResourcesAndGeometryOverflow()
+    {
+        Create(); runner.configuration.repositoryResources = true;
+        runner.configuration.quadsPerHolder = 3;
+        Assert.Throws<System.InvalidOperationException>(() => runner.BeginRun());
+        Assert.AreEqual(0, runner.SampleCount);
+        ConfigureRepositoryFixture();
+        runner.repositorySprites[1] = runner.repositorySprites[0];
+        Assert.Throws<System.InvalidOperationException>(() => runner.BeginRun());
+        runner.configuration.holderCount = 2000;
+        Assert.Throws<System.ArgumentException>(() => runner.configuration.Validate());
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_024.md
+    [UnityTest]
+    [Category("UT_PERF_024")]
+    public IEnumerator RotatingGenerationProfile_PreservesOutputAndClearsIdleSamples()
+    {
+        Create(true); ConfigureRepositoryFixture();
+        runner.configuration.holderCount = 129;
+        runner.configuration.useBucketScheduling = true;
+        runner.configuration.bucketStrategy = HolderBucketStrategy.Rotating;
+        HudRcPerformanceRunner.Report reference = null;
+        foreach (bool enabled in new[] { true, false })
+        {
+            runner.configuration.profileBucketGeneration = enabled;
+            runner.BeginRun(); yield return Complete();
+            var report = runner.CreateReport();
+            bool observed = false, idle = false;
+            foreach (var frame in report.frames)
+            {
+                Assert.AreEqual(Screen.width, frame.screenWidth);
+                Assert.AreEqual(Screen.height, frame.screenHeight);
+                Assert.AreEqual(runner.outputCamera.pixelWidth, frame.cameraPixelWidth);
+                Assert.AreEqual(runner.outputCamera.pixelHeight, frame.cameraPixelHeight);
+                bool available = enabled && frame.completedHolders > 0;
+                Assert.AreEqual(available, frame.buildMeshStagesAvailable);
+                Assert.AreEqual(available ? frame.completedHolders : 0, frame.profiledHolders);
+                Assert.AreEqual(available ? frame.completedHolders : 0, frame.tmpStageSamples);
+                if (available)
+                {
+                    observed = true;
+                    Assert.GreaterOrEqual(frame.tmpCanvasMs, 0);
+                    Assert.GreaterOrEqual(frame.tmpMeshMs, 0);
+                    Assert.GreaterOrEqual(frame.tmpExtractionMs, 0);
+                    Assert.GreaterOrEqual(frame.tmpTransformMs, 0);
+                    Assert.GreaterOrEqual(frame.buildMeshDoGenerateMs, frame.tmpCanvasMs + frame.tmpMeshMs + frame.tmpExtractionMs + frame.tmpTransformMs);
+                }
+                else
+                {
+                    if (frame.completedHolders == 0) idle = true;
+                    Assert.AreEqual(-1, frame.tmpCanvasMs); Assert.AreEqual(-1, frame.tmpMeshMs);
+                    Assert.AreEqual(-1, frame.tmpExtractionMs); Assert.AreEqual(-1, frame.tmpTransformMs);
+                }
+            }
+            Assert.IsTrue(idle); if (enabled) Assert.IsTrue(observed);
+            if (reference == null) reference = report;
+            else
+            {
+                CollectionAssert.AreEqual(reference.bucketOutputChecksums, report.bucketOutputChecksums);
+                Assert.AreEqual(reference.bucketRequests.Length, report.bucketRequests.Length);
+                for (int i = 0; i < report.bucketRequests.Length; i++)
+                {
+                    Assert.AreEqual(reference.bucketRequests[i].holder, report.bucketRequests[i].holder);
+                    Assert.AreEqual(reference.bucketRequests[i].requestFrame, report.bucketRequests[i].requestFrame);
+                    Assert.AreEqual(reference.bucketRequests[i].completedFrame, report.bucketRequests[i].completedFrame);
+                    Assert.AreEqual(reference.bucketRequests[i].completedVersion, report.bucketRequests[i].completedVersion);
+                }
+            }
+            runner.ResetRun();
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_023.md
+    [UnityTest]
+    [Category("UT_PERF_023")]
+    public IEnumerator AllocationEvents_CalibrateCountBytesRejectSaturationAndMeasureHudScope()
+    {
+        using (var counter = new HudRcPerformanceRunner.AllocationEventCounter(64))
+        {
+            Assert.IsTrue(counter.Calibration.available, "Editor positive allocation control must be observed: " + JsonUtility.ToJson(counter.Calibration));
+            counter.Begin(); System.GC.KeepAlive(new byte[8192]); var reading = counter.End();
+            Assert.IsTrue(reading.available); Assert.Greater(reading.events, 0);
+            if (reading.bytesAvailable) Assert.GreaterOrEqual(reading.bytes, 8192);
+            else Assert.AreEqual(-1, reading.bytes, "Marker durations/counts cannot be reported as bytes.");
+        }
+        using (var counter = new HudRcPerformanceRunner.AllocationEventCounter(1))
+        {
+            Assert.IsFalse(counter.Calibration.available); Assert.IsTrue(counter.Calibration.saturated);
+            counter.Begin(); var reading = counter.End(); Assert.IsFalse(reading.available); Assert.AreEqual(-1, reading.bytes);
+        }
+        Create(true); ConfigureRepositoryFixture(); runner.configuration.allocationEvents = true;
+        runner.BeginRun(); yield return Complete();
+        var report = runner.CreateReport(); Assert.IsTrue(report.allocationCalibration.available);
+        bool updated = false;
+        foreach (var frame in report.frames)
+        {
+            Assert.IsTrue(frame.allocationEventsAvailable); Assert.IsFalse(frame.allocationEventsSaturated);
+            if (frame.updatedHolders > 0) updated = true;
+            Assert.AreEqual(0, frame.allocationEventCount, "Warmed representative HUD scope must reuse TMP extraction scratch.");
+        }
+        Assert.IsTrue(updated, "Zero-event measurement must include refreshed holders.");
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Performance/UT_PERF_020.md
     [UnityTest]
     [Category("UT_PERF_020")]

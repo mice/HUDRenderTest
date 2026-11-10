@@ -4,9 +4,17 @@ using UnityEngine.UI;
 
 public static class TMPMeshDataUtility
 {
+    private static VertexHelper _scratch;
+    private static bool _scratchInUse;
+    private static bool _releaseRequested;
+
+    /// <summary>Extracts current geometry on the main thread. Warm nonnested calls reuse scratch.</summary>
     public static void Fill(TMP_TextInfo textInfo, IUIData meshData)
     {
-        using (var helper = new VertexHelper())
+        bool shared = !_scratchInUse;
+        var helper = shared ? (_scratch ?? (_scratch = CreateHelper())) : CreateHelper();
+        if (shared) _scratchInUse = true;
+        try
         {
             var white = (Color32)Color.white;
 
@@ -52,5 +60,60 @@ public static class TMPMeshDataUtility
             meshData.TextureIndex = 0;
             meshData.FillVertex(helper, 1);
         }
+        finally
+        {
+            helper.Clear();
+            if (shared)
+            {
+                _scratchInUse = false;
+                if (_releaseRequested) ReleaseScratch();
+            }
+            else helper.Dispose();
+        }
     }
+
+    private static VertexHelper CreateHelper()
+    {
+        var helper = new VertexHelper();
+        // Initialize every list even for the first empty extraction. Some custom
+        // UGUI CopyIndices implementations require initialized index storage.
+        helper.AddVert(default(UIVertex));
+        helper.Clear();
+        return helper;
+    }
+
+    /// <summary>
+    /// Releases retained extraction scratch on the main thread. Active extraction
+    /// defers release until it exits. UGUI's list pool can retain returned capacity.
+    /// </summary>
+    public static void ReleaseScratch()
+    {
+        if (_scratchInUse)
+        {
+            _releaseRequested = true;
+            return;
+        }
+        _scratch?.Dispose();
+        _scratch = null;
+        _releaseRequested = false;
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetScratch()
+    {
+        ReleaseScratch();
+        Application.quitting -= ReleaseScratch;
+        Application.quitting += ReleaseScratch;
+    }
+
+#if UNITY_EDITOR
+    [UnityEditor.InitializeOnLoadMethod]
+    private static void RegisterScratchCleanup()
+    {
+        UnityEditor.AssemblyReloadEvents.beforeAssemblyReload -= ReleaseScratch;
+        UnityEditor.AssemblyReloadEvents.beforeAssemblyReload += ReleaseScratch;
+        UnityEditor.EditorApplication.quitting -= ReleaseScratch;
+        UnityEditor.EditorApplication.quitting += ReleaseScratch;
+    }
+#endif
 }

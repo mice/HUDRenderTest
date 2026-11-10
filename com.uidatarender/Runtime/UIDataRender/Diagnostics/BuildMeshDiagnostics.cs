@@ -22,6 +22,8 @@ public struct BuildMeshStageTimings
     public SimpleQuadWriteTimings SimpleQuadWrite;
     public double UguiFallbackMs;
     public double TransformMs;
+    public int TmpSamples;
+    public double TmpCanvasMs, TmpMeshMs, TmpExtractionMs, TmpTransformMs;
 
     public void Clear()
     {
@@ -36,6 +38,8 @@ public struct BuildMeshStageTimings
         SimpleQuadWrite.Clear();
         UguiFallbackMs = 0;
         TransformMs = 0;
+        TmpSamples = 0;
+        TmpCanvasMs = TmpMeshMs = TmpExtractionMs = TmpTransformMs = 0;
     }
 }
 
@@ -73,4 +77,10 @@ public struct SimpleQuadWriteTimings
 public interface ISimpleQuadWriteStageSource
 {
     SimpleQuadWriteTimings LastSimpleQuadWriteTimings { get; }
+}
+
+public struct TmpGenerationTimings
+{
+    public int Samples;
+    public double CanvasMs, MeshMs, ExtractionMs, TransformMs;
 }

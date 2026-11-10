@@ -8,6 +8,162 @@ using UnityEngine.UI;
 
 public class TestVertexHelperUtils
 {
+    [TearDown]
+    public void ReleaseFallbackScratch()
+    {
+        VertexHelperUtils.ReleaseIndexScratch();
+    }
+
+    // Explicit static calls exercise the stock fallback even with custom UGUI installed.
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_031.md
+    [Test]
+    [Category("UT_MESH_031")]
+    public void StockCopyIndices_PreservesDistinctIndexedIdentityAndOffsets()
+    {
+        var destination = new int[10];
+        for (var i = 0; i < destination.Length; i++) destination[i] = -1;
+        using (var helper = new VertexHelper())
+        {
+            // Vertices 0 and 3 have identical channels; vertex 4 is unreferenced.
+            helper.AddVert(Vector3.zero, Color.white, Vector2.zero);
+            helper.AddVert(Vector3.right, Color.white, Vector2.right);
+            helper.AddVert(Vector3.up, Color.white, Vector2.up);
+            helper.AddVert(Vector3.zero, Color.white, Vector2.zero);
+            helper.AddVert(Vector3.one, Color.white, Vector2.one);
+            helper.AddTriangle(3, 1, 2);
+            helper.AddTriangle(2, 1, 0);
+
+            VertexHelperUtils.CopyIndices(helper, destination, 2, 5);
+            CollectionAssert.AreEqual(new[] { -1, -1, 8, 6, 7, 7, 6, 5, -1, -1 }, destination);
+
+            // Shrinking a populated stream must not retain the previous triangles.
+            helper.Clear();
+            helper.AddVert(Vector3.zero, Color.white, Vector2.zero);
+            helper.AddVert(Vector3.right, Color.white, Vector2.right);
+            helper.AddVert(Vector3.up, Color.white, Vector2.up);
+            helper.AddTriangle(2, 0, 1);
+            for (var i = 0; i < destination.Length; i++) destination[i] = -1;
+            VertexHelperUtils.CopyIndices(helper, destination, 1, -1);
+            CollectionAssert.AreEqual(new[] { -1, 1, -1, 0, -1, -1, -1, -1, -1, -1 }, destination);
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_032.md
+    [Test]
+    [Category("UT_MESH_032")]
+    public void StockCopyIndices_RejectsInvalidRangesBeforeWriting()
+    {
+        var destination = new[] { -1, -1, -1, -1, -1, -1 };
+        using (var helper = CreateQuad())
+        {
+            Assert.Throws<ArgumentNullException>(() => VertexHelperUtils.CopyIndices(null, destination));
+            Assert.Throws<ArgumentNullException>(() => VertexHelperUtils.CopyIndices(helper, null));
+            Assert.Throws<ArgumentOutOfRangeException>(() => VertexHelperUtils.CopyIndices(helper, new int[5]));
+            Assert.Throws<ArgumentOutOfRangeException>(() => VertexHelperUtils.CopyIndices(helper, destination, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => VertexHelperUtils.CopyIndices(helper, destination, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => VertexHelperUtils.CopyIndices(helper, destination, int.MaxValue));
+            CollectionAssert.AreEqual(new[] { -1, -1, -1, -1, -1, -1 }, destination);
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_033.md
+    [Test]
+    [Category("UT_MESH_033")]
+    public void StockCopyIndices_EmptyStreamAfterPopulatedStreamWritesNothing()
+    {
+        var destination = new[] { -1, -1, -1, -1, -1, -1 };
+        using (var helper = CreateQuad())
+        {
+            VertexHelperUtils.CopyIndices(helper, destination);
+            helper.Clear();
+            for (var i = 0; i < destination.Length; i++) destination[i] = -1;
+            VertexHelperUtils.CopyIndices(helper, destination);
+            VertexHelperUtils.CopyIndices(helper, destination, destination.Length);
+            VertexHelperUtils.CopyIndices(helper, Array.Empty<int>());
+            CollectionAssert.AreEqual(new[] { -1, -1, -1, -1, -1, -1 }, destination);
+            Assert.Throws<ArgumentOutOfRangeException>(() => VertexHelperUtils.CopyIndices(helper, destination, int.MaxValue));
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_034.md
+    [Test]
+    [Category("UT_MESH_034")]
+    public void StockCopyIndices_AfterWarmupDoesNotAllocateManagedMemory()
+    {
+        var destination = new int[10];
+        using (var helper = CreateDetailedQuad())
+        {
+            for (var i = 0; i < 32; i++)
+                VertexHelperUtils.CopyIndices(helper, destination, 2, 5);
+
+            var allocations = MeasureAllocation(() =>
+            {
+                for (var i = 0; i < 10000; i++)
+                    VertexHelperUtils.CopyIndices(helper, destination, 2, 5);
+            });
+
+            Assert.AreEqual(0, allocations, "Stock fallback allocated managed memory after warmup.");
+            CollectionAssert.AreEqual(new[] { 0, 0, 5, 6, 7, 7, 8, 5, 0, 0 }, destination);
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_035.md
+    [Test]
+    [Category("UT_MESH_035")]
+    public void StockCopyIndices_ReleaseDestroysScratchAndNextCallRecreatesIt()
+    {
+        VertexHelperUtils.ReleaseIndexScratch();
+        var destination = new int[6];
+        using (var helper = CreateQuad())
+        {
+            VertexHelperUtils.CopyIndices(helper, destination);
+            var scratch = Array.FindAll(Resources.FindObjectsOfTypeAll<Mesh>(),
+                mesh => mesh.name == "UIData.VertexHelper.IndexScratch");
+            Assert.AreEqual(1, scratch.Length);
+            Assert.AreEqual(HideFlags.HideAndDontSave, scratch[0].hideFlags);
+
+            VertexHelperUtils.ReleaseIndexScratch();
+            VertexHelperUtils.ReleaseIndexScratch();
+            Assert.IsTrue(scratch[0] == null, "EditMode cleanup must destroy the native Mesh.");
+
+            VertexHelperUtils.CopyIndices(helper, destination);
+            var recreated = Array.FindAll(Resources.FindObjectsOfTypeAll<Mesh>(),
+                mesh => mesh.name == "UIData.VertexHelper.IndexScratch");
+            Assert.AreEqual(1, recreated.Length);
+            Assert.IsFalse(ReferenceEquals(scratch[0], recreated[0]));
+            CollectionAssert.AreEqual(new[] { 0, 1, 2, 2, 3, 0 }, destination);
+        }
+    }
+
+    // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_036.md
+    [Test]
+    [Category("UT_MESH_036")]
+    public void StockCopyIndices_FillMeshVertexLimitFailsWithoutWriting()
+    {
+        using (var helper = new VertexHelper())
+        {
+            for (var i = 0; i < 64999; i++)
+                helper.AddVert(new Vector3(i, 0, 0), Color.white, Vector2.zero);
+            helper.AddTriangle(64998, 1, 0);
+            var destination = new int[3];
+            VertexHelperUtils.CopyIndices(helper, destination);
+            CollectionAssert.AreEqual(new[] { 64998, 1, 0 }, destination);
+
+            helper.AddVert(Vector3.zero, Color.white, Vector2.zero);
+            for (var i = 0; i < destination.Length; i++) destination[i] = -1;
+            Assert.Throws<ArgumentException>(() => VertexHelperUtils.CopyIndices(helper, destination));
+            CollectionAssert.AreEqual(new[] { -1, -1, -1 }, destination);
+
+            // A rejected helper must not poison the shared scratch for later calls.
+            using (var quad = CreateQuad())
+            {
+                var recovered = new int[6];
+                VertexHelperUtils.CopyIndices(quad, recovered);
+                CollectionAssert.AreEqual(new[] { 0, 1, 2, 2, 3, 0 }, recovered);
+            }
+        }
+    }
+
     // TestRecord: Documentation~/Testing/Unit/Mesh/UT_MESH_019.md
     [Test]
     [Category("UT_MESH_019")]

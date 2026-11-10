@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using TMPro;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.SceneManagement;
@@ -127,12 +130,16 @@ public static class HudRcSceneBuilder
                 runner.configuration.bucketStrategy = (HolderBucketStrategy)Enum.Parse(typeof(HolderBucketStrategy), bucketStrategy, true);
             runner.configuration.spriteBacked = ReadBool("-hudRcSpriteBacked", false);
             runner.configuration.forceUguiFallback = ReadBool("-hudRcForceUguiFallback", false);
+            runner.configuration.repositoryResources = ReadBool("-hudRcRepositoryResources", false);
+            runner.configuration.allocationEvents = ReadBool("-hudRcAllocationEvents", false);
             runner.configuration.holderCount = ReadInt("-hudRcCount", runner.configuration.holderCount);
             runner.configuration.sampleFrames = ReadInt("-hudRcSamples", runner.configuration.sampleFrames);
             runner.configuration.warmupFrames = ReadInt("-hudRcWarmup", runner.configuration.warmupFrames);
             runner.configuration.targetFrameRate = ReadInt("-hudRcFrameRate", runner.configuration.targetFrameRate);
             runner.configuration.Validate();
             SetSourceMetadata(runner);
+            // Include references for optional request-file profiles without editing the committed scene.
+            ConfigureRepositoryResources(runner);
             temporaryScenePath = "Assets/HudRcBuild_" + Guid.NewGuid().ToString("N") + ".unity";
             if (!EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), temporaryScenePath, true))
                 throw new IOException("Could not save the temporary HUD RC build scene.");
@@ -251,5 +258,42 @@ public static class HudRcSceneBuilder
         runner.sourceFingerprint = Environment.GetEnvironmentVariable("HUD_RC_SOURCE_FINGERPRINT") ?? "unknown";
         var package = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(UIMeshData).Assembly);
         runner.packageVersion = package != null ? package.version : "unknown";
+        var ugui = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(UnityEngine.UI.VertexHelper).Assembly);
+        string helper = ugui == null ? null : Path.Combine(ugui.resolvedPath, "Runtime/UI/Core/Utility/VertexHelper.cs");
+        runner.uguiSourceSha256 = helper != null && File.Exists(helper) ? HashFile(helper) : "unknown";
+    }
+
+    public static void ConfigureRepositoryResources(HudRcPerformanceRunner runner)
+    {
+        string[] paths = {
+            "Assets/Art/Atlas/Main/01_0040.png", "Assets/Art/Atlas/Login/02_0041.png",
+            "Assets/Art/Atlas/IconCtrl/02_11.png",
+            "Packages/com.uidatarender/Runtime/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset",
+            "Packages/com.uidatarender/Runtime/Shaders/UIE-TMP-SDF.shader"
+        };
+        runner.repositorySprites = new Sprite[3];
+        var inventory = new List<HudRcPerformanceRunner.ResourceIdentity>();
+        for (int i = 0; i < paths.Length; i++)
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(paths[i]);
+            if (asset == null) throw new InvalidOperationException("Missing fixture resource: " + paths[i]);
+            if (i < 3) runner.repositorySprites[i] = AssetDatabase.LoadAssetAtPath<Sprite>(paths[i]);
+            else if (i == 3) runner.repositoryFont = (TMP_FontAsset)asset;
+            else runner.mixedShader = (Shader)asset;
+            string absolute = paths[i].StartsWith("Packages/")
+                ? Path.Combine(UnityEditor.PackageManager.PackageInfo.FindForAssetPath(paths[i]).resolvedPath,
+                    paths[i].Substring("Packages/com.uidatarender/".Length)) : Path.GetFullPath(paths[i]);
+            var texture = i < 3 ? runner.repositorySprites[i].texture : i == 3 ? runner.repositoryFont.atlasTexture : null;
+            inventory.Add(new HudRcPerformanceRunner.ResourceIdentity { path = paths[i], sha256 = HashFile(absolute),
+                metaSha256 = HashFile(absolute + ".meta"), kind = i < 3 ? "Sprite" : i == 3 ? "TMP primary atlas" : "Shader",
+                width = texture != null ? texture.width : 0, height = texture != null ? texture.height : 0 });
+        }
+        runner.resourceInventory = inventory.ToArray();
+    }
+
+    private static string HashFile(string path)
+    {
+        using (var stream = File.OpenRead(path))
+        using (var hash = SHA256.Create()) return BitConverter.ToString(hash.ComputeHash(stream)).Replace("-", "");
     }
 }

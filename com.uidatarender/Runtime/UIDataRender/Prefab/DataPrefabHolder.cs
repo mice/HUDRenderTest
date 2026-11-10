@@ -85,6 +85,15 @@ public class DataPrefabHolder<T> : IUIPrefabHolder
             {
                 var generateMs = BuildMeshDiagnostics.Milliseconds(Stopwatch.GetTimestamp() - initStart);
                 timings.DoGenerateMs += generateMs;
+                if (draws[i] is UITMPText tmp)
+                {
+                    var tmpTiming = tmp.LastGenerationStageTimings;
+                    timings.TmpSamples += tmpTiming.Samples;
+                    timings.TmpCanvasMs += tmpTiming.CanvasMs;
+                    timings.TmpMeshMs += tmpTiming.MeshMs;
+                    timings.TmpExtractionMs += tmpTiming.ExtractionMs;
+                    timings.TmpTransformMs += tmpTiming.TransformMs;
+                }
                 if (draws[i] is UIImage image)
                 {
                     var imageTimings = image.LastGenerationStageTimings;

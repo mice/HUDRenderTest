@@ -13,6 +13,8 @@ param(
     [ValidateSet('Legacy','SingleBucket','SameFrame','Rotating')][string]$BucketStrategy = 'Legacy',
     [switch]$SpriteBacked,
     [switch]$ForceUguiFallback,
+    [switch]$RepositoryResources,
+    [switch]$AllocationEvents,
     [ValidateRange(1, 4096)][int]$HolderCount = 256,
     [ValidateRange(2, 10000)][int]$SampleFrames = 180,
     [ValidateRange(2, 10000)][int]$WarmupFrames = 60,
@@ -52,6 +54,8 @@ if ($Action -eq 'Build') {
     if ($BucketStrategy -ne 'Legacy') { $args += @('-hudRcBucketStrategy', $BucketStrategy) }
     if ($SpriteBacked) { $args += '-hudRcSpriteBacked' }
     if ($ForceUguiFallback) { $args += '-hudRcForceUguiFallback' }
+    if ($RepositoryResources) { $args += '-hudRcRepositoryResources' }
+    if ($AllocationEvents) { $args += '-hudRcAllocationEvents' }
     $process = Start-Process -FilePath $UnityExe -ArgumentList $args -WindowStyle Hidden -PassThru
     if (-not $process.WaitForExit($TimeoutSeconds * 1000)) { Stop-Process -Id $process.Id -Force; throw "Unity Android build timed out. Log: $logPath" }
     if ($process.ExitCode -ne 0) { throw "Unity Android build failed ($($process.ExitCode)). Log: $logPath" }

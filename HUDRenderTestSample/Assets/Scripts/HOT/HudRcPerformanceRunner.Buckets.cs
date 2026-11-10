@@ -14,6 +14,7 @@ public sealed partial class HudRcPerformanceRunner
         public float Width;
         public Vector3 Position;
         public Color EvenColor, OddColor;
+        public int TextVariant;
     }
 
     [Serializable]
@@ -34,7 +35,10 @@ public sealed partial class HudRcPerformanceRunner
     {
         private readonly HudRcPerformanceRunner _owner;
         private int _opened;
-        public int ScopeCount;
+        public int ScopeCount, ProfiledHolders;
+        public BuildMeshStageTimings Stages;
+        public double BuildMs;
+        public void ResetProfile() { ProfiledHolders = 0; Stages = default; BuildMs = 0; }
         public HudStateApplier(HudRcPerformanceRunner owner) { _owner = owner; }
         public void BeginBatch()
         {
@@ -52,7 +56,23 @@ public sealed partial class HudRcPerformanceRunner
                 _owner.images[i].rectTransform.sizeDelta = new Vector2(state.Width, 3);
                 _owner.images[i].color = i % 2 == 0 ? state.EvenColor : state.OddColor;
             }
-            holder.BuildMesh(_owner.draws);
+            _owner.SetWorkloadText(state.TextVariant);
+            long start = BuildMeshDiagnostics.Enabled ? Stopwatch.GetTimestamp() : 0;
+            _owner.BuildWorkloadHolder(holder);
+            if (BuildMeshDiagnostics.Enabled && holder is IBuildMeshStageSource source)
+            {
+                BuildMs += Milliseconds(Stopwatch.GetTimestamp() - start);
+                var stage = source.LastBuildMeshTimings;
+                ProfiledHolders++;
+                Stages.SetupMs += stage.SetupMs; Stages.MeshDataInitMs += stage.MeshDataInitMs;
+                Stages.DrawDispatchMs += stage.DrawDispatchMs; Stages.DoGenerateMs += stage.DoGenerateMs;
+                Stages.SimplePathMs += stage.SimplePathMs; Stages.UguiFallbackMs += stage.UguiFallbackMs;
+                Stages.TransformMs += stage.TransformMs; Stages.SimpleSpriteDataMs += stage.SimpleSpriteDataMs;
+                Stages.SimpleDrawingDimensionsMs += stage.SimpleDrawingDimensionsMs; Stages.SimpleMeshWriteMs += stage.SimpleMeshWriteMs;
+                Stages.TmpSamples += stage.TmpSamples; Stages.TmpCanvasMs += stage.TmpCanvasMs;
+                Stages.TmpMeshMs += stage.TmpMeshMs; Stages.TmpExtractionMs += stage.TmpExtractionMs;
+                Stages.TmpTransformMs += stage.TmpTransformMs;
+            }
             return state.Position;
         }
         public void EndBatch()
@@ -146,16 +166,19 @@ public sealed partial class HudRcPerformanceRunner
         bool drain = sampling && frame >= active.sampleFrames;
         State = sampling ? RunState.Sampling : RunState.Warming;
         bucketFrame++;
+        allocationCounter?.Begin();
         long bytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() : 0;
         long updateStart = Stopwatch.GetTimestamp();
         int count = drain ? 0 : sampling ? PlannedUpdates((Workload)mode, frame, active) : active.holderCount;
         int start = (int)(((long)frame * Math.Max(1, count) + (uint)active.seed) % active.holderCount);
         int checksum = 0;
         bucketApplier.ScopeCount = 0;
+        bucketApplier.ResetProfile();
         for (int j = 0; j < count; j++)
         {
             int index = (start + j) % active.holderCount;
             bucketStates[index].Width = 12 + ((index + frame + (uint)active.seed) % 11);
+            bucketStates[index].TextVariant = (int)((index + frame + (uint)active.seed) % 11);
             long version = bucketScheduler.Submit(bucketHandles[index], in bucketStates[index], bucketFrame);
             checksum = unchecked(checksum * 31 + index + 1);
             if (sampling)
@@ -195,9 +218,14 @@ public sealed partial class HudRcPerformanceRunner
         UpdateBucketGeometryCounts();
         long end = Stopwatch.GetTimestamp();
         long measuredBytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() - bytes : -1;
+        var allocation = allocationCounter != null ? allocationCounter.End() : AllocationReading.Unavailable;
         if (sampling)
         {
             double updateMs = Milliseconds(updateEnd - updateStart);
+            bool stagesAvailable = active.profileBucketGeneration && result.CompletedHolders > 0 &&
+                bucketApplier.ProfiledHolders == result.CompletedHolders &&
+                (!active.repositoryResources || bucketApplier.Stages.TmpSamples == result.CompletedHolders);
+            var stage = bucketApplier.Stages;
             pending = new FrameSample
             {
                 unityFrame = Time.frameCount, sampleFrame = frame, mode = mode,
@@ -214,14 +242,24 @@ public sealed partial class HudRcPerformanceRunner
                 runnerBookkeepingMs = Milliseconds(updateStart - advanceStart), hudCpuMs = Milliseconds(end - advanceStart),
                 generationBytes = -1, mergeBytes = -1, measuredThreadBytes = measuredBytes,
                 scopedAllocationAvailable = scopedAllocationAvailable, generationBatchCount = bucketApplier.ScopeCount,
-                buildMeshStagesAvailable = false, buildMeshWriteAvailable = false,
-                holderSelectionMs = -1, buildMeshMs = -1, buildMeshSetupMs = -1, buildMeshDataInitMs = -1,
-                buildMeshDispatchMs = -1, buildMeshDoGenerateMs = -1, buildMeshSimplePathMs = -1,
-                buildMeshUguiFallbackMs = -1, buildMeshTransformMs = -1, buildMeshSpriteDataMs = -1,
-                buildMeshDrawingDimensionsMs = -1, buildMeshMeshWriteMs = -1, buildMeshWriteStorageMs = -1,
+                buildMeshStagesAvailable = stagesAvailable, buildMeshWriteAvailable = false,
+                profiledHolders = bucketApplier.ProfiledHolders, tmpStageSamples = stage.TmpSamples,
+                tmpCanvasMs = stagesAvailable && stage.TmpSamples > 0 ? stage.TmpCanvasMs : -1,
+                tmpMeshMs = stagesAvailable && stage.TmpSamples > 0 ? stage.TmpMeshMs : -1,
+                tmpExtractionMs = stagesAvailable && stage.TmpSamples > 0 ? stage.TmpExtractionMs : -1,
+                tmpTransformMs = stagesAvailable && stage.TmpSamples > 0 ? stage.TmpTransformMs : -1,
+                screenWidth = Screen.width, screenHeight = Screen.height,
+                cameraPixelWidth = outputCamera.pixelWidth, cameraPixelHeight = outputCamera.pixelHeight,
+                holderSelectionMs = -1, buildMeshMs = stagesAvailable ? bucketApplier.BuildMs : -1,
+                buildMeshSetupMs = stagesAvailable ? stage.SetupMs : -1, buildMeshDataInitMs = stagesAvailable ? stage.MeshDataInitMs : -1,
+                buildMeshDispatchMs = stagesAvailable ? stage.DrawDispatchMs : -1, buildMeshDoGenerateMs = stagesAvailable ? stage.DoGenerateMs : -1,
+                buildMeshSimplePathMs = stagesAvailable ? stage.SimplePathMs : -1, buildMeshUguiFallbackMs = stagesAvailable ? stage.UguiFallbackMs : -1,
+                buildMeshTransformMs = stagesAvailable ? stage.TransformMs : -1, buildMeshSpriteDataMs = stagesAvailable ? stage.SimpleSpriteDataMs : -1,
+                buildMeshDrawingDimensionsMs = stagesAvailable ? stage.SimpleDrawingDimensionsMs : -1, buildMeshMeshWriteMs = stagesAvailable ? stage.SimpleMeshWriteMs : -1, buildMeshWriteStorageMs = -1,
                 buildMeshWriteVertexMs = -1, buildMeshWriteUvMs = -1, buildMeshWriteColorMs = -1, buildMeshWriteIndexMs = -1,
                 mergePlanMs = -1, mergeFillMs = -1, meshUploadMs = -1
             };
+            FinishAllocationScope(ref pending, allocation);
             hasPending = true;
         }
         modeFrame++;

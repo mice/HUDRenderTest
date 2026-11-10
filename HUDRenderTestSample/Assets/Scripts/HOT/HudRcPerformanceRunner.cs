@@ -34,11 +34,15 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
         public bool useSlim;
         public bool profileQuadWrites;
         public bool disableBuildMeshDiagnostics;
+        public bool profileBucketGeneration;
         public bool useGenerationBatch;
         public bool useBucketScheduling;
         public HolderBucketStrategy bucketStrategy = HolderBucketStrategy.Rotating;
         public bool spriteBacked;
         public bool forceUguiFallback;
+        public bool repositoryResources;
+        public bool allocationEvents;
+        public int allocationEventCapacity = 16384;
         public int targetFrameRate = -1;
         public Configuration Copy() => (Configuration)MemberwiseClone();
         public void Validate()
@@ -46,7 +50,12 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             if (useBucketScheduling && (holderCount > HolderBucketScheduler<HudHolderState>.MaximumHolders ||
                 !disableBuildMeshDiagnostics || !useGenerationBatch || spriteBacked || forceUguiFallback ||
                 !Enum.IsDefined(typeof(HolderBucketStrategy), bucketStrategy)))
-                throw new ArgumentException("Bucket comparison requires <=256 null-Sprite Simple holders, query reuse and disabled stage diagnostics.");
+                throw new ArgumentException("Bucket comparison requires <=256 Simple holders, query reuse and disabled stage diagnostics.");
+            if (repositoryResources && (quadsPerHolder != 3 || spriteBacked || forceUguiFallback ||
+                (long)holderCount * 9 * 4 > 60000))
+                throw new ArgumentException("Repository fixture requires three images and six visible primary-atlas glyphs per holder, within 60000 vertices.");
+            if (allocationEventCapacity < 1 || allocationEventCapacity > 65536)
+                throw new ArgumentOutOfRangeException(nameof(allocationEventCapacity));
             if (holderCount < 1 || holderCount > 4096 || quadsPerHolder < 1 || quadsPerHolder > 16 ||
                 (long)holderCount * quadsPerHolder * 4 > 60000 || partialPercent < 1 || partialPercent > 100 ||
                 burstEveryFrames < 1 || warmupFrames < 2 || sampleFrames < 2 || sampleFrames > 10000 ||
@@ -68,10 +77,15 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
         public int buildMeshWriteSamples;
         public bool buildMeshWriteAvailable;
         public bool buildMeshStagesAvailable;
+        public int profiledHolders, tmpStageSamples;
+        public double tmpCanvasMs, tmpMeshMs, tmpExtractionMs, tmpTransformMs;
+        public int screenWidth, screenHeight, cameraPixelWidth, cameraPixelHeight;
         public int generationBatchCount;
         public double mergePlanMs, mergeFillMs, meshUploadMs;
         public long generationBytes, mergeBytes, measuredThreadBytes, frameGcBytes;
         public bool mainThreadAvailable, frameGcAvailable, scopedAllocationAvailable;
+        public bool allocationEventsAvailable, allocationEventsSaturated, allocationEventBytesAvailable;
+        public long allocationEventBytes, allocationEventCount;
         public int selectionChecksum;
         public bool bucketScheduling, drainFrame, barrierFrame;
         public int requestedHolders, completedHolders, pendingHolders, logicalBuckets, refreshedBuckets;
@@ -97,6 +111,10 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
         public long quadWriteTimestampFrequency;
         public string utc, unityVersion, os, cpu, graphics, executionMode, scriptingBackend;
         public string commit, sourceStatus, sourceFingerprint, packageVersion;
+        public string buildGuid, buildType, resourceProfile, uguiSourceSha256, requestId, requestSha256;
+        public bool uguiDirectCopyIndices;
+        public ResourceIdentity[] resources;
+        public AllocationReading allocationCalibration;
         public string measurementNotes;
         public int preparedSpriteImages, preparedFastPathImages;
         public Configuration configuration;
@@ -120,6 +138,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
     public string sourceStatus = "unknown";
     public string sourceFingerprint = "unknown";
     public string packageVersion = "unknown";
+    public string uguiSourceSha256 = "unknown";
 
     public RunState State { get; private set; }
     public Workload Mode => (Workload)mode;
@@ -154,13 +173,14 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
     private long previousUpdate;
     private ProfilerRecorder mainThread, frameGc;
 
-    private void Start() { if (autoRun) BeginRun(); }
+    private void Start() { if (autoRun) { LoadRunRequest(); BeginRun(); } }
 
     [ContextMenu("Run HUD RC suite")]
     public void BeginRun()
     {
         ResetRun();
         configuration.Validate();
+        ValidateResources(configuration);
         if (outputCamera == null || batchShader == null)
             throw new InvalidOperationException("Scene camera and batch shader must be bound.");
         active = configuration.Copy();
@@ -172,8 +192,8 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
         oldVSync = QualitySettings.vSyncCount;
         oldTargetRate = Application.targetFrameRate;
         savedSettings = true;
-        BuildMeshDiagnostics.Enabled = !active.disableBuildMeshDiagnostics;
-        BuildMeshDiagnostics.ProfileSimpleQuadWrites = active.profileQuadWrites && !active.disableBuildMeshDiagnostics;
+        BuildMeshDiagnostics.Enabled = active.useBucketScheduling ? active.profileBucketGeneration : !active.disableBuildMeshDiagnostics;
+        BuildMeshDiagnostics.ProfileSimpleQuadWrites = active.profileQuadWrites && BuildMeshDiagnostics.Enabled;
         UIImage.EnableSimpleMeshFastPath = !active.forceUguiFallback;
         Time.timeScale = 1f;
         QualitySettings.vSyncCount = 0;
@@ -194,12 +214,12 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             PrepareHolders();
             createMaterial = () =>
             {
-                var material = new Material(batchShader);
+                var material = new Material(active.repositoryResources ? mixedShader : batchShader);
                 material.SetTexture("_MainTex0", Texture2D.whiteTexture);
                 material.renderQueue = 3000;
                 return material;
             };
-            bindTextures = (material, batch) => material.SetTexture("_MainTex0", Texture2D.whiteTexture);
+            bindTextures = BindWorkloadTextures;
             if (active.useBucketScheduling) PrepareBuckets();
             else
             {
@@ -208,6 +228,8 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             }
             mainThread = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 1);
             frameGc = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame", 1);
+            allocationCounter = active.allocationEvents ? new AllocationEventCounter(active.allocationEventCapacity) : null;
+            allocationCalibration = allocationCounter != null ? allocationCounter.Calibration : AllocationReading.Unavailable;
             previousUpdate = Stopwatch.GetTimestamp();
             State = RunState.Warming;
         }
@@ -231,7 +253,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             workloadSprite = Sprite.Create(Texture2D.whiteTexture,
                 new Rect(0, 0, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height),
                 new Vector2(.5f, .5f), 1f, 0, SpriteMeshType.FullRect);
-        draws = new IUIDrawTarget[images.Length];
+        draws = new IUIDrawTarget[images.Length + (active.repositoryResources ? 1 : 0)];
         generationBatches = new UIImage.GenerationBatch[images.Length];
         for (int i = 0; i < images.Length; i++)
         {
@@ -242,11 +264,12 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             image.rectTransform.anchoredPosition = new Vector2(0, i * 4);
             image.color = i % 2 == 0 ? Color.green : Color.cyan;
             image.raycastTarget = false;
-            image.sprite = workloadSprite;
+            image.sprite = active.repositoryResources ? repositorySprites[i] : workloadSprite;
             images[i] = image;
             draws[i] = image;
             owner.targets.Add(go.transform);
         }
+        PrepareWorkloadText(owner);
         int columns = Mathf.CeilToInt(Mathf.Sqrt(active.holderCount));
         for (int i = 0; i < active.holderCount; i++)
         {
@@ -254,7 +277,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
                 ? (IUIPrefabHolder)new DataPrefabHolder<UIMeshDataX>() : new DataPrefabHolder<UIMeshData>();
             holder.SetTarget(owner);
             // Direct public holder API avoids registering temporary owners in the global owner registry.
-            holder.BuildMesh(draws);
+            BuildWorkloadHolder(holder);
             holders.Add(holder);
             positions.Add(holder, new Vector3((i % columns - columns / 2f) * 28, (i / columns - columns / 2f) * 18, 0));
         }
@@ -335,6 +358,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
         // Warm every holder/mesh before each measurement mode, including the static baseline.
         int count = sampling ? PlannedUpdates((Workload)mode, frame, active) : active.holderCount;
         int start = (int)(((long)frame * Math.Max(1, count) + (uint)active.seed) % active.holderCount);
+        allocationCounter?.Begin();
         long bytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() : 0;
         long selectionStart = Stopwatch.GetTimestamp();
         int checksum = 0;
@@ -376,8 +400,9 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
                         images[k].rectTransform.sizeDelta = new Vector2(width, 3);
                     if (!active.disableBuildMeshDiagnostics) selectionTicks += Stopwatch.GetTimestamp() - selectionItemStart;
                     long buildStart = active.disableBuildMeshDiagnostics ? 0 : Stopwatch.GetTimestamp();
+                    SetWorkloadText((int)((index + frame + (uint)active.seed) % 11));
                     using (BuildMeshMarker.Auto())
-                        holders[index].BuildMesh(draws);
+                        BuildWorkloadHolder(holders[index]);
                     if (!active.disableBuildMeshDiagnostics && holders[index] is IBuildMeshStageSource stageSource)
                     {
                         var stage = stageSource.LastBuildMeshTimings;
@@ -423,6 +448,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             renderer.Draw(Matrix4x4.identity, gameObject.layer, outputCamera);
         long afterDraw = Stopwatch.GetTimestamp();
         long measuredBytes = scopedAllocationAvailable ? GC.GetAllocatedBytesForCurrentThread() - bytes : -1;
+        var allocation = allocationCounter != null ? allocationCounter.End() : AllocationReading.Unavailable;
         if (sampling)
         {
             bool stagesAvailable = !active.disableBuildMeshDiagnostics;
@@ -455,6 +481,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
                 mergeBytes = scopedAllocationAvailable ? mergeBytes : -1, measuredThreadBytes = scopedAllocationAvailable ? measuredBytes : -1,
                 scopedAllocationAvailable = scopedAllocationAvailable, selectionChecksum = checksum
             };
+            FinishAllocationScope(ref pending, allocation);
             hasPending = true;
         }
         modeFrame++;
@@ -483,6 +510,11 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             scriptingBackend = "Mono",
 #endif
             commit = sourceCommit, sourceStatus = sourceStatus, sourceFingerprint = sourceFingerprint, packageVersion = packageVersion,
+            buildGuid = Application.buildGUID, buildType = Application.isEditor ? "Editor" : Debug.isDebugBuild ? "Development" : "Release",
+            resourceProfile = active.repositoryResources ? "repository-sprite3-tmp6-v1" : active.spriteBacked ? "white-sprite" : "historical-null-sprite",
+            resources = resourceInventory, uguiSourceSha256 = uguiSourceSha256,
+            uguiDirectCopyIndices = typeof(VertexHelper).GetMethod("CopyIndices", new[] { typeof(int[]), typeof(int), typeof(int) }) != null,
+            requestId = runRequestId, requestSha256 = runRequestSha256, allocationCalibration = allocationCalibration,
             quadWriteTimestampFrequency = Stopwatch.Frequency,
             configuration = active.Copy(), frames = (FrameSample[])samples.Clone(),
             bucketRequests = active.useBucketScheduling ? bucketRequests : null,
@@ -493,11 +525,12 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             bucketOwnedMaterials = bucketStorage.Materials, bucketOwnedUnityObjectBytes = bucketStorage.UnityObjectBytes,
             bucketOwnedUnityObjectBytesAvailable = active.useBucketScheduling && bucketStorage.UnityObjectBytes > 0,
             preparedSpriteImages = preparedSpriteImages, preparedFastPathImages = preparedFastPathImages,
-            measurementNotes = "generation=UIImage.DoGenerate + UIMeshData/ X.FillVertex + transforms; not extraction-only. " +
+            measurementNotes = "generation=UIImage/UITMPText.DoGenerate + UIMeshData/ X.FillVertex + transforms; not extraction-only. " +
+                "Opt-in allocation events measure only the bounded current-thread HUD scope; counts require a positive control and reject saturated storage. Bytes additionally require a Bytes unit and a >=4096 byte control; marker durations are never allocation bytes. Diagnostic timing is instrumented. " +
                 "merge=production HolderBatchRenderer.Rebuild including its allocations. measuredThreadBytes includes generation, merge, draw submission. " +
                 "frame interval=Update-to-Update wall time including editor/pacing; Main Thread and frame GC are previous-frame profiler counters aligned by Unity frame. " +
                 "Scoped allocation API is calibrated with a known allocation before measurement; failure marks scoped bytes unavailable. Unavailable counters use flags and -1, CSV uses unavailable. No whole-application zero-GC claim. " +
-                "disableBuildMeshDiagnostics removes per-holder and Image stage timestamps/aggregation; outer generation+merge timers remain. Disabled stage fields are unavailable (-1). " +
+                "disableBuildMeshDiagnostics removes legacy per-holder and Image stage timestamps/aggregation; rotating profileBucketGeneration separately opts into completed-holder/TMP stages. Outer generation+merge timers remain. Disabled stage fields are unavailable (-1). " +
                 "Quad write substages use opt-in Stopwatch.GetTimestamp reads; timer/marker overhead is included in enclosing timings. " +
                 "Compare profileQuadWrites on/off with identical workload and repeat runs before attributing performance gains. " +
                 "buildMeshWriteAvailable requires a recorded write for every expected quad; disabled, idle or incomplete samples are unavailable, not zero cost."
@@ -508,7 +541,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
             report.measurementNotes += " Bucket updateCpuMs includes snapshot preparation/Submit, scheduling, generation, merge/upload and publication. generationMs is updateCpuMs minus mergeMs (includes queue/publication). " +
                 "updatedHolders means completed holders; requestedHolders/selectionChecksum describe input requests. Completed refresh frames include the second bucket. " +
                 "Two drain frames per mode are explicitly marked and excluded from ordinary summaries. telemetryMs is separately included in hudCpuMs. Request traces retain coalesced versions and actual completion frames. " +
-                "All front meshes use the same ordered Built-in camera pass. Per-stage allocation split is unavailable; measuredThreadBytes covers the entire measured HUD work when the calibrated counter is available.";
+                "TMP phases are inclusive children of DoGenerate, and DoGenerate is included in holder BuildMesh; do not sum parent and child timings. Probe-on timings include timestamp overhead. All front meshes use the same ordered Built-in camera pass. Per-stage allocation split is unavailable; measuredThreadBytes covers the entire measured HUD work when the calibrated counter is available.";
         }
         var summaries = new List<Summary>();
         for (int m = 0; m < 3; m++)
@@ -574,7 +607,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
         File.WriteAllText(jsonPath, JsonUtility.ToJson(report, true), new UTF8Encoding(false));
         using (var writer = new StreamWriter(csvPath, false, new UTF8Encoding(false)))
         {
-            writer.WriteLine("unity_frame,sample_frame,mode,updated_holders,vertices,indices,batches,generation_ms,merge_ms,draw_submit_ms,frame_interval_ms,main_thread_ms,build_mesh_setup_ms,build_mesh_data_init_ms,build_mesh_dispatch_ms,build_mesh_do_generate_ms,build_mesh_simple_path_ms,build_mesh_sprite_data_ms,build_mesh_drawing_dimensions_ms,build_mesh_mesh_write_ms,build_mesh_write_storage_ms,build_mesh_write_vertex_ms,build_mesh_write_uv_ms,build_mesh_write_color_ms,build_mesh_write_index_ms,build_mesh_ugui_fallback_ms,build_mesh_transform_ms,generation_bytes,merge_bytes,measured_thread_bytes,frame_gc_bytes,selection_checksum,build_mesh_write_samples,build_mesh_write_available,build_mesh_stages_available,generation_batch_count");
+            writer.WriteLine("unity_frame,sample_frame,mode,updated_holders,vertices,indices,batches,generation_ms,merge_ms,draw_submit_ms,frame_interval_ms,main_thread_ms,build_mesh_setup_ms,build_mesh_data_init_ms,build_mesh_dispatch_ms,build_mesh_do_generate_ms,build_mesh_simple_path_ms,build_mesh_sprite_data_ms,build_mesh_drawing_dimensions_ms,build_mesh_mesh_write_ms,build_mesh_write_storage_ms,build_mesh_write_vertex_ms,build_mesh_write_uv_ms,build_mesh_write_color_ms,build_mesh_write_index_ms,build_mesh_ugui_fallback_ms,build_mesh_transform_ms,generation_bytes,merge_bytes,measured_thread_bytes,frame_gc_bytes,selection_checksum,build_mesh_write_samples,build_mesh_write_available,build_mesh_stages_available,generation_batch_count,allocation_events,allocation_event_bytes,allocation_events_available,allocation_event_bytes_available,allocation_events_saturated");
             foreach (var s in report.frames)
                 writer.WriteLine(string.Join(",", s.unityFrame, s.sampleFrame, (Workload)s.mode, s.updatedHolders, s.vertices, s.indices, s.batches,
                     F(s.generationMs), F(s.mergeMs), F(s.drawSubmitMs), F(s.frameIntervalMs), s.mainThreadAvailable ? F(s.mainThreadMs) : "unavailable",
@@ -586,7 +619,10 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
                     s.buildMeshWriteAvailable ? F(s.buildMeshWriteIndexMs) : "unavailable",
                     s.buildMeshStagesAvailable ? F(s.buildMeshUguiFallbackMs) : "unavailable", s.buildMeshStagesAvailable ? F(s.buildMeshTransformMs) : "unavailable",
                     s.scopedAllocationAvailable && !s.bucketScheduling ? s.generationBytes.ToString() : "unavailable", s.scopedAllocationAvailable && !s.bucketScheduling ? s.mergeBytes.ToString() : "unavailable", s.scopedAllocationAvailable ? s.measuredThreadBytes.ToString() : "unavailable", s.frameGcAvailable ? s.frameGcBytes.ToString(CultureInfo.InvariantCulture) : "unavailable", s.selectionChecksum,
-                    s.buildMeshWriteSamples, s.buildMeshWriteAvailable, s.buildMeshStagesAvailable, s.generationBatchCount));
+                    s.buildMeshWriteSamples, s.buildMeshWriteAvailable, s.buildMeshStagesAvailable, s.generationBatchCount,
+                    s.allocationEventsAvailable ? s.allocationEventCount.ToString(CultureInfo.InvariantCulture) : "unavailable",
+                    s.allocationEventBytesAvailable ? s.allocationEventBytes.ToString(CultureInfo.InvariantCulture) : "unavailable",
+                    s.allocationEventsAvailable, s.allocationEventBytesAvailable, s.allocationEventsSaturated));
         }
         LastReportPath = jsonPath;
         if (active.useBucketScheduling) ExportBucketCsv(Path.Combine(directory, stem + "-buckets.csv"));
@@ -612,6 +648,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
     {
         mainThread.Dispose();
         frameGc.Dispose();
+        allocationCounter?.Dispose(); allocationCounter = null;
         ReleaseBuckets();
         renderer?.Dispose();
         renderer = null;
@@ -626,6 +663,7 @@ public sealed partial class HudRcPerformanceRunner : MonoBehaviour
         }
         images = null;
         draws = null;
+        workloadText = null;
         generationBatches = null;
         if (workloadSprite != null)
         {
