@@ -1,6 +1,6 @@
 # PERF-04：仓库资源负载与设备分配诊断
 
-日期：2026-11-06–07（Asia/Shanghai）。范围：M5 / PERF-04 / 0.1.2 Unreleased。变更：[measure-representative-hud-workloads](../openspec/changes/measure-representative-hud-workloads/proposal.md)。
+日期：2026-11-06–07（Asia/Shanghai）。范围：M5 / PERF-04 / 0.1.2 Unreleased。变更：[measure-representative-hud-workloads](../openspec/changes/archive/2026-11-11-measure-representative-hud-workloads/proposal.md)。
 
 后续：TMP 提取缓冲复用与 11 月 8 日设备对照见 [最新结论](perf-04-tmp-scratch-results-2026-11-08.md)。本文保留优化前的实测结果；正式 HUD 采样为竖屏，后续横屏对照另有协议，不直接比较跨轮绝对值。
 

@@ -31,4 +31,4 @@ Pass without a device timing assertion or an application-wide allocation claim.
 2026-11-06: runner suite 11/11, complete EditMode 196/196 and D3D11 PlayMode 64/64 passed; no failures or skips. First failures and final evidence retained locally under TestResults/Perf04/.
 
 ## Notes
-SourceEvidence: openspec/changes/measure-representative-hud-workloads/specs/hud-rc-performance-acceptance/spec.md
+SourceEvidence: openspec/changes/archive/2026-11-11-measure-representative-hud-workloads/specs/hud-rc-performance-acceptance/spec.md

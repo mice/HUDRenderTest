@@ -30,4 +30,4 @@ No consumer API migration is required. Install the updated package using the dec
 
 ## Open Questions
 
-Resolved on 2026-11-06 after editor launch authorization: both dependency environments passed 13 extraction tests, 196 complete EditMode tests and 61 D3D11 PlayMode tests. Actual stock provenance and the initial plain-export report failure/fix are recorded in [VERIFY-02 acceptance](../../../Documentation~/verify-02-stock-ugui-results-2026-11-06.md). Performance-budget and release acceptance remain with their existing roadmap nodes.
+Resolved on 2026-11-06 after editor launch authorization: both dependency environments passed 13 extraction tests, 196 complete EditMode tests and 61 D3D11 PlayMode tests. Actual stock provenance and the initial plain-export report failure/fix are recorded in [VERIFY-02 acceptance](../../../../Documentation~/verify-02-stock-ugui-results-2026-11-06.md). Performance-budget and release acceptance remain with their existing roadmap nodes.

@@ -31,4 +31,4 @@ Pass with no stale timings or altered workload.
 Passed in original-project focused EditMode (9/9) and complete EditMode (205/205), with no failures or skips. Full original-project UIDataRender line coverage was 90.2% (3413/3782), above the existing 70% gate. Local evidence: TestResults/GenerationProfile; this is working-tree validation, not exact-RC acceptance.
 
 ## Notes
-SourceEvidence: openspec/changes/profile-representative-hud-generation/specs/representative-generation-profiling/spec.md
+SourceEvidence: openspec/changes/archive/2026-11-11-profile-representative-hud-generation/specs/representative-generation-profiling/spec.md

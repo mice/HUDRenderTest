@@ -31,4 +31,4 @@ Pass with no stale timings or altered workload.
 Passed in original-project D3D11 focused PlayMode (12/12) and complete PlayMode (65/65), with no failures or skips. Probe-on/off requests, completions, final geometry, stage counts and per-frame rendering dimensions remained equivalent in the tested fixture. Local evidence: TestResults/GenerationProfile; target-device timing and separate Profiler GC acceptance are additional checks.
 
 ## Notes
-SourceEvidence: openspec/changes/profile-representative-hud-generation/specs/representative-generation-profiling/spec.md
+SourceEvidence: openspec/changes/archive/2026-11-11-profile-representative-hud-generation/specs/representative-generation-profiling/spec.md

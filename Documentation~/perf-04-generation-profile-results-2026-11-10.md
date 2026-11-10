@@ -1,6 +1,6 @@
 # PERF-04：代表性 Rotating generation 成本量化（2026-11-10）
 
-状态：功能、Unity 验证、八轮设备计时和独立 Profiler GC 验收均完成，主代理独立重跑并核对实际证据。变更：[profile-representative-hud-generation](../openspec/changes/profile-representative-hud-generation/proposal.md)。归属 PERF-04 / M5，目标仍为 0.1.2 Unreleased；不关闭整个节点或发布门禁。
+状态：功能、Unity 验证、八轮设备计时和独立 Profiler GC 验收均完成，主代理独立重跑并核对实际证据。变更：[profile-representative-hud-generation](../openspec/changes/archive/2026-11-11-profile-representative-hud-generation/proposal.md)。归属 PERF-04 / M5，目标仍为 0.1.2 Unreleased；不关闭整个节点或发布门禁。
 
 ## 诊断范围
 

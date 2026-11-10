@@ -120,6 +120,8 @@
 
 **节点 ID**：`M5`；**目标版本**：`v0.1.2` 治理周期；不等同于已发布。
 
+**OpenSpec 合并与归档（2026-11-11）**：五个已完成 change（stock UGUI 提取、代表性资源负载、TMP scratch 复用、generation 诊断、stock 场景对照）共 33/33 项任务已同步主规格，归档到 `openspec/changes/archive/2026-11-11-*`。UPM 提取契约此前已覆盖，本次不重复添加；HUD/TMP 主规格分别新增 3/2 项要求，新建 generation profiling 与 stock 场景对照主规格各 4 项要求。归档只结束这五个变更的工作周期；九项活动 TODO 继续保留，PERF-04/M5、原预算、目标设备字节和精确 RC/覆盖率门禁仍开放，版本保持 0.1.2 Unreleased。
+
 **PERF-04 stock 对照入场复核（2026-11-11）**：整体重读九项活动 TODO：PERF-04、GOV-002、MAINT-01 延续 M5；PERF-02/03、JOB-01 延续 M3；TMP-01..03 延续 M4，GOV-002 继续 blocked/unverified。本轮仅承接真实 stock 场景性能和独立 Profiler scoped 字节，固定 2340×1080 同负载八轮；来源、相关 22/22 EditMode、12/12 D3D11 PlayMode 与 Release 构建已验收。stock Profiler 两次证据不完整，GC 不记为通过。详见 [本轮记录](perf-04-stock-scene-results-2026-11-11.md)。不改变 0.1.2 Unreleased、原预算或精确 RC/覆盖率门禁，不归档活动 TODO。
 
 **PERF-04 stock 对照 / 出口复核（2026-11-11）**：八轮 72,048 帧及两份 CSV 逐行验收；stock Burst update median/p95 运行均值比 custom 高 37.42%/36.13%，四组相邻配对同向。第三次独立 stock Profiler 完整通过 39 正控/906 scope，受控 Editor/Mono 主线程为 0 事件/0 B；前两次仍拒绝，不拼接。原 APK、请求、九项设置与文件名恢复一致，应用停止。完整重读九项活动 TODO，仍全部 carried-forward（M5/M3/M4 各三项），GOV-002 保持 blocked/unverified，JOB-01 按预算触发，不归档或复用 ID。下一步低扰动复核 TMP regeneration，补目标设备 scoped 字节及精确候选测试/覆盖率绑定；0.1.2 仍 Unreleased，PERF-04/M5 和发布门禁不由本轮关闭。
@@ -128,9 +130,9 @@
 
 出口整体重读九项活动 TODO，全部 carried-forward：PERF-04/GOV-002/MAINT-01 继续 M5，PERF-02/03/JOB-01 继续 M3，TMP-01..03 继续 M4；GOV-002 仍 blocked/unverified，JOB-01 按预算触发，无 ID 归档、删除或复用。下一步补 stock 场景性能，并在优化前以低扰动方法复核 TMP mesh regeneration。原预算、目标设备 scoped 字节、精确 RC/覆盖率绑定继续开放；0.1.2 仍 Unreleased，不关闭 M5，不触发 Jenkins、tag 或发布。
 
-**PERF-04 generation 量化 / 入口复核（2026-11-09）**：承接 [profile-representative-hud-generation](../openspec/changes/profile-representative-hud-generation/proposal.md)，先补实际 Rotating 完成 holder 的阶段采样，再量化同 APK 探针开关开销与 generation 构成。用户指定 GC 验收通过 Unity Profiler，避免增加运行时统计代码；独立 Profiler 诊断必须有正控和有效采样范围，不把其耗时混入 Release 结果。完整重读九项活动 TODO，PERF-04/GOV-002/MAINT-01 继续 M5，PERF-02/03/JOB-01 继续 M3，TMP-01..03 继续 M4，GOV-002 仍 blocked/unverified、JOB-01 按预算触发；不新增/复用 TODO ID，不改变预算/版本/发布状态。stock 场景性能、scoped 字节和精确 RC/覆盖率继续开放。
+**PERF-04 generation 量化 / 入口复核（2026-11-09）**：承接 [profile-representative-hud-generation](../openspec/changes/archive/2026-11-11-profile-representative-hud-generation/proposal.md)，先补实际 Rotating 完成 holder 的阶段采样，再量化同 APK 探针开关开销与 generation 构成。用户指定 GC 验收通过 Unity Profiler，避免增加运行时统计代码；独立 Profiler 诊断必须有正控和有效采样范围，不把其耗时混入 Release 结果。完整重读九项活动 TODO，PERF-04/GOV-002/MAINT-01 继续 M5，PERF-02/03/JOB-01 继续 M3，TMP-01..03 继续 M4，GOV-002 仍 blocked/unverified、JOB-01 按预算触发；不新增/复用 TODO ID，不改变预算/版本/发布状态。stock 场景性能、scoped 字节和精确 RC/覆盖率继续开放。
 
-**PERF-04 TMP 提取复用子项 / 出口复核（2026-11-08）**：完成 [reuse-tmp-extraction-scratch](../openspec/changes/reuse-tmp-extraction-scratch/proposal.md) 的分配归因、缓冲复用、正确性和两种 UGUI 验证。原 Sample EditMode 204/204、D3D11 PlayMode 64/64、stock 相关 EditMode 12/12、PlayMode 11/11、治理 265/265 通过。Mi 10 九轮 56,754 帧（含排空）来源/请求/几何/方向验收通过；历史正式横屏为 2340×1080，因此保留当前方向和分辨率。混合 HUD 有界分配事件由 10,360 降为 0，正控有效且无饱和，字节不可用。Release Burst 刷新 p95 运行均值 `10.7578→9.86305 ms`（观测下降 8.32%）；历史无 TMP 单对无一致收益。每版本两次运行、中断 556 秒及环境端点限制已披露。原 APK/请求/九项设置恢复读回通过。见 [完整结论](perf-04-tmp-scratch-results-2026-11-08.md)。
+**PERF-04 TMP 提取复用子项 / 出口复核（2026-11-08）**：完成 [reuse-tmp-extraction-scratch](../openspec/changes/archive/2026-11-11-reuse-tmp-extraction-scratch/proposal.md) 的分配归因、缓冲复用、正确性和两种 UGUI 验证。原 Sample EditMode 204/204、D3D11 PlayMode 64/64、stock 相关 EditMode 12/12、PlayMode 11/11、治理 265/265 通过。Mi 10 九轮 56,754 帧（含排空）来源/请求/几何/方向验收通过；历史正式横屏为 2340×1080，因此保留当前方向和分辨率。混合 HUD 有界分配事件由 10,360 降为 0，正控有效且无饱和，字节不可用。Release Burst 刷新 p95 运行均值 `10.7578→9.86305 ms`（观测下降 8.32%）；历史无 TMP 单对无一致收益。每版本两次运行、中断 556 秒及环境端点限制已披露。原 APK/请求/九项设置恢复读回通过。见 [完整结论](perf-04-tmp-scratch-results-2026-11-08.md)。
 
 完整重读活动 TODO 后，九项均 carried-forward：PERF-04、GOV-002、MAINT-01 继续 M5；PERF-02/03、JOB-01 继续 M3；TMP-01..03 继续 M4。GOV-002 保持 blocked/unverified，JOB-01 按预算触发，无 TODO ID 归档、删除或复用。下一步量化剩余 generation 成本，补 stock 场景性能、设备 scoped 字节、精确 RC/覆盖率门禁；不改预算、版本或发布状态，M5 和 PERF-04 继续开放。
 
@@ -138,9 +140,9 @@
 
 完整重读 TODO 后，9 项均 carried-forward：PERF-04、GOV-002、MAINT-01 继续 M5；PERF-02/03、JOB-01 继续 M3；TMP-01..03 继续 M4。GOV-002 保持 blocked/unverified，JOB-01 按预算触发，无 ID 归档、删除或复用。下一步先定位 TMP 生成分配/缓存，并匹配环境复核当前控制；不把本轮可追溯工作树测量记作 RC、stock 场景性能、覆盖率或发布通过，不改变预算。
 
-**PERF-04 代表性负载入口复核（2026-11-06）**：承接 [measure-representative-hud-workloads](../openspec/changes/measure-representative-hud-workloads/proposal.md)，用户选择仓库现有 Sprite、TMP 和多纹理资源作为可复现负载。完整复核 9 个活动 TODO：PERF-04、GOV-002、MAINT-01 延续 M5；PERF-02/03、JOB-01 延续 M3；TMP-01..03 延续 M4。GOV-002 保持 blocked/unverified，JOB-01 按预算触发。目标保持 0.1.2 Unreleased，不新增 TODO ID，不把历史 null-Sprite 局部 1.5 ms 目标扩展为新负载预算；代表性设备计时、分配、精确候选和覆盖率证据分别核实。
+**PERF-04 代表性负载入口复核（2026-11-06）**：承接 [measure-representative-hud-workloads](../openspec/changes/archive/2026-11-11-measure-representative-hud-workloads/proposal.md)，用户选择仓库现有 Sprite、TMP 和多纹理资源作为可复现负载。完整复核 9 个活动 TODO：PERF-04、GOV-002、MAINT-01 延续 M5；PERF-02/03、JOB-01 延续 M3；TMP-01..03 延续 M4。GOV-002 保持 blocked/unverified，JOB-01 按预算触发。目标保持 0.1.2 Unreleased，不新增 TODO ID，不把历史 null-Sprite 局部 1.5 ms 目标扩展为新负载预算；代表性设备计时、分配、精确候选和覆盖率证据分别核实。
 
-**VERIFY-02 入口复核（2026-11-06）**：完整重读 10 个活动 TODO，本轮承接 `VERIFY-02 / M5 / v0.1.2`，实施 [stock UGUI 兼容变更](../openspec/changes/restore-stock-ugui-extraction/proposal.md)。PERF-04、GOV-002、MAINT-01 延续 M5，PERF-02/03、JOB-01 延续 M3，TMP-01..03 延续 M4；GOV-002 保持 blocked/unverified。已加入回退实现、资源清理和 UT_MESH_031..036，治理静态检查 257/257；唯一复用 stock 快照位于 `D:/workspace/HUDRenderPackageValidation`，准备阶段未启动 Unity。stock 消费项目的真实编译、正确性和分配验证通过前，不关闭 VERIFY-02，活动队列仍为 10 项。未改包版本或发布状态。
+**VERIFY-02 入口复核（2026-11-06）**：完整重读 10 个活动 TODO，本轮承接 `VERIFY-02 / M5 / v0.1.2`，实施 [stock UGUI 兼容变更](../openspec/changes/archive/2026-11-11-restore-stock-ugui-extraction/proposal.md)。PERF-04、GOV-002、MAINT-01 延续 M5，PERF-02/03、JOB-01 延续 M3，TMP-01..03 延续 M4；GOV-002 保持 blocked/unverified。已加入回退实现、资源清理和 UT_MESH_031..036，治理静态检查 257/257；唯一复用 stock 快照位于 `D:/workspace/HUDRenderPackageValidation`，准备阶段未启动 Unity。stock 消费项目的真实编译、正确性和分配验证通过前，不关闭 VERIFY-02，活动队列仍为 10 项。未改包版本或发布状态。
 
 **完成记录 / 归档 VERIFY-02（2026-11-06）**：用户授权自由使用编辑器后，原 Sample/定制 UGUI 与 stock BuiltIn 1.0.0 两种环境的提取专项各 13/13、完整 EditMode 各 196/196、D3D11 PlayMode 各 61/61 通过，无失败/跳过，治理 257/257、布局、OpenSpec strict 20/20 和 diff 检查通过。首次 stock 消费从无 Library 状态编译；随后同一目录改为 detached worktree，修复普通导出缺少 Git 来源导致的一项 Sample 报告断言失败，保留失败证据并完成专项及全套复测。stock 实际依赖路径/源码哈希、定制方法缺失、预热零分配和资源清理见 [验收结论](verify-02-stock-ugui-results-2026-11-06.md)；主规格已同步，修复进入 [0.1.2 Unreleased changelog](../com.uidatarender/CHANGELOG.md)。
 

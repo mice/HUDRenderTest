@@ -1,6 +1,6 @@
 # PERF-04：真实 stock UGUI 代表性场景对照（2026-11-11）
 
-状态：来源、stock 相关功能、Release 构建、八轮设备计时和独立 stock Profiler scoped 字节均已验收。前两次 Profiler 拒绝证据保留，第三次完整通过。变更：[measure-stock-hud-scene-performance](../openspec/changes/measure-stock-hud-scene-performance/proposal.md)。归属 PERF-04 / M5 / 0.1.2 Unreleased，不关闭节点，不形成 RC 或发布通过结论。
+状态：来源、stock 相关功能、Release 构建、八轮设备计时和独立 stock Profiler scoped 字节均已验收。前两次 Profiler 拒绝证据保留，第三次完整通过。变更：[measure-stock-hud-scene-performance](../openspec/changes/archive/2026-11-11-measure-stock-hud-scene-performance/proposal.md)。归属 PERF-04 / M5 / 0.1.2 Unreleased，不关闭节点，不形成 RC 或发布通过结论。
 
 ## 本轮范围与来源
 
