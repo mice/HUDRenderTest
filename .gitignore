@@ -35,7 +35,7 @@ Packages/*
 /HUDRenderTestSample/.vscode
 /HUDRenderTestSample/Packages/*
 !/HUDRenderTestSample/Packages/manifest.json
-!/HUDRenderTestSample/Packages/packages-lock.json
+/HUDRenderTestSample/Packages/packages-lock.json
 /Builds
 /.codex
 
